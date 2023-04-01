@@ -63,7 +63,7 @@ WindowHeader::CreateSubWindows()
   headerText->resize(100, 20);
   headerText->setText("Nothing");
   headerText->setAlignment(Qt::AlignLeft);
-  headerText->setFont(QFont("Segoe UI", 15, QFont::Bold));
+  // headerText->setFont(QFont("Segoe UI", 15, QFont::Bold));
 }
 
 /*****************************************************************************!

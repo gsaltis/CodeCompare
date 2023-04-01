@@ -19,6 +19,7 @@
  *****************************************************************************/
 #include "CodeWindow.h"
 #include "CodeNameWindow.h"
+#include "DependencyTreeWindow.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -57,6 +58,7 @@ class MainDisplayWindow : public QWidget
   void                          InitializeSubWindows    ();
   void                          CreateSubWindows        ();
   void                          resizeEvent             (QResizeEvent* InEvent);
+  void                          CreateConnections       (void);
 
  //! Private Data
  private :
@@ -64,12 +66,16 @@ class MainDisplayWindow : public QWidget
   CodeWindow*                   codeWindowTrack2;
   CodeNameWindow*               codeNameWindow;
   CodeWindow*                   codeWindowMerge;
+  DependencyTreeWindow*         dependencyTreeWindow;
 
  //! Public Slots
  public slots :
+  void                          SlotCreateDependencyTree (void);
+  void                          SlotDependencyWindowClose (void);
 
  //! Public Signals
  signals :
+  void                          SignalDependencyWindowClose     (void);
 
  //! Public Actions
  public :

@@ -17,9 +17,12 @@ QMAKE_CXXFLAGS                  +=
 
 QMAKE_LIBS                      = 
 
+RESOURCES                       += images.qrc
+
 TARGET                          = CodeCompare
 
-VERSION                         = "0.0.0"
+VERSION                         = "0.0.1"
+
 QMAKE_TARGET_COMPANY            = "Greg Saltis"
 
 QMAKE_TARGET_PRODUCT            = "CodeCompare"
@@ -35,7 +38,10 @@ SOURCES                         += \
 				   CodeBaseOpenDialog.cpp                       \
 				   CodeNameWindow.cpp                           \
 				   CodeWindow.cpp                               \
+				   DependencyTreeWindow.cpp                     \
 				   DirectoryReadEntry.cpp                       \
+				   DirectoryTreeElement.cpp                     \
+				   DirectoryTreeWindow.cpp                      \
 				   MainDisplayWindow.cpp                        \
 				   MainWindow.cpp                               \
 				   SystemConfig.cpp                             \
@@ -48,7 +54,10 @@ HEADERS                         += \
 				   CodeBaseOpenDialog.h                         \
 				   CodeNameWindow.h                             \
 				   CodeWindow.h                                 \
+				   DependencyTreeWindow.h                       \
 				   DirectoryReadEntry.h                         \
+				   DirectoryTreeElement.h                       \
+				   DirectoryTreeWindow.h                        \
 				   MainDisplayWindow.h                          \
 				   MainWindow.h                                 \
 				   SystemConfig.h                               \

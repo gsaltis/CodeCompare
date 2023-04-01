@@ -19,6 +19,7 @@
  * Local Headers
  *****************************************************************************/
 #include "WindowHeader.h"
+#include "DirectoryTreeWindow.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -46,6 +47,7 @@ class CodeWindow : public QFrame
  //! Public Methods
  public :
   void                          SetTitle                (QString InTitle);
+  void                          AddDirectory            (QString InDirectoryName);
 
  //! Public Data
  public :
@@ -66,7 +68,8 @@ class CodeWindow : public QFrame
  //! Private Data
  private :
   WindowHeader*                 header;
-
+  DirectoryTreeWindow*          dirTreeWindow;
+  QString                       directoryName;
  //! Public Slots
  public slots :
 

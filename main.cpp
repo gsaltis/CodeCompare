@@ -36,6 +36,9 @@
 QString
 MainConfigFilename = "System.json";
 
+SystemConfig*
+mainSystemConfig;
+
 /*****************************************************************************!
  * Function : main
  *****************************************************************************/
@@ -45,17 +48,17 @@ main
 {
   QApplication                          application(argc, argv);
   MainWindow*                           w;
-  SystemConfig                          systemConfig;
 
   application.setApplicationName("CodeCompare");
   application.setApplicationVersion("0.0.0");
   application.setOrganizationName("Greg Saltis");
   application.setOrganizationDomain("www.gsaltis.com");
 
-  systemConfig.ReadJSON(MainConfigFilename);
+  mainSystemConfig = new SystemConfig();
+  mainSystemConfig->ReadJSON(MainConfigFilename);
   w = new MainWindow(NULL);
-  w->resize(systemConfig.GetMainWindowSize());
-  w->move(systemConfig.GetMainWindowLocation());
+  w->resize(mainSystemConfig->GetMainWindowSize());
+  w->move(mainSystemConfig->GetMainWindowLocation());
   w->show();
   
   return application.exec();

@@ -25,7 +25,7 @@
 #define WINDOW_HEADER_X                 0
 #define WINDOW_HEADER_Y                 0
 #define WINDOW_HEADER_WIDTH             200
-#define WINDOW_HEADER_HEIGHT            30
+#define WINDOW_HEADER_HEIGHT            15
 
 /*****************************************************************************!
  * Exported Class : WindowHeader

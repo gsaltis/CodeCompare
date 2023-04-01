@@ -1,8 +1,11 @@
 {
   "MainWindowGeometry" : {
     "x"                                 : 0,
-    "y"                                 : -1080,
-    "width"                             : 1920,
-    "height"                            : 1000
+    "y"                                 : 0,
+    "width"                             : 1000,
+    "height"                            : 600
+  },
+  "Paths" : {
+    "sourcepath"                        : "D:/Source/NCUCodeMerge/Track2_NCU_Code"
   }
 }

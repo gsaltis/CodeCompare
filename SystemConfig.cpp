@@ -47,6 +47,7 @@ void
 SystemConfig::ReadJSON
 (QString InFilename)
 {
+  QJsonObject                           pathsObject;
   QJsonValue                            geomValue;
   QJsonObject                           geomObject;
   QJsonObject                           docObject;
@@ -69,6 +70,10 @@ SystemConfig::ReadJSON
   geomObject = geomValue.toObject();
   if ( ! geomObject.isEmpty() ) {
     ReadMainWindowGeometry(geomObject);
+  }
+  pathsObject = docObject["Paths"].toObject();
+  if ( ! pathsObject.isEmpty() ) {
+    ReadPaths(pathsObject);
   }
 }
 
@@ -101,4 +106,23 @@ QSize
 SystemConfig::GetMainWindowSize(void)
 {
   return QSize(MainWindowWidth, MainWindowHeight);
+}
+
+/*****************************************************************************!
+ * Function : ReadPaths
+ *****************************************************************************/
+void
+SystemConfig::ReadPaths
+(QJsonObject& InObject)
+{
+  SourceTrackPath = InObject["sourcepath"].toString();
+}
+
+/*****************************************************************************!
+ * Function : GetSourceTrackPath
+ *****************************************************************************/
+QString
+SystemConfig::GetSourceTrackPath(void)
+{
+  return SourceTrackPath;
 }

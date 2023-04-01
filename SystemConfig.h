@@ -42,6 +42,7 @@ class SystemConfig : public QWidget
   void                          ReadJSON                (QString InFilename);
   QPoint                        GetMainWindowLocation   (void);
   QSize                         GetMainWindowSize       (void);
+  QString                       GetSourceTrackPath      (void);
 
  //! Public Data
  public :
@@ -56,6 +57,7 @@ class SystemConfig : public QWidget
  //! Private Methods
  private :
   void                          ReadMainWindowGeometry  (QJsonObject &InObject);
+  void                          ReadPaths               (QJsonObject &InObject);
 
  //! Private Data
  private :
@@ -63,7 +65,8 @@ class SystemConfig : public QWidget
   int                                   MainWindowY;
   int                                   MainWindowWidth;
   int                                   MainWindowHeight;
-
+  QString                               SourceTrackPath;
+  
  //! Public Slots
  public slots :
 

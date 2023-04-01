@@ -16,6 +16,7 @@
  * Local Headers
  *****************************************************************************/
 #include "MainDisplayWindow.h"
+#include "trace.h"
 
 /*****************************************************************************!
  * Local Macros
@@ -55,6 +56,7 @@ MainDisplayWindow::Initialize()
 {
   InitializeSubWindows();  
   CreateSubWindows();
+  CreateConnections();
 }
 
 /*****************************************************************************!
@@ -67,6 +69,7 @@ MainDisplayWindow::InitializeSubWindows()
   codeWindowTrack2 = NULL;
   codeNameWindow = NULL;
   codeWindowMerge = NULL;
+  dependencyTreeWindow = NULL;
 }
 
 /*****************************************************************************!
@@ -77,12 +80,17 @@ MainDisplayWindow::CreateSubWindows()
 {
   codeWindowTrack1 = new CodeWindow();
   codeWindowTrack1->setParent(this);
+  codeWindowTrack1->AddDirectory("D:\\Source\\NCUCodeMerge\\Track2_NCU_CODE");
   codeWindowTrack2 = new CodeWindow();
   codeWindowTrack2->setParent(this);
   codeNameWindow = new CodeNameWindow();
   codeNameWindow->setParent(this);
   codeWindowMerge = new CodeWindow();
   codeWindowMerge->setParent(this);
+
+  dependencyTreeWindow = new DependencyTreeWindow();
+  dependencyTreeWindow->setParent(this);
+  dependencyTreeWindow->hide();
 }
 
 /*****************************************************************************!
@@ -92,6 +100,10 @@ void
 MainDisplayWindow::resizeEvent
 (QResizeEvent* InEvent)
 {
+  int                                   dependencyTreeWindowH;
+  int                                   dependencyTreeWindowW;
+  int                                   dependencyTreeWindowX;
+  int                                   dependencyTreeWindowY;
   int                                   w;
   QSize                                 size;  
   int                                   width;
@@ -131,7 +143,11 @@ MainDisplayWindow::resizeEvent
   track2W = codeWindowWidth;
   track2H = height - (Y_GAP * 2);
 
-
+  dependencyTreeWindowX = (X_GAP * 2) + codeNameWindowW;
+  dependencyTreeWindowY = Y_GAP;
+  dependencyTreeWindowW = width - (codeNameWindowW + X_GAP * 2);
+  dependencyTreeWindowH = height - (Y_GAP * 2);
+  
   if ( codeWindowTrack1 ) {
     codeWindowTrack1->move(track1X, track1Y);
     codeWindowTrack1->resize(track1W, track1H);
@@ -148,4 +164,45 @@ MainDisplayWindow::resizeEvent
     codeWindowMerge->move(mergeTrackX, mergeTrackY);
     codeWindowMerge->resize(mergeTrackW, mergeTrackH);
   }
+  if ( dependencyTreeWindow ) {
+    dependencyTreeWindow->move(dependencyTreeWindowX, dependencyTreeWindowY);
+    dependencyTreeWindow->resize(dependencyTreeWindowW, dependencyTreeWindowH);
+  }
+}
+
+/*****************************************************************************!
+ * Function : SlotCreateDependencyTree
+ *****************************************************************************/
+void
+MainDisplayWindow::SlotCreateDependencyTree(void)
+{
+  codeWindowTrack1->hide();
+  codeWindowTrack2->hide();
+  codeWindowMerge->hide();
+  dependencyTreeWindow->show();
+}
+
+/*****************************************************************************!
+ * Function : SlotDependencyWindowClose
+ *****************************************************************************/
+void
+MainDisplayWindow::SlotDependencyWindowClose(void)
+{
+  emit SignalDependencyWindowClose();
+  codeWindowTrack1->show();
+  codeWindowTrack2->show();
+  codeWindowMerge->show();
+  dependencyTreeWindow->hide();
+}
+
+/*****************************************************************************!
+ * Function : CreateConnections
+ *****************************************************************************/
+void
+MainDisplayWindow::CreateConnections(void)
+{
+  connect(dependencyTreeWindow,
+          SIGNAL(SignalWindowClose()),
+          this,
+          SLOT(SlotDependencyWindowClose()));
 }

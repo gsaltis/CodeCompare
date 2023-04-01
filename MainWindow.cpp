@@ -34,11 +34,12 @@ MainWindow::MainWindow
 MainWindow::MainWindow
 (QWidget* parent) : QMainWindow(parent)
 {
-    Initialize();
-    CreateActions();
-    CreateMenus();
-    InitializeSubWindows();
-    CreateSubWindows();
+  Initialize();
+  CreateActions();
+  CreateMenus();
+  InitializeSubWindows();
+  CreateSubWindows();
+  CreateConnections();
 }
 
 /*****************************************************************************!
@@ -115,6 +116,8 @@ MainWindow::CreateActions()
   connect(ActionExit, SIGNAL(triggered()), this, SLOT(SlotExit()));
   ActionOpen = new QAction("Open", this);
   connect(ActionOpen, SIGNAL(triggered()), this, SLOT(SlotOpen()));
+  ActionCreateDependencyTree = new QAction("Create Dependency Tree", this);
+  connect(ActionCreateDependencyTree, SIGNAL(triggered()), this, SLOT(SlotCreateDependencyTree()));
 }
 
 /*****************************************************************************!
@@ -128,6 +131,9 @@ MainWindow::CreateMenus()
   fileMenu = menubar->addMenu("&File");
   fileMenu->addAction(ActionExit);
   fileMenu->addAction(ActionOpen);
+
+  actionMenu = menubar->addMenu("&Action");
+  actionMenu->addAction(ActionCreateDependencyTree);
 }
 
 /*****************************************************************************!
@@ -151,4 +157,39 @@ MainWindow::SlotOpen(void)
   dialog = new CodeBaseOpenDialog();
   n = dialog->exec();
   (void)n;
+}
+
+/*****************************************************************************!
+ * Function : SlotCreateDependencyTree
+ *****************************************************************************/
+void
+MainWindow::SlotCreateDependencyTree(void)
+{
+  ActionCreateDependencyTree->setEnabled(false);
+  emit SignalCreateDependencyTree();
+}
+
+/*****************************************************************************!
+ * Function : CreateConnections
+ *****************************************************************************/
+void
+MainWindow::CreateConnections(void)
+{
+  connect(this,
+          SIGNAL(SignalCreateDependencyTree()),
+          displayWindow,
+          SLOT(SlotCreateDependencyTree()));
+  connect(displayWindow,
+          SIGNAL(SignalDependencyWindowClose()),
+          this,
+          SLOT(SlotDependencyTreeWindowClose()));
+}
+
+/*****************************************************************************!
+ * Function : SlotDependencyTreeWindowClose
+ *****************************************************************************/
+void
+MainWindow::SlotDependencyTreeWindowClose(void)
+{
+  ActionCreateDependencyTree->setEnabled(true);
 }

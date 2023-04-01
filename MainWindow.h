@@ -65,6 +65,7 @@ class MainWindow : public QMainWindow
   void                          resizeEvent             (QResizeEvent* InEvent);
   void                          CreateActions           ();
   void                          CreateMenus             ();
+  void                          CreateConnections       (void);
 
  //! Private Data
  private :
@@ -72,19 +73,24 @@ class MainWindow : public QMainWindow
   QMenuBar*                     menubar;
   QMenu*                        fileMenu;
   QStatusBar*                   statusbar;
+  QMenu*                        actionMenu;
 
  //! Public Slots
  public slots :
   void                          SlotExit                (void);
   void                          SlotOpen                (void);
-
+  void                          SlotCreateDependencyTree (void);
+  void                          SlotDependencyTreeWindowClose (void);
+  
  //! Public Signals
  signals :
+  void                          SignalCreateDependencyTree (void);
 
  //! Public Actions
  public :
   QAction*                      ActionExit;
   QAction*                      ActionOpen;
+  QAction*                      ActionCreateDependencyTree;
 
 };
 
