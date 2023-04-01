@@ -41,7 +41,6 @@ SOURCES                         += \
 				   DependencyTreeWindow.cpp                     \
 				   DirectoryReadEntry.cpp                       \
 				   DirectoryTreeElement.cpp                     \
-				   DirectoryTreeWindow.cpp                      \
 				   MainDisplayWindow.cpp                        \
 				   MainWindow.cpp                               \
 				   SystemConfig.cpp                             \
@@ -57,7 +56,6 @@ HEADERS                         += \
 				   DependencyTreeWindow.h                       \
 				   DirectoryReadEntry.h                         \
 				   DirectoryTreeElement.h                       \
-				   DirectoryTreeWindow.h                        \
 				   MainDisplayWindow.h                          \
 				   MainWindow.h                                 \
 				   SystemConfig.h                               \

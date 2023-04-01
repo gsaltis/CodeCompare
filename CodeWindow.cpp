@@ -61,9 +61,6 @@ CodeWindow::CreateSubWindows()
 {
   header = new WindowHeader();  
   header->setParent(this);
-  dirTreeWindow = new DirectoryTreeWindow();
-  dirTreeWindow->setParent(this);
-  dirTreeWindow->hide();
 }
 
 /*****************************************************************************!
@@ -73,7 +70,6 @@ void
 CodeWindow::InitializeSubWindows()
 {
   header = NULL;  
-  dirTreeWindow = NULL;
 }
 
 /*****************************************************************************!
@@ -86,8 +82,6 @@ CodeWindow::resizeEvent
   QSize                                 size;  
   int                                   width;
   int                                   height;
-  int                                   dirTreeWindowX, dirTreeWindowY;
-  int                                   dirTreeWindowW, dirTreeWindowH;
   
   size = InEvent->size();
   width = size.width();
@@ -97,15 +91,6 @@ CodeWindow::resizeEvent
   if ( header ) {
     header->move(2, 0);
     header->resize(width - 2, WINDOW_HEADER_HEIGHT);
-  }
-
-  dirTreeWindowX = 5;
-  dirTreeWindowY = WINDOW_HEADER_HEIGHT + 3;
-  dirTreeWindowW = width - (3 + 5);
-  dirTreeWindowH = (height - (WINDOW_HEADER_HEIGHT + (3 * 2)));
-  if ( dirTreeWindow ) {
-    dirTreeWindow->move(dirTreeWindowX, dirTreeWindowY);
-    dirTreeWindow->resize(dirTreeWindowW, dirTreeWindowH);
   }
 }
 
@@ -127,8 +112,6 @@ CodeWindow::AddDirectory
 (QString InDirectoryName)
 {
   directoryName = InDirectoryName;
-  dirTreeWindow->show();
   header->SetText(InDirectoryName);
-  dirTreeWindow->PopulateDirectory(InDirectoryName);
 }
 
