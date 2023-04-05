@@ -19,6 +19,7 @@
 #include "DependencyTreeWindow.h"
 #include "main.h"
 #include "trace.h"
+#include "BuildTreeLineDialog.h"
 
 /*****************************************************************************!
  * Function : DependencyTreeWindow
@@ -51,10 +52,20 @@ DependencyTreeWindow::initialize()
   InitializeSubWindows();  
   CreateSubWindows();
   ActionCloseButtonPushed = new QAction("CloseButtonPushed", this);
-  connect(ActionCloseButtonPushed, SIGNAL(triggered()), this, SLOT(SlotCloseButtonPushed()));
   ActionpathLineSelectPushed = new QAction("pathLineSelectPushed", this);
-  connect(ActionpathLineSelectPushed, SIGNAL(triggered()), this, SLOT(SlotpathLineSelectPushed()));
   ActionBrowsePathButtonPushed = new QAction("BrowsePathButtonPushed", this);
+  ConnectWindows();
+}
+
+/*****************************************************************************!
+ * Function : ConnectWindows
+ *****************************************************************************/
+void
+DependencyTreeWindow::ConnectWindows
+()
+{
+  connect(ActionCloseButtonPushed, SIGNAL(triggered()), this, SLOT(SlotCloseButtonPushed()));
+  connect(ActionpathLineSelectPushed, SIGNAL(triggered()), this, SLOT(SlotpathLineSelectPushed()));
   connect(ActionBrowsePathButtonPushed, SIGNAL(triggered()), this, SLOT(SlotBrowsePathButtonPushed()));
 }
 
@@ -65,6 +76,7 @@ void
 DependencyTreeWindow::CreateSubWindows()
 {
   QTreeWidgetItem*                      treeHeader;
+
   //! Create the CloseButton button  
   CloseButton = new QPushButton();
   CloseButton->setParent(this);
@@ -72,6 +84,14 @@ DependencyTreeWindow::CreateSubWindows()
   CloseButton->move(10, 10);
   CloseButton->resize(100,20);
   connect(CloseButton, SIGNAL(pressed()), this, SLOT(SlotCloseButtonPushed()));
+
+  //! Create the CloseButton button  
+  MakeButton = new QPushButton();
+  MakeButton->setParent(this);
+  MakeButton->setText("Make");
+  MakeButton->move(10, 10);
+  MakeButton->resize(100,20);
+  connect(MakeButton, SIGNAL(pressed()), this, SLOT(SlotMakeButtonPushed()));
   
     //! Create pathLineInput LineEdit
   pathLineInput = new QLineEdit();
@@ -153,6 +173,8 @@ DependencyTreeWindow::resizeEvent
   int                                   browsePathButtonW, browsePathButtonH;
   int                                   directoryTreeWindowX, directoryTreeWindowY;
   int                                   directoryTreeWindowW, directoryTreeWindowH;
+  int                                   makeButtonX, makeButtonY;
+  int                                   makeButtonW, makeButtonH;
   
   size = InEvent->size();
   width = size.width();
@@ -162,6 +184,11 @@ DependencyTreeWindow::resizeEvent
   closeButtonH = 20;
   closeButtonX = width - (closeButtonW + 10);
   closeButtonY = height- (closeButtonH + 10);
+
+  makeButtonW = 60;
+  makeButtonH = 20;
+  makeButtonX = width - (closeButtonW + makeButtonW + 20);
+  makeButtonY = height- (makeButtonH + 10);
 
   pathLineInputX = 10;
   pathLineInputY = 10;
@@ -186,6 +213,9 @@ DependencyTreeWindow::resizeEvent
   CloseButton->move(closeButtonX, closeButtonY);
   CloseButton->resize(closeButtonW, closeButtonH);
 
+  MakeButton->move(makeButtonX, makeButtonY);
+  MakeButton->resize(makeButtonW, makeButtonH);
+
   pathLineInput->move(pathLineInputX, pathLineInputY);
   pathLineInput->resize(pathLineInputW, pathLineInputH);
 
@@ -206,6 +236,18 @@ void
 DependencyTreeWindow::SlotCloseButtonPushed(void)
 {
   emit SignalWindowClose();
+}
+
+/*****************************************************************************!
+ * Function : SlotMakeButtonPushed
+ *****************************************************************************/
+void
+DependencyTreeWindow::SlotMakeButtonPushed(void)
+{
+  DependencyTreeWidgetItem*             item;
+  
+  item = (DependencyTreeWidgetItem*)directoryTreeWindow->currentItem();
+  TreeItemSelected(item);
 }
 
 /*****************************************************************************!
@@ -251,7 +293,7 @@ DependencyTreeWindow::ProcessTopLevelDirectory
 (QFileInfo InInfo, QTreeWidget* InTreeWindow)
 {
   QFont                                 font;
-  QTreeWidgetItem*                      treeItem;
+  DependencyTreeWidgetItem*             treeItem;
   QString                               makeFileName;
   QString                               fullPath;
   QString                               name = InInfo.fileName();
@@ -265,9 +307,7 @@ DependencyTreeWindow::ProcessTopLevelDirectory
   if ( info.exists() ) {
     fg.setColor(Qt::black);
   }
-  treeItem = new QTreeWidgetItem(static_cast<QTreeWidget*>(nullptr),
-                                 QStringList(name));
-  
+  treeItem = new DependencyTreeWidgetItem(QStringList(name), InInfo);
   treeItem->setData(0, Qt::ForegroundRole, fg);
   if ( info.exists() ) {
     font = treeItem->font(0);
@@ -290,7 +330,7 @@ DependencyTreeWindow::ProcessTreeDirectory
   QDir dir(fullPath, QString(""), QDir::Name, QDir::Dirs | QDir::NoDotAndDotDot);
 
   QFileInfoList                         list = dir.entryInfoList();
-  QTreeWidgetItem*                      treeItem;
+  DependencyTreeWidgetItem*             treeItem;
   QBrush                                fg(Qt::gray);
   
   for (auto i = list.begin() ; i != list.end(); i++ ) {
@@ -304,15 +344,29 @@ DependencyTreeWindow::ProcessTreeDirectory
 
     if ( makeFileInfo.exists() ) {
       fg.setColor(Qt::black);
-  }
+    }
     
     fileName = info.fileName();
-    treeItem = new QTreeWidgetItem(static_cast<QTreeWidget*>(nullptr),
-                                   QStringList(fileName));
+    treeItem = new DependencyTreeWidgetItem(QStringList(fileName), info);
     treeItem->setData(0, Qt::ForegroundRole, fg);
     InTreeItem->addChild(treeItem);
     if ( makeFileInfo.exists() ) {
       ProcessTreeDirectory(info, treeItem);
     }
   }
+}
+
+/*****************************************************************************!
+ * Function : TreeItemSelected
+ *****************************************************************************/
+void
+DependencyTreeWindow::TreeItemSelected
+(DependencyTreeWidgetItem* InItem)
+{
+  BuildTreeLineDialog*                  dialog;
+  BuildLine*                            buildLine;
+  InItem->PerformMake();
+  buildLine = InItem->GetBuildLine();
+  dialog = new BuildTreeLineDialog(buildLine);
+  (void)dialog->exec();
 }

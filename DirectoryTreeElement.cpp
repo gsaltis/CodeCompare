@@ -22,18 +22,10 @@
  * Function : DirectoryTreeElement
  *****************************************************************************/
 DirectoryTreeElement::DirectoryTreeElement
-(QFileInfo InInfo, int InIndent, int InY) : QFrame()
+(QFileInfo InInfo) : QFrame()
 {
   fileInfo = InInfo;
-  indent = InIndent;
-  localY = InY;
-  QPalette pal;
-  pal = palette();
-  pal.setBrush(QPalette::Window, QBrush(QColor(0, 0, 0, 0)));
-  setPalette(pal);
-  setAutoFillBackground(true);
   initialize();
-  move(0, localY);
 }
 
 /*****************************************************************************!
@@ -50,52 +42,19 @@ DirectoryTreeElement::~DirectoryTreeElement
 void
 DirectoryTreeElement::initialize()
 {
-  InitializeSubWindows();  
-  CreateSubWindows();
 }
 
 /*****************************************************************************!
- * Function : CreateSubWindows
+ * Function : AddChild
  *****************************************************************************/
 void
-DirectoryTreeElement::CreateSubWindows()
+DirectoryTreeElement::AddChild
+(class DirectoryTreeElement*  InChild)
 {
-  QLabel*                               label;
-
-  //! Create label   
-  label = new QLabel();
-  label->setParent(this);
-  label->move(indent, 0);
-  label->resize(100, 20);
-  label->setText(fileInfo.fileName());
-  label->setAlignment(Qt::AlignLeft);
-}
-
-/*****************************************************************************!
- * Function : InitializeSubWindows
- *****************************************************************************/
-void
-DirectoryTreeElement::InitializeSubWindows()
-{
+  if ( NULL == InChild ) {
+    return;
+  }
   
+  childElements << InChild;
 }
 
-/*****************************************************************************!
- * Function : resizeEvent
- *****************************************************************************/
-void
-DirectoryTreeElement::resizeEvent
-(QResizeEvent* InEvent)
-{
-  QSize                                 size;  
-  int                                   width;
-  int                                   height;
-
-  size = InEvent->size();
-  width = size.width();
-  height = size.height();
-  (void)height;
-  (void)width;
-
-  
-}

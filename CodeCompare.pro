@@ -34,10 +34,14 @@ QT                              += core gui widgets
 DEFINES                         += \
 
 SOURCES                         += \
+				   BuildLine.cpp                                \
+				   BuildLineDisplayForm.cpp                     \
+				   BuildTreeLineDialog.cpp                      \
 				   CodeBaseForm.cpp                             \
 				   CodeBaseOpenDialog.cpp                       \
 				   CodeNameWindow.cpp                           \
 				   CodeWindow.cpp                               \
+				   DependencyTreeWidgetItem.cpp                 \
 				   DependencyTreeWindow.cpp                     \
 				   DirectoryReadEntry.cpp                       \
 				   DirectoryTreeElement.cpp                     \
@@ -49,10 +53,14 @@ SOURCES                         += \
 				   trace.cpp                                    \
 
 HEADERS                         += \
+				   BuildLine.h                                  \
+				   BuildLineDisplayForm.h                       \
+				   BuildTreeLineDialog.h                        \
 				   CodeBaseForm.h                               \
 				   CodeBaseOpenDialog.h                         \
 				   CodeNameWindow.h                             \
 				   CodeWindow.h                                 \
+				   DependencyTreeWidgetItem.h                   \
 				   DependencyTreeWindow.h                       \
 				   DirectoryReadEntry.h                         \
 				   DirectoryTreeElement.h                       \

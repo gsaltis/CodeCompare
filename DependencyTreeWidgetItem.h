@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : DirectoryTreeElement.h
- * DATE         : March 30 2023
+ * FILE NAME    : DependencyTreeWidgetItem.h
+ * DATE         : April 03 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _directorytreeelement_h_
-#define _directorytreeelement_h_
+#ifndef _dependencytreewidgetitem_h_
+#define _dependencytreewidgetitem_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -13,41 +13,38 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
-#include <QFrame>
+#include <QTreeWidgetItem>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
+#include "BuildLine.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define DIRECTORY_TREE_ELEMENT_X        200
-#define DIRECTORY_TREE_ELEMENT_Y        200
-#define DIRECTORY_TREE_ELEMENT_WIDTH    200
-#define DIRECTORY_TREE_ELEMENT_HEIGHT   200
 
 /*****************************************************************************!
- * Exported Class : DirectoryTreeElement
+ * Exported Class : DependencyTreeWidgetItem
  *****************************************************************************/
-class DirectoryTreeElement : public QFrame
+class DependencyTreeWidgetItem : public QTreeWidgetItem
 {
-  Q_OBJECT;
-
  //! Constructors
  public :
-  DirectoryTreeElement          (QFileInfo InFileInfo);
+  DependencyTreeWidgetItem      (QStringList InNames, QFileInfo InInfo);
 
  //! Destructor
  public :
-  ~DirectoryTreeElement         ();
+  ~DependencyTreeWidgetItem     ();
 
  //! Public Methods
  public :
-  void
-  AddChild
-  (class DirectoryTreeElement*  InChild);
-  
+  QFileInfo                     GetFileInfo             (void);
+  void                          SetFileInfo             (QFileInfo InFileInfo);
+  void                          ParseMakefileOutput     (QString InMakeOutput);
+  void                          PerformMake             ();
+  BuildLine*                    GetBuildLine            (void);
+
  //! Public Data
  public :
 
@@ -59,13 +56,13 @@ class DirectoryTreeElement : public QFrame
 
  //! Private Methods
  private :
-  void                          initialize              ();
+  void                          ParseMakefileOutputLine (QString InOutputLine);
 
  //! Private Data
  private :
   QFileInfo                     fileInfo;
-  QString                       makefileCommands;
-  QList<DirectoryTreeElement*>  childElements;
+  BuildLine*                    buildLine;
+  QString                       buildString;
   
  //! Public Slots
  public slots :
@@ -78,4 +75,4 @@ class DirectoryTreeElement : public QFrame
 
 };
 
-#endif /* _directorytreeelement_h_*/
+#endif /* _dependencytreewidgetitem_h_*/

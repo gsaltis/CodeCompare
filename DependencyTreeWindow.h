@@ -21,6 +21,8 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
+#include "DirectoryTreeElement.h"
+#include "DependencyTreeWidgetItem.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -65,20 +67,25 @@ class DependencyTreeWindow : public QWidget
   void                          resizeEvent             (QResizeEvent* InEvent);
   void                          ProcessTopLevelDirectory(QFileInfo InInfo, QTreeWidget* InTreeWindow);
   void                          ProcessTreeDirectory    (QFileInfo InInfo, QTreeWidgetItem* InTreeItem);
+  void                          ConnectWindows          ();
+  void                          TreeItemSelected        (DependencyTreeWidgetItem* InItem);
 
  //! Private Data
  private :
   QPushButton*                  CloseButton;
+  QPushButton*                  MakeButton;
   QLineEdit*                    pathLineInput;
   QPushButton*                  pathLineSelectButton;
   QPushButton*                  BrowsePathButton;
   QTreeWidget*                  directoryTreeWindow;
+  DirectoryTreeElement*         topElement;
   
  //! Public Slots
  public slots :
-  void                          SlotCloseButtonPushed   (void);
-  void                          SlotpathLineSelectPushed (void);
-  void                          SlotBrowsePathButtonPushed (void);
+  void                          SlotCloseButtonPushed           (void);
+  void                          SlotMakeButtonPushed            (void);
+  void                          SlotpathLineSelectPushed        (void);
+  void                          SlotBrowsePathButtonPushed      (void);
 
  //! Public Signals
  signals :

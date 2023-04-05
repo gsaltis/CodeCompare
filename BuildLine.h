@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : DirectoryTreeElement.h
- * DATE         : March 30 2023
+ * FILE NAME    : BuildLine.h
+ * DATE         : April 03 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _directorytreeelement_h_
-#define _directorytreeelement_h_
+#ifndef _buildline_h_
+#define _buildline_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -13,7 +13,6 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
-#include <QFrame>
 
 /*****************************************************************************!
  * Local Headers
@@ -22,31 +21,32 @@
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define DIRECTORY_TREE_ELEMENT_X        200
-#define DIRECTORY_TREE_ELEMENT_Y        200
-#define DIRECTORY_TREE_ELEMENT_WIDTH    200
-#define DIRECTORY_TREE_ELEMENT_HEIGHT   200
 
 /*****************************************************************************!
- * Exported Class : DirectoryTreeElement
+ * Exported Class : BuildLine
  *****************************************************************************/
-class DirectoryTreeElement : public QFrame
+class BuildLine : public QWidget
 {
   Q_OBJECT;
 
  //! Constructors
  public :
-  DirectoryTreeElement          (QFileInfo InFileInfo);
+  BuildLine                     ();
 
  //! Destructor
  public :
-  ~DirectoryTreeElement         ();
+  ~BuildLine                    ();
 
  //! Public Methods
  public :
-  void
-  AddChild
-  (class DirectoryTreeElement*  InChild);
+  void                          ParseLine               (QString InBuildLine);
+  QString                       GetTarget               (void);
+  QString                       GetAction               (void);
+  QStringList                   GetSources              (void);
+  QStringList                   GetIncludePaths         (void);
+  QStringList                   GetLibraries            (void);
+  QStringList                   GetLibraryPaths         (void);
+  QStringList                   GetFlags                (void);
   
  //! Public Data
  public :
@@ -59,13 +59,17 @@ class DirectoryTreeElement : public QFrame
 
  //! Private Methods
  private :
-  void                          initialize              ();
 
  //! Private Data
  private :
-  QFileInfo                     fileInfo;
-  QString                       makefileCommands;
-  QList<DirectoryTreeElement*>  childElements;
+  QString                               action;
+  QString                               target;
+  QStringList                           sources;
+  QStringList                           includePaths;
+  QStringList                           flags;
+  QStringList                           libs;
+  QStringList                           libPaths;
+  QString                               lineText;
   
  //! Public Slots
  public slots :
@@ -78,4 +82,4 @@ class DirectoryTreeElement : public QFrame
 
 };
 
-#endif /* _directorytreeelement_h_*/
+#endif /* _buildline_h_*/
