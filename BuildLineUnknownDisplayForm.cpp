@@ -1,5 +1,5 @@
 /*****************************************************************************
- * FILE NAME    : BuildLineDisplayForm.cpp
+ * FILE NAME    : BuildLineUnknownDisplayForm.cpp
  * DATE         : April 05 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
@@ -15,27 +15,29 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildLineDisplayForm.h"
+#include "BuildLineUnknownDisplayForm.h"
 #include "trace.h"
 
 /*****************************************************************************!
- * Function : BuildLineDisplayForm
+ * Function : BuildLineUnknownDisplayForm
  *****************************************************************************/
-BuildLineDisplayForm::BuildLineDisplayForm
-() : QWidget()
+BuildLineUnknownDisplayForm::BuildLineUnknownDisplayForm
+() : BuildLineBaseDisplayForm()
 {
   QPalette pal;
   pal = palette();
   pal.setBrush(QPalette::Window, QBrush(QColor(255, 255, 255)));
   setPalette(pal);
   setAutoFillBackground(true);
+  setFrameShadow(QFrame::Sunken);
+  setFrameShape(QFrame::Box);
   initialize();
 }
 
 /*****************************************************************************!
- * Function : ~BuildLineDisplayForm
+ * Function : ~BuildLineUnknownDisplayForm
  *****************************************************************************/
-BuildLineDisplayForm::~BuildLineDisplayForm
+BuildLineUnknownDisplayForm::~BuildLineUnknownDisplayForm
 ()
 {
 }
@@ -44,8 +46,10 @@ BuildLineDisplayForm::~BuildLineDisplayForm
  * Function : initialize
  *****************************************************************************/
 void
-BuildLineDisplayForm::initialize()
+BuildLineUnknownDisplayForm::initialize()
 {
+  BuildLineBaseDisplayForm::initialize();
+  buildLine = NULL;
   InitializeSubWindows();  
   CreateSubWindows();
 }
@@ -54,70 +58,61 @@ BuildLineDisplayForm::initialize()
  * Function : CreateSubWindows
  *****************************************************************************/
 void
-BuildLineDisplayForm::CreateSubWindows()
+BuildLineUnknownDisplayForm::CreateSubWindows()
 {
-  gccForm = new BuildLineGCCDisplayForm();  
-  gccForm->setParent(this);
-  gccForm->hide();
-  
-  unknownBuildTypeForm = new BuildLineUnknownDisplayForm();
-  unknownBuildTypeForm->setParent(this);
-  unknownBuildTypeForm->hide();
+  int                                   y;
+  y = 30;
+
+  CreateEditSection(unknownTextLabel, QString("Unknown"),
+                    QString(""),
+                    unknownTextEdit,
+                    y);
 }
 
 /*****************************************************************************!
  * Function : InitializeSubWindows
  *****************************************************************************/
 void
-BuildLineDisplayForm::InitializeSubWindows()
+BuildLineUnknownDisplayForm::InitializeSubWindows()
 {
-  gccForm = NULL;
-  unknownBuildTypeForm = NULL;
+  
 }
 
 /*****************************************************************************!
  * Function : resizeEvent
  *****************************************************************************/
 void
-BuildLineDisplayForm::resizeEvent
+BuildLineUnknownDisplayForm::resizeEvent
 (QResizeEvent* InEvent)
 {
   QSize                                 size;  
-  int                                   width;
-  int                                   height;
-
+  int                                   width, height;
+  int                                   elementX, elementW, elementH, elementY;
+  
   size = InEvent->size();
   width = size.width();
   height = size.height();
-  if ( gccForm ) {
-    gccForm->resize(width, height);
-  }
-  if ( unknownBuildTypeForm ) {
-    unknownBuildTypeForm->resize(width, height);
-  }
+  
+  elementX = unknownTextEdit->pos().x();
+  elementY = unknownTextEdit->pos().y();
+  elementH = height;
+  elementH -= elementY;
+  elementH -= 10;
+  elementW = width - (elementX + 10);
+  unknownTextEdit->resize(elementW, elementH);
 }
 
 /*****************************************************************************!
  * Function : SetBuildLine
  *****************************************************************************/
 void
-BuildLineDisplayForm::SetBuildLine
+BuildLineUnknownDisplayForm::SetBuildLine
 (BuildLine* InBuildLine)
 {
-  QString                               action;
-  
+  if ( NULL == InBuildLine ) {
+    return;
+  }
+
   buildLine = InBuildLine;
-  gccForm->hide();
-  unknownBuildTypeForm->hide();
-  if ( buildLine == NULL ) {
-    return;
-  }
-  action = buildLine->GetAction();
-  if ( action == "gcc" ) {
-    gccForm->show();
-    gccForm->SetBuildLine(buildLine);
-    return;
-  }
-  unknownBuildTypeForm->show();
-  unknownBuildTypeForm->SetBuildLine(buildLine);
+  unknownTextEdit->setText(buildLine->GetText());
 }

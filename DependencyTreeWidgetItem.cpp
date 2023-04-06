@@ -24,6 +24,7 @@
 DependencyTreeWidgetItem::DependencyTreeWidgetItem
 (QStringList InNames, QFileInfo InInfo) : QTreeWidgetItem(InNames)
 {
+  buildLine = NULL;
   fileInfo = QFileInfo(InInfo);
 }
 

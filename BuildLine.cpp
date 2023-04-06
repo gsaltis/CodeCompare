@@ -166,3 +166,12 @@ BuildLine::GetFlags
   return flags;
 }
 
+/*****************************************************************************!
+ * Function : GetText
+ *****************************************************************************/
+QString
+BuildLine::GetText
+(void)
+{
+  return QString(lineText);
+}

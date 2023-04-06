@@ -35,7 +35,10 @@ DEFINES                         += \
 
 SOURCES                         += \
 				   BuildLine.cpp                                \
+				   BuildLineBaseDisplayForm.cpp                 \
 				   BuildLineDisplayForm.cpp                     \
+				   BuildLineGCCDisplayForm.cpp                  \
+				   BuildLineUnknownDisplayForm.cpp              \
 				   BuildTreeLineDialog.cpp                      \
 				   CodeBaseForm.cpp                             \
 				   CodeBaseOpenDialog.cpp                       \
@@ -54,7 +57,10 @@ SOURCES                         += \
 
 HEADERS                         += \
 				   BuildLine.h                                  \
+				   BuildLineBaseDisplayForm.h                   \
 				   BuildLineDisplayForm.h                       \
+				   BuildLineGCCDisplayForm.h                    \
+				   BuildLineUnknownDisplayForm.h                \
 				   BuildTreeLineDialog.h                        \
 				   CodeBaseForm.h                               \
 				   CodeBaseOpenDialog.h                         \

@@ -1,74 +1,91 @@
 /*****************************************************************************
- * FILE NAME    : BuildLineDisplayForm.h
- * DATE         : April 05 2023
+ * FILE NAME    : BuildLineBaseDisplayForm.h
+ * DATE         : April 06 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _buildlinedisplayform_h_
-#define _buildlinedisplayform_h_
+#ifndef _buildlinebasedisplayform_h_
+#define _buildlinebasedisplayform_h_
 
 /*****************************************************************************!
  * Global Headers
  *****************************************************************************/
 #include <QtCore>
 #include <QtGui>
+#include <QFrame>
 #include <QWidget>
+#include <QLabel>
+#include <QScrollArea>
+#include <QTextEdit>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildLineGCCDisplayForm.h"
-#include "BuildLineUnknownDisplayForm.h"
-#include "BuildLine.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define BUILD_LINE_DISPLAY_FORM_X       200
-#define BUILD_LINE_DISPLAY_FORM_Y       200
-#define BUILD_LINE_DISPLAY_FORM_WIDTH   200
-#define BUILD_LINE_DISPLAY_FORM_HEIGHT  200
+#define BUILD_LINE_BASE_DISPLAY_FORM_X  200
+#define BUILD_LINE_BASE_DISPLAY_FORM_Y  200
+#define BUILD_LINE_BASE_DISPLAY_FORM_WIDTH 200
+#define BUILD_LINE_BASE_DISPLAY_FORM_HEIGHT 200
 
 /*****************************************************************************!
- * Exported Class : BuildLineDisplayForm
+ * Exported Class : BuildLineBaseDisplayForm
  *****************************************************************************/
-class BuildLineDisplayForm : public QWidget
+class BuildLineBaseDisplayForm : public QFrame
 {
   Q_OBJECT;
 
  //! Constructors
  public :
-  BuildLineDisplayForm          ();
+  BuildLineBaseDisplayForm      ();
 
  //! Destructor
  public :
-  ~BuildLineDisplayForm         ();
+  ~BuildLineBaseDisplayForm     ();
 
  //! Public Methods
  public :
-  void                          SetBuildLine            (BuildLine* InBuildLine);
 
  //! Public Data
  public :
 
  //! Protected Methods
  protected :
+  void
+  CreateGroupSection
+  (QLabel* &InNameLabel, QString InName, QStringList sl, QFrame* &InNameAreas, QScrollArea* &InScrollArea, int &InY);
 
+  void
+  CreateLabel
+  (QLabel* &InLabel, QLabel* &InTextLabel, QString InName, QString InNameText, int &InY);
+
+  void
+  CreateEditSection
+  (QLabel* &InNameLabel, QString InName, QString InText, QTextEdit* &InTextEdit, int &InY);
+
+  void
+  initialize
+  ();
+  
  //! Protected Data
  protected :
+  int                                   labelX;
+  int                                   labelWidth;
+  int                                   labelHeight;
+  int                                   elementX;
+  int                                   elementW;
+  int                                   ySkip;
 
  //! Private Methods
  private :
-  void                          initialize              ();
   void                          CreateSubWindows        ();
   void                          InitializeSubWindows    ();
   void                          resizeEvent             (QResizeEvent* InEvent);
 
  //! Private Data
  private :
-  BuildLineGCCDisplayForm*      gccForm;
-  BuildLineUnknownDisplayForm*  unknownBuildTypeForm;
-  BuildLine*                    buildLine;
 
  //! Public Slots
  public slots :
@@ -81,4 +98,4 @@ class BuildLineDisplayForm : public QWidget
 
 };
 
-#endif /* _buildlinedisplayform_h_*/
+#endif /* _buildlinebasedisplayform_h_*/

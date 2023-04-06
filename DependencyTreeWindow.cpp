@@ -114,7 +114,14 @@ DependencyTreeWindow::CreateSubWindows()
   directoryTreeWindow->setFrameShape(QFrame::Box);
   directoryTreeWindow->setLineWidth(1);
   directoryTreeWindow->setAutoFillBackground(true);
+  connect(directoryTreeWindow,
+          SIGNAL(itemClicked(QTreeWidgetItem*, int)),
+          this,
+          SLOT(SlotTreeWidgetItemSelected(QTreeWidgetItem*, int)));
 
+  buildLineDisplayWindow = new BuildLineDisplayForm();
+  buildLineDisplayWindow->setParent(this);
+  
   QBrush fg(Qt::blue);
   QBrush bg(Qt::darkGray);
 
@@ -175,7 +182,9 @@ DependencyTreeWindow::resizeEvent
   int                                   directoryTreeWindowW, directoryTreeWindowH;
   int                                   makeButtonX, makeButtonY;
   int                                   makeButtonW, makeButtonH;
-  
+  int                                   buildLineDisplayWindowX, buildLineDisplayWindowY;
+  int                                   buildLineDisplayWindowH, buildLineDisplayWindowW;
+
   size = InEvent->size();
   width = size.width();
   height = size.height();
@@ -208,7 +217,12 @@ DependencyTreeWindow::resizeEvent
   directoryTreeWindowY = pathLineInputY + pathLineInputH + 10;
   directoryTreeWindowX = 10;
   directoryTreeWindowH = height - (pathLineInputH + browsePathButtonH + 40);
-  directoryTreeWindowW = width - 20;
+  directoryTreeWindowW = (width - 30) * 5 / 8 ;
+
+  buildLineDisplayWindowX = directoryTreeWindowX + directoryTreeWindowW + 10;
+  buildLineDisplayWindowY = pathLineInputY + pathLineInputH + 10;
+  buildLineDisplayWindowW = (width - 30) - directoryTreeWindowW;
+  buildLineDisplayWindowH = directoryTreeWindowH;
   
   CloseButton->move(closeButtonX, closeButtonY);
   CloseButton->resize(closeButtonW, closeButtonH);
@@ -225,6 +239,9 @@ DependencyTreeWindow::resizeEvent
   BrowsePathButton->move(browsePathButtonX, browsePathButtonY);
   BrowsePathButton->resize(browsePathButtonW, browsePathButtonH);
 
+  buildLineDisplayWindow->move(buildLineDisplayWindowX, buildLineDisplayWindowY);
+  buildLineDisplayWindow->resize(buildLineDisplayWindowW, buildLineDisplayWindowH);
+  
   directoryTreeWindow->move(directoryTreeWindowX, directoryTreeWindowY);
   directoryTreeWindow->resize(directoryTreeWindowW, directoryTreeWindowH);
 }
@@ -313,6 +330,7 @@ DependencyTreeWindow::ProcessTopLevelDirectory
     font = treeItem->font(0);
     font.setBold(false);
     treeItem->setFont(0, font);
+    treeItem->PerformMake();
   }
   InTreeWindow->addTopLevelItem(treeItem);
   ProcessTreeDirectory(InInfo, treeItem);
@@ -331,7 +349,6 @@ DependencyTreeWindow::ProcessTreeDirectory
 
   QFileInfoList                         list = dir.entryInfoList();
   DependencyTreeWidgetItem*             treeItem;
-  QBrush                                fg(Qt::gray);
   
   for (auto i = list.begin() ; i != list.end(); i++ ) {
     QFileInfo                           info = *i;
@@ -342,6 +359,7 @@ DependencyTreeWindow::ProcessTreeDirectory
     makeFileName = fullPath + QString("/Makefile");
     QFileInfo                             makeFileInfo(makeFileName);
 
+    QBrush                                fg(Qt::gray);
     if ( makeFileInfo.exists() ) {
       fg.setColor(Qt::black);
     }
@@ -352,6 +370,7 @@ DependencyTreeWindow::ProcessTreeDirectory
     InTreeItem->addChild(treeItem);
     if ( makeFileInfo.exists() ) {
       ProcessTreeDirectory(info, treeItem);
+      treeItem->PerformMake();
     }
   }
 }
@@ -365,8 +384,22 @@ DependencyTreeWindow::TreeItemSelected
 {
   BuildTreeLineDialog*                  dialog;
   BuildLine*                            buildLine;
-  InItem->PerformMake();
   buildLine = InItem->GetBuildLine();
   dialog = new BuildTreeLineDialog(buildLine);
   (void)dialog->exec();
+}
+
+/*****************************************************************************!
+ * Function : SlotTreeWidgetItemSelected
+ *****************************************************************************/
+void
+DependencyTreeWindow::SlotTreeWidgetItemSelected
+(QTreeWidgetItem* InItem, int)
+{
+  DependencyTreeWidgetItem*             treeItem;
+  BuildLine*                            buildLine;
+  
+  treeItem = (DependencyTreeWidgetItem*)InItem;
+  buildLine = treeItem->GetBuildLine();
+  buildLineDisplayWindow->SetBuildLine(buildLine);
 }

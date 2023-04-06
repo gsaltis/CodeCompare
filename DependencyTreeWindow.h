@@ -23,6 +23,7 @@
  *****************************************************************************/
 #include "DirectoryTreeElement.h"
 #include "DependencyTreeWidgetItem.h"
+#include "BuildLineDisplayForm.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -79,6 +80,7 @@ class DependencyTreeWindow : public QWidget
   QPushButton*                  BrowsePathButton;
   QTreeWidget*                  directoryTreeWindow;
   DirectoryTreeElement*         topElement;
+  BuildLineDisplayForm*         buildLineDisplayWindow;
   
  //! Public Slots
  public slots :
@@ -86,6 +88,7 @@ class DependencyTreeWindow : public QWidget
   void                          SlotMakeButtonPushed            (void);
   void                          SlotpathLineSelectPushed        (void);
   void                          SlotBrowsePathButtonPushed      (void);
+  void                          SlotTreeWidgetItemSelected      (QTreeWidgetItem* InItem, int InColumn);
 
  //! Public Signals
  signals :
