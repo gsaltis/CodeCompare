@@ -1,5 +1,5 @@
 /*****************************************************************************
- * FILE NAME    : BuildLineDisplayForm.cpp
+ * FILE NAME    : BuildLineLNDisplayForm.cpp
  * DATE         : April 05 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
@@ -15,30 +15,30 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildLineDisplayForm.h"
-#include "trace.h"
-#include "BuildCompileLine.h"
+#include "BuildLineLNDisplayForm.h"
 #include "BuildLNLine.h"
-#include "BuildLine.h"
+#include "trace.h"
 
 /*****************************************************************************!
- * Function : BuildLineDisplayForm
+ * Function : BuildLineLNDisplayForm
  *****************************************************************************/
-BuildLineDisplayForm::BuildLineDisplayForm
-() : QWidget()
+BuildLineLNDisplayForm::BuildLineLNDisplayForm
+() : BuildLineBaseDisplayForm()
 {
   QPalette pal;
   pal = palette();
   pal.setBrush(QPalette::Window, QBrush(QColor(255, 255, 255)));
   setPalette(pal);
   setAutoFillBackground(true);
+  setFrameShadow(QFrame::Sunken);
+  setFrameShape(QFrame::Box);
   initialize();
 }
 
 /*****************************************************************************!
- * Function : ~BuildLineDisplayForm
+ * Function : ~BuildLineLNDisplayForm
  *****************************************************************************/
-BuildLineDisplayForm::~BuildLineDisplayForm
+BuildLineLNDisplayForm::~BuildLineLNDisplayForm
 ()
 {
 }
@@ -47,8 +47,10 @@ BuildLineDisplayForm::~BuildLineDisplayForm
  * Function : initialize
  *****************************************************************************/
 void
-BuildLineDisplayForm::initialize()
+BuildLineLNDisplayForm::initialize()
 {
+  BuildLineBaseDisplayForm::initialize();
+  buildLine = NULL;
   InitializeSubWindows();  
   CreateSubWindows();
 }
@@ -57,91 +59,80 @@ BuildLineDisplayForm::initialize()
  * Function : CreateSubWindows
  *****************************************************************************/
 void
-BuildLineDisplayForm::CreateSubWindows()
+BuildLineLNDisplayForm::CreateSubWindows()
 {
-  gccForm = new BuildLineGCCDisplayForm();  
-  gccForm->setParent(this);
-  gccForm->hide();
+  int                                   y;
+  y = 30;
+
+  //!
+  CreateLabel(actionNameLabel, actionLabel, "Action", QString(), y);
+
+  //!
+  CreateLabel(targetNameLabel, targetLabel, "Target", QString(), y);
   
-  lnForm = new BuildLineLNDisplayForm();  
-  lnForm->setParent(this);
-  lnForm->hide();
+  //!
+  CreateLabel(linkNameLabel, linkLabel, "Line", QString(), y);
   
-  unknownBuildTypeForm = new BuildLineUnknownDisplayForm();
-  unknownBuildTypeForm->setParent(this);
-  unknownBuildTypeForm->hide();
+  //!
+  CreateGroupSection(flagsNameLabel, "Flags", QStringList(),
+                     flags, flagsScrollArea, y);  
 }
 
 /*****************************************************************************!
  * Function : InitializeSubWindows
  *****************************************************************************/
 void
-BuildLineDisplayForm::InitializeSubWindows()
+BuildLineLNDisplayForm::InitializeSubWindows()
 {
-  gccForm = NULL;
-  lnForm = NULL;
-  unknownBuildTypeForm = NULL;
+  
 }
 
 /*****************************************************************************!
  * Function : resizeEvent
  *****************************************************************************/
 void
-BuildLineDisplayForm::resizeEvent
+BuildLineLNDisplayForm::resizeEvent
 (QResizeEvent* InEvent)
 {
   QSize                                 size;  
+  int                                   elementW, elementH;
   int                                   width;
-  int                                   height;
-
+  
   size = InEvent->size();
   width = size.width();
-  height = size.height();
-  if ( gccForm ) {
-    gccForm->resize(width, height);
-  }
-  if ( lnForm ) {
-    lnForm->resize(width, height);
-  }
-  if ( unknownBuildTypeForm ) {
-    unknownBuildTypeForm->resize(width, height);
-  }
+  elementW = width - (elementX + 10);
+  
+  elementH = flagsScrollArea->size().height();
+  flagsScrollArea->resize(elementW, elementH);
+  elementH = flags->size().height();
+  flags->resize(elementW-3, elementH);
+
+  elementH = actionLabel->size().height();
+  actionLabel->resize(elementW, elementH);
+  
+  elementH = targetLabel->size().height();
+  targetLabel->resize(elementW, elementH);
+
+  elementH = linkLabel->size().height();
+  linkLabel->resize(elementW, elementH);
 }
 
 /*****************************************************************************!
  * Function : SetBuildLine
  *****************************************************************************/
 void
-BuildLineDisplayForm::SetBuildLine
+BuildLineLNDisplayForm::SetBuildLine
 (BuildLine* InBuildLine)
 {
-  QString                               action;
-  BuildLine::Type                       lineType;
+  BuildLNLine*                          lnBuildLine;
   
+  if ( NULL == InBuildLine ) {
+    return;
+  }
+
   buildLine = InBuildLine;
-  gccForm->hide();
-  lnForm->hide();
-  unknownBuildTypeForm->hide();
-
-  lineType = buildLine->GetType();
-  if ( buildLine == NULL ) {
-    return;
-  }
-  if ( lineType == BuildLine::TypeCompile ) {
-    BuildCompileLine*                   compileLine;
-
-    compileLine = (BuildCompileLine*)buildLine;
-    gccForm->show();
-    gccForm->SetBuildLine(compileLine);
-    return;
-  }
-  if ( lineType == BuildLine::TypeLN ) {
-    BuildLNLine*                        lnLine;
-    lnLine = (BuildLNLine*)buildLine;
-    lnForm->show();
-    lnForm->SetBuildLine(lnLine);
-    return;
-  }
-  unknownBuildTypeForm->show();
-  unknownBuildTypeForm->SetBuildLine(buildLine);
+  lnBuildLine = (BuildLNLine*)buildLine;
+  actionLabel->setText(lnBuildLine->GetAction());
+  linkLabel->setText(lnBuildLine->GetLinkName());
+  targetLabel->setText(lnBuildLine->GetTarget());
 }

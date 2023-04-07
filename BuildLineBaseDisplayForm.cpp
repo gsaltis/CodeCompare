@@ -48,7 +48,6 @@ BuildLineBaseDisplayForm::~BuildLineBaseDisplayForm
 void
 BuildLineBaseDisplayForm::initialize()
 {
-  TRACE_FUNCTION_START();
   labelWidth = 150;
   labelHeight = 20;
   labelX = 10;
@@ -58,7 +57,6 @@ BuildLineBaseDisplayForm::initialize()
   
   InitializeSubWindows();  
   CreateSubWindows();
-  TRACE_FUNCTION_END();
 }
 
 /*****************************************************************************!
@@ -188,7 +186,6 @@ BuildLineBaseDisplayForm::CreateLabel
   InTextLabel->move(elementX, InY);
   InTextLabel->setAlignment(Qt::AlignLeft);
 
-  TRACE_FUNCTION_INT(ySkip);
   InY += ySkip;
 }
 

@@ -37,40 +37,47 @@ class BuildLine : public QWidget
  public :
   ~BuildLine                    ();
 
+  enum Type {
+    TypeNone,
+    TypeCompile,
+    TypeLN,
+    TypeUnknown
+  };
+  
  //! Public Methods
  public :
-  void                          ParseLine               (QString InBuildLine);
-  QString                       GetTarget               (void);
-  QString                       GetAction               (void);
-  QStringList                   GetSources              (void);
-  QStringList                   GetIncludePaths         (void);
-  QStringList                   GetLibraries            (void);
-  QStringList                   GetLibraryPaths         (void);
-  QStringList                   GetFlags                (void);
-  QString                       GetText                 (void);
+  Type
+  GetType
+  ();
+
+  virtual void
+  ParseLine
+  (QString InBuildLine) = 0;
+
+  QString
+  GetText
+  (void);
+
+  static QStringList
+  GetLineElements
+  (QString InBuildLine);
   
  //! Public Data
  public :
-
+  
  //! Protected Methods
  protected :
 
  //! Protected Data
  protected :
+  Type                                  buildType;
+  QString                               lineText;
 
  //! Private Methods
  private :
 
  //! Private Data
  private :
-  QString                               action;
-  QString                               target;
-  QStringList                           sources;
-  QStringList                           includePaths;
-  QStringList                           flags;
-  QStringList                           libs;
-  QStringList                           libPaths;
-  QString                               lineText;
   
  //! Public Slots
  public slots :

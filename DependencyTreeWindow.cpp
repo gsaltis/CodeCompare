@@ -85,14 +85,6 @@ DependencyTreeWindow::CreateSubWindows()
   CloseButton->resize(100,20);
   connect(CloseButton, SIGNAL(pressed()), this, SLOT(SlotCloseButtonPushed()));
 
-  //! Create the CloseButton button  
-  MakeButton = new QPushButton();
-  MakeButton->setParent(this);
-  MakeButton->setText("Make");
-  MakeButton->move(10, 10);
-  MakeButton->resize(100,20);
-  connect(MakeButton, SIGNAL(pressed()), this, SLOT(SlotMakeButtonPushed()));
-  
     //! Create pathLineInput LineEdit
   pathLineInput = new QLineEdit();
   pathLineInput->setParent(this);
@@ -180,8 +172,6 @@ DependencyTreeWindow::resizeEvent
   int                                   browsePathButtonW, browsePathButtonH;
   int                                   directoryTreeWindowX, directoryTreeWindowY;
   int                                   directoryTreeWindowW, directoryTreeWindowH;
-  int                                   makeButtonX, makeButtonY;
-  int                                   makeButtonW, makeButtonH;
   int                                   buildLineDisplayWindowX, buildLineDisplayWindowY;
   int                                   buildLineDisplayWindowH, buildLineDisplayWindowW;
 
@@ -193,11 +183,6 @@ DependencyTreeWindow::resizeEvent
   closeButtonH = 20;
   closeButtonX = width - (closeButtonW + 10);
   closeButtonY = height- (closeButtonH + 10);
-
-  makeButtonW = 60;
-  makeButtonH = 20;
-  makeButtonX = width - (closeButtonW + makeButtonW + 20);
-  makeButtonY = height- (makeButtonH + 10);
 
   pathLineInputX = 10;
   pathLineInputY = 10;
@@ -227,9 +212,6 @@ DependencyTreeWindow::resizeEvent
   CloseButton->move(closeButtonX, closeButtonY);
   CloseButton->resize(closeButtonW, closeButtonH);
 
-  MakeButton->move(makeButtonX, makeButtonY);
-  MakeButton->resize(makeButtonW, makeButtonH);
-
   pathLineInput->move(pathLineInputX, pathLineInputY);
   pathLineInput->resize(pathLineInputW, pathLineInputH);
 
@@ -253,18 +235,6 @@ void
 DependencyTreeWindow::SlotCloseButtonPushed(void)
 {
   emit SignalWindowClose();
-}
-
-/*****************************************************************************!
- * Function : SlotMakeButtonPushed
- *****************************************************************************/
-void
-DependencyTreeWindow::SlotMakeButtonPushed(void)
-{
-  DependencyTreeWidgetItem*             item;
-  
-  item = (DependencyTreeWidgetItem*)directoryTreeWindow->currentItem();
-  TreeItemSelected(item);
 }
 
 /*****************************************************************************!
@@ -373,20 +343,6 @@ DependencyTreeWindow::ProcessTreeDirectory
       treeItem->PerformMake();
     }
   }
-}
-
-/*****************************************************************************!
- * Function : TreeItemSelected
- *****************************************************************************/
-void
-DependencyTreeWindow::TreeItemSelected
-(DependencyTreeWidgetItem* InItem)
-{
-  BuildTreeLineDialog*                  dialog;
-  BuildLine*                            buildLine;
-  buildLine = InItem->GetBuildLine();
-  dialog = new BuildTreeLineDialog(buildLine);
-  (void)dialog->exec();
 }
 
 /*****************************************************************************!

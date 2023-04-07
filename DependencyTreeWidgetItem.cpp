@@ -16,6 +16,9 @@
  * Local Headers
  *****************************************************************************/
 #include "DependencyTreeWidgetItem.h"
+#include "BuildCompileLine.h"
+#include "BuildLNLine.h"
+#include "BuildUnknownLine.h"
 #include "trace.h"
 
 /*****************************************************************************!
@@ -80,8 +83,33 @@ void
 DependencyTreeWidgetItem::ParseMakefileOutputLine
 (QString InOutputLine)
 {
-  buildLine = new BuildLine();
-  buildLine->ParseLine(InOutputLine);
+  QStringList                           elements;
+  
+  buildLine = NULL;
+  elements = BuildLine::GetLineElements(InOutputLine);
+  if ( 0 == elements.count() ) {
+    return;
+  }
+  if ( elements[0] == "gcc" ) {
+    BuildCompileLine*                   compileBuildLine;
+    
+    compileBuildLine = new BuildCompileLine();
+    compileBuildLine->ParseLine(InOutputLine);
+    buildLine = compileBuildLine;
+    return;
+  }
+  if ( elements[0] == "ln" ) {
+    BuildLNLine*                        line;
+    line = new BuildLNLine();
+    line->ParseLine(InOutputLine);
+    buildLine = line;
+    return;
+  }
+  BuildUnknownLine*                     unknownBuildLine;
+
+  unknownBuildLine = new BuildUnknownLine();
+  unknownBuildLine->ParseLine(InOutputLine);
+  buildLine = unknownBuildLine;
 }
 
 /*****************************************************************************!

@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : BuildLineDisplayForm.h
+ * FILE NAME    : BuildLineLNDisplayForm.h
  * DATE         : April 05 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _buildlinedisplayform_h_
-#define _buildlinedisplayform_h_
+#ifndef _buildlinelndisplayform_h_
+#define _buildlinelndisplayform_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -13,37 +13,39 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
+#include <QLabel>
+#include <QListWidget>
+#include <QScrollArea>
+#include <QFrame>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildLineGCCDisplayForm.h"
-#include "BuildLineLNDisplayForm.h"
-#include "BuildLineUnknownDisplayForm.h"
 #include "BuildLine.h"
+#include "BuildLineBaseDisplayForm.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define BUILD_LINE_DISPLAY_FORM_X       200
-#define BUILD_LINE_DISPLAY_FORM_Y       200
-#define BUILD_LINE_DISPLAY_FORM_WIDTH   200
-#define BUILD_LINE_DISPLAY_FORM_HEIGHT  200
+#define BUILD_LINE_GCC_DISPLAY_FORM_X       200
+#define BUILD_LINE_GCC_DISPLAY_FORM_Y       200
+#define BUILD_LINE_GCC_DISPLAY_FORM_WIDTH   200
+#define BUILD_LINE_GCC_DISPLAY_FORM_HEIGHT  200
 
 /*****************************************************************************!
- * Exported Class : BuildLineDisplayForm
+ * Exported Class : BuildLineLNDisplayForm
  *****************************************************************************/
-class BuildLineDisplayForm : public QWidget
+class BuildLineLNDisplayForm : public BuildLineBaseDisplayForm
 {
   Q_OBJECT;
 
  //! Constructors
  public :
-  BuildLineDisplayForm          ();
+  BuildLineLNDisplayForm        ();
 
  //! Destructor
  public :
-  ~BuildLineDisplayForm         ();
+  ~BuildLineLNDisplayForm       ();
 
  //! Public Methods
  public :
@@ -67,11 +69,18 @@ class BuildLineDisplayForm : public QWidget
 
  //! Private Data
  private :
-  BuildLineGCCDisplayForm*      gccForm;
-  BuildLineUnknownDisplayForm*  unknownBuildTypeForm;
-  BuildLineLNDisplayForm*       lnForm;
   BuildLine*                    buildLine;
+  QLabel*                       actionNameLabel;
+  QLabel*                       targetNameLabel;
+  QLabel*                       linkNameLabel;
+  QLabel*                       flagsNameLabel;
 
+  QLabel*                       actionLabel;
+  QLabel*                       targetLabel;
+  QLabel*                       linkLabel;
+  QFrame*                       flags;
+  QScrollArea*                  flagsScrollArea;
+  
  //! Public Slots
  public slots :
 
@@ -83,4 +92,4 @@ class BuildLineDisplayForm : public QWidget
 
 };
 
-#endif /* _buildlinedisplayform_h_*/
+#endif /* _buildlinelndisplayform_h_*/

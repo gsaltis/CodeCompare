@@ -1,6 +1,6 @@
 /*****************************************************************************
- * FILE NAME    : BuildLine.cpp
- * DATE         : April 03 2023
+ * FILE NAME    : BuildUnknownLine.cpp
+ * DATE         : April 06 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
@@ -15,54 +15,33 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildLine.h"
+#include "BuildUnknownLine.h"
 
 /*****************************************************************************!
- * Function : BuildLine
+ * Function : BuildUnknownLine
  *****************************************************************************/
-BuildLine::BuildLine
-() : QWidget()
+BuildUnknownLine::BuildUnknownLine
+() : BuildLine()
 {
-  buildType = TypeNone;
+  buildType = BuildLine::TypeUnknown;
 }
 
 /*****************************************************************************!
- * Function : ~BuildLine
+ * Function : ~BuildUnknownLine
  *****************************************************************************/
-BuildLine::~BuildLine
+BuildUnknownLine::~BuildUnknownLine
 ()
 {
 }
 
 /*****************************************************************************!
- * Function : GetType
+ * Function : 
  *****************************************************************************/
-BuildLine::Type
-BuildLine::GetType
-()
-{
-  return buildType;
-}
-  
-/*****************************************************************************!
- * Function : GetText
- *****************************************************************************/
-QString
-BuildLine::GetText
-(void)
-{
-  return QString(lineText);
-}
-
-/*****************************************************************************!
- * Function : GetLineElements
- *****************************************************************************/
-QStringList
-BuildLine::GetLineElements
+void
+BuildUnknownLine::ParseLine
 (QString InBuildLine)
 {
-  QStringList                           elements;
-
-  elements = InBuildLine.split(QRegularExpression("\\s+|\n"));
-  return elements;
+  lineText = QString(InBuildLine);
 }
+
+

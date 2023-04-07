@@ -34,12 +34,15 @@ QT                              += core gui widgets
 DEFINES                         += \
 
 SOURCES                         += \
-				   BuildLine.cpp                                \
+				   BuildCompileLine.cpp                         \
+                                   BuildLNLine.cpp                              \
+                                   BuildLine.cpp                                \
 				   BuildLineBaseDisplayForm.cpp                 \
 				   BuildLineDisplayForm.cpp                     \
 				   BuildLineGCCDisplayForm.cpp                  \
+				   BuildLineLNDisplayForm.cpp                   \
 				   BuildLineUnknownDisplayForm.cpp              \
-				   BuildTreeLineDialog.cpp                      \
+				   BuildUnknownLine.cpp                         \
 				   CodeBaseForm.cpp                             \
 				   CodeBaseOpenDialog.cpp                       \
 				   CodeNameWindow.cpp                           \
@@ -56,12 +59,15 @@ SOURCES                         += \
 				   trace.cpp                                    \
 
 HEADERS                         += \
+				   BuildCompileLine.h                           \
+                                   BuildLNLine.h                                \
 				   BuildLine.h                                  \
 				   BuildLineBaseDisplayForm.h                   \
 				   BuildLineDisplayForm.h                       \
 				   BuildLineGCCDisplayForm.h                    \
+				   BuildLineLNDisplayForm.h                     \
 				   BuildLineUnknownDisplayForm.h                \
-				   BuildTreeLineDialog.h                        \
+				   BuildUnknownLine.h                           \
 				   CodeBaseForm.h                               \
 				   CodeBaseOpenDialog.h                         \
 				   CodeNameWindow.h                             \

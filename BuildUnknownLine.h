@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : BuildLineDisplayForm.h
- * DATE         : April 05 2023
+ * FILE NAME    : BuildUnknownLine.h
+ * DATE         : April 06 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _buildlinedisplayform_h_
-#define _buildlinedisplayform_h_
+#ifndef _buildunknownline_h_
+#define _buildunknownline_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -17,37 +17,33 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildLineGCCDisplayForm.h"
-#include "BuildLineLNDisplayForm.h"
-#include "BuildLineUnknownDisplayForm.h"
 #include "BuildLine.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define BUILD_LINE_DISPLAY_FORM_X       200
-#define BUILD_LINE_DISPLAY_FORM_Y       200
-#define BUILD_LINE_DISPLAY_FORM_WIDTH   200
-#define BUILD_LINE_DISPLAY_FORM_HEIGHT  200
 
 /*****************************************************************************!
- * Exported Class : BuildLineDisplayForm
+ * Exported Class : BuildUnknownLine
  *****************************************************************************/
-class BuildLineDisplayForm : public QWidget
+class BuildUnknownLine : public BuildLine
 {
   Q_OBJECT;
 
  //! Constructors
  public :
-  BuildLineDisplayForm          ();
+  BuildUnknownLine              ();
 
  //! Destructor
  public :
-  ~BuildLineDisplayForm         ();
+  ~BuildUnknownLine             ();
 
  //! Public Methods
  public :
-  void                          SetBuildLine            (BuildLine* InBuildLine);
+  void
+  ParseLine
+  (QString InBuildLine);
+
 
  //! Public Data
  public :
@@ -60,17 +56,9 @@ class BuildLineDisplayForm : public QWidget
 
  //! Private Methods
  private :
-  void                          initialize              ();
-  void                          CreateSubWindows        ();
-  void                          InitializeSubWindows    ();
-  void                          resizeEvent             (QResizeEvent* InEvent);
 
  //! Private Data
  private :
-  BuildLineGCCDisplayForm*      gccForm;
-  BuildLineUnknownDisplayForm*  unknownBuildTypeForm;
-  BuildLineLNDisplayForm*       lnForm;
-  BuildLine*                    buildLine;
 
  //! Public Slots
  public slots :
@@ -83,4 +71,4 @@ class BuildLineDisplayForm : public QWidget
 
 };
 
-#endif /* _buildlinedisplayform_h_*/
+#endif /* _buildunknownline_h_*/

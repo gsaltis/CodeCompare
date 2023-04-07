@@ -16,6 +16,7 @@
  * Local Headers
  *****************************************************************************/
 #include "BuildLineGCCDisplayForm.h"
+#include "BuildCompileLine.h"
 #include "trace.h"
 
 /*****************************************************************************!
@@ -155,11 +156,14 @@ void
 BuildLineGCCDisplayForm::SetBuildLine
 (BuildLine* InBuildLine)
 {
+  BuildCompileLine*                     compileBuildLine;
+  
   if ( NULL == InBuildLine ) {
     return;
   }
 
   buildLine = InBuildLine;
-  actionLabel->setText(buildLine->GetAction());
-  targetLabel->setText(buildLine->GetTarget());
+  compileBuildLine = (BuildCompileLine*)buildLine;
+  actionLabel->setText(compileBuildLine->GetAction());
+  targetLabel->setText(compileBuildLine->GetTarget());
 }
