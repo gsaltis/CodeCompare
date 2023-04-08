@@ -19,6 +19,7 @@
 #include "BuildCompileLine.h"
 #include "BuildLNLine.h"
 #include "BuildUnknownLine.h"
+#include "BuildForLine.h"
 #include "trace.h"
 
 /*****************************************************************************!
@@ -28,6 +29,7 @@ DependencyTreeWidgetItem::DependencyTreeWidgetItem
 (QStringList InNames, QFileInfo InInfo) : QTreeWidgetItem(InNames)
 {
   buildLine = NULL;
+  buildLines = new BuildLineSet();
   fileInfo = QFileInfo(InInfo);
 }
 
@@ -69,47 +71,61 @@ DependencyTreeWidgetItem::ParseMakefileOutput
 {
   QStringList                           lines;
   int                                   linesCount;
-
-  lines = InMakeOutput.split("\n");
+  BuildLine*                            line;
+  
+  lines = InMakeOutput.split("\n", Qt::SkipEmptyParts);
   linesCount = lines.count();
 
-  ParseMakefileOutputLine(lines[linesCount-2]);
+  for ( int i = 0 ; i < linesCount ; i++ ) {
+    line = ParseMakefileOutputLine(lines[i]);
+    buildLines->AppendLine(line);
+  }
+  buildLine = buildLines->GetLineByIndex(0);
 }
 
 /*****************************************************************************!
  * Function : ParseMakefileOutputLine
  *****************************************************************************/
-void
+BuildLine*
 DependencyTreeWidgetItem::ParseMakefileOutputLine
 (QString InOutputLine)
 {
   QStringList                           elements;
+  BuildLine*                            outputLine;
   
-  buildLine = NULL;
+  outputLine = NULL;
   elements = BuildLine::GetLineElements(InOutputLine);
   if ( 0 == elements.count() ) {
-    return;
+    return outputLine;
   }
   if ( elements[0] == "gcc" ) {
     BuildCompileLine*                   compileBuildLine;
     
     compileBuildLine = new BuildCompileLine();
     compileBuildLine->ParseLine(InOutputLine);
-    buildLine = compileBuildLine;
-    return;
+    outputLine = compileBuildLine;
+    return outputLine;
   }
   if ( elements[0] == "ln" ) {
     BuildLNLine*                        line;
     line = new BuildLNLine();
     line->ParseLine(InOutputLine);
-    buildLine = line;
-    return;
+    outputLine = line;
+    return outputLine;
+  }
+  if ( elements[0] == "for" ) {
+    BuildForLine*                       line;
+    line = new BuildForLine();
+    line->ParseLine(InOutputLine);
+    outputLine = line;
+    return outputLine;
   }
   BuildUnknownLine*                     unknownBuildLine;
 
   unknownBuildLine = new BuildUnknownLine();
   unknownBuildLine->ParseLine(InOutputLine);
-  buildLine = unknownBuildLine;
+  outputLine = unknownBuildLine;
+  return outputLine;
 }
 
 /*****************************************************************************!
@@ -145,4 +161,14 @@ BuildLine*
 DependencyTreeWidgetItem::GetBuildLine(void)
 {
   return buildLine;
+}
+
+/*****************************************************************************!
+ * Function : GetBuildLines
+ *****************************************************************************/
+BuildLineSet*
+DependencyTreeWidgetItem::GetBuildLines
+(void)
+{
+  return buildLines;
 }

@@ -113,6 +113,11 @@ DependencyTreeWindow::CreateSubWindows()
 
   buildLineDisplayWindow = new BuildLineDisplayForm();
   buildLineDisplayWindow->setParent(this);
+
+  connect(this,
+          SIGNAL(SignalBuildLinesSelected(BuildLineSet*)),
+          buildLineDisplayWindow,
+          SLOT(SlotBuildLinesSelected(BuildLineSet*)));
   
   QBrush fg(Qt::blue);
   QBrush bg(Qt::darkGray);
@@ -354,8 +359,12 @@ DependencyTreeWindow::SlotTreeWidgetItemSelected
 {
   DependencyTreeWidgetItem*             treeItem;
   BuildLine*                            buildLine;
+  BuildLineSet*                         buildLines;
   
   treeItem = (DependencyTreeWidgetItem*)InItem;
   buildLine = treeItem->GetBuildLine();
   buildLineDisplayWindow->SetBuildLine(buildLine);
+  buildLines = treeItem->GetBuildLines();
+  buildLineDisplayWindow->SlotBuildLinesSelected(buildLines);
+  emit SignalBuildLinesSelected(buildLines);
 }

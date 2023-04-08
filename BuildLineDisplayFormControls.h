@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : BuildLineDisplayForm.h
- * DATE         : April 05 2023
+ * FILE NAME    : BuildLineDisplayFormControls.h
+ * DATE         : April 07 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _buildlinedisplayform_h_
-#define _buildlinedisplayform_h_
+#ifndef _buildlinedisplayformcontrols_h_
+#define _buildlinedisplayformcontrols_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -13,44 +13,40 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
+#include <QFrame>
+#include <QPushButton>
+#include <QLabel>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildLineGCCDisplayForm.h"
-#include "BuildLineLNDisplayForm.h"
-#include "BuildLineUnknownDisplayForm.h"
-#include "BuildLineDisplayFormControls.h"
-#include "BuildLineForDisplayForm.h"
-#include "BuildLine.h"
 #include "BuildLineSet.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define BUILD_LINE_DISPLAY_FORM_X       200
-#define BUILD_LINE_DISPLAY_FORM_Y       200
-#define BUILD_LINE_DISPLAY_FORM_WIDTH   200
-#define BUILD_LINE_DISPLAY_FORM_HEIGHT  200
+#define BUILD_LINE_DISPLAY_FORM_CONTROLS_X 200
+#define BUILD_LINE_DISPLAY_FORM_CONTROLS_Y 200
+#define BUILD_LINE_DISPLAY_FORM_CONTROLS_WIDTH 200
+#define BUILD_LINE_DISPLAY_FORM_CONTROLS_HEIGHT 200
 
 /*****************************************************************************!
- * Exported Class : BuildLineDisplayForm
+ * Exported Class : BuildLineDisplayFormControls
  *****************************************************************************/
-class BuildLineDisplayForm : public QWidget
+class BuildLineDisplayFormControls : public QFrame
 {
   Q_OBJECT;
 
  //! Constructors
  public :
-  BuildLineDisplayForm          ();
+  BuildLineDisplayFormControls  ();
 
  //! Destructor
  public :
-  ~BuildLineDisplayForm         ();
+  ~BuildLineDisplayFormControls ();
 
  //! Public Methods
  public :
-  void                          SetBuildLine            (BuildLine* InBuildLine);
 
  //! Public Data
  public :
@@ -67,28 +63,30 @@ class BuildLineDisplayForm : public QWidget
   void                          CreateSubWindows        ();
   void                          InitializeSubWindows    ();
   void                          resizeEvent             (QResizeEvent* InEvent);
+  void                          CreateConnections       (void);
 
  //! Private Data
  private :
-  BuildLineGCCDisplayForm*      gccForm;
-  BuildLineUnknownDisplayForm*  unknownBuildTypeForm;
-  BuildLineLNDisplayForm*       lnForm;
-  BuildLineForDisplayForm*      forForm;
-  BuildLineDisplayFormControls* controlsForm;
-  BuildLine*                    buildLine;
+  QPushButton*                  previousButton;
+  QPushButton*                  nextButton;
   BuildLineSet*                 buildLines;
+  QLabel*                       currentLineLabel;
+  QLabel*                       lineCountLabel;
+  int                           currentLine;
   
  //! Public Slots
  public slots :
-  void                          SlotBuildLinesSelected  (BuildLineSet* InLineSet);
-  void                          SlotBuildLineSelected   (BuildLine* InBuildLine);
+  void                          SlotNextButtonPushed    (void);
+  void                          SlotPreviousButtonPushed(void);
+  void                          SlotBuildLinesSet       (BuildLineSet* InLineSet);
   
  //! Public Signals
  signals :
+  void                          SignalBuildLineSelected (BuildLine* InBuildLine);
 
  //! Public Actions
  public :
 
 };
 
-#endif /* _buildlinedisplayform_h_*/
+#endif /* _buildlinedisplayformcontrols_h_*/

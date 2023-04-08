@@ -19,6 +19,7 @@
 #include "trace.h"
 #include "BuildCompileLine.h"
 #include "BuildLNLine.h"
+#include "BuildForLine.h"
 #include "BuildLine.h"
 
 /*****************************************************************************!
@@ -67,9 +68,20 @@ BuildLineDisplayForm::CreateSubWindows()
   lnForm->setParent(this);
   lnForm->hide();
   
+  forForm = new BuildLineForDisplayForm();  
+  forForm->setParent(this);
+  forForm->hide();
+  
   unknownBuildTypeForm = new BuildLineUnknownDisplayForm();
   unknownBuildTypeForm->setParent(this);
   unknownBuildTypeForm->hide();
+
+  controlsForm = new BuildLineDisplayFormControls();
+  controlsForm->setParent(this);
+  connect(controlsForm,
+          SIGNAL(SignalBuildLineSelected(BuildLine*)),
+          this,
+          SLOT(SlotBuildLineSelected(BuildLine*)));
 }
 
 /*****************************************************************************!
@@ -78,9 +90,11 @@ BuildLineDisplayForm::CreateSubWindows()
 void
 BuildLineDisplayForm::InitializeSubWindows()
 {
-  gccForm = NULL;
-  lnForm = NULL;
-  unknownBuildTypeForm = NULL;
+  gccForm               = NULL;
+  lnForm                = NULL;
+  forForm               = NULL;
+  unknownBuildTypeForm  = NULL;
+  controlsForm          = NULL;
 }
 
 /*****************************************************************************!
@@ -93,18 +107,35 @@ BuildLineDisplayForm::resizeEvent
   QSize                                 size;  
   int                                   width;
   int                                   height;
-
+  int                                   elementHeight;
+  int                                   controlsFormX, controlsFormY;
+  int                                   controlsFormW, controlsFormH;
+  
   size = InEvent->size();
   width = size.width();
   height = size.height();
+  elementHeight = height - 35;
+
+  controlsFormX = 0;
+  controlsFormY = height - 30;
+  controlsFormH = 30;
+  controlsFormW = width;
+  
   if ( gccForm ) {
-    gccForm->resize(width, height);
+    gccForm->resize(width, elementHeight);
   }
   if ( lnForm ) {
-    lnForm->resize(width, height);
+    lnForm->resize(width, elementHeight);
   }
   if ( unknownBuildTypeForm ) {
-    unknownBuildTypeForm->resize(width, height);
+    unknownBuildTypeForm->resize(width, elementHeight);
+  }
+  if ( forForm ) {
+    forForm->resize(width, elementHeight);
+  }
+  if ( controlsForm ) {
+    controlsForm->resize(controlsFormW, controlsFormH);
+    controlsForm->move(controlsFormX, controlsFormY);
   }
 }
 
@@ -121,6 +152,7 @@ BuildLineDisplayForm::SetBuildLine
   buildLine = InBuildLine;
   gccForm->hide();
   lnForm->hide();
+  forForm->hide();
   unknownBuildTypeForm->hide();
 
   lineType = buildLine->GetType();
@@ -142,6 +174,34 @@ BuildLineDisplayForm::SetBuildLine
     lnForm->SetBuildLine(lnLine);
     return;
   }
+  if ( lineType == BuildLine::TypeFor ) {
+    BuildForLine*                       forLine;
+    forLine = (BuildForLine*)buildLine;
+    forForm->show();
+    forForm->SetBuildLine(forLine);
+    return;
+  }
   unknownBuildTypeForm->show();
   unknownBuildTypeForm->SetBuildLine(buildLine);
+}
+
+/*****************************************************************************!
+ * Function : SlotBuildLinesSelected
+ *****************************************************************************/
+void
+BuildLineDisplayForm::SlotBuildLinesSelected
+(BuildLineSet* InLineSet)
+{
+  buildLines = InLineSet;
+  controlsForm->SlotBuildLinesSet(buildLines);
+}
+
+/*****************************************************************************!
+ * Function : SlotBuildLineSelected
+ *****************************************************************************/
+void
+BuildLineDisplayForm::SlotBuildLineSelected
+(BuildLine* InBuildLine)
+{
+  SetBuildLine(InBuildLine);
 }

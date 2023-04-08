@@ -1,5 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
     <file>images/OpenFile.png</file>
+    <file>images/Right.png</file>
+    <file>images/Left.png</file>
 </qresource>
 </RCC>

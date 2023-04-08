@@ -24,6 +24,7 @@
 #include "DirectoryTreeElement.h"
 #include "DependencyTreeWidgetItem.h"
 #include "BuildLineDisplayForm.h"
+#include "BuildLineSet.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -90,6 +91,7 @@ class DependencyTreeWindow : public QWidget
  //! Public Signals
  signals :
   void                          SignalWindowClose       (void);
+  void                          SignalBuildLinesSelected (BuildLineSet* InBuildLines);
 
  //! Public Actions
  public :

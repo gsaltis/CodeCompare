@@ -35,13 +35,17 @@ DEFINES                         += \
 
 SOURCES                         += \
 				   BuildCompileLine.cpp                         \
-                                   BuildLNLine.cpp                              \
-                                   BuildLine.cpp                                \
+				   BuildForLine.cpp                             \
+				   BuildLNLine.cpp                              \
+				   BuildLine.cpp                                \
 				   BuildLineBaseDisplayForm.cpp                 \
 				   BuildLineDisplayForm.cpp                     \
+				   BuildLineDisplayFormControls.cpp             \
+				   BuildLineForDisplayForm.cpp                  \
 				   BuildLineGCCDisplayForm.cpp                  \
 				   BuildLineLNDisplayForm.cpp                   \
 				   BuildLineUnknownDisplayForm.cpp              \
+				   BuildLineSet.cpp                             \
 				   BuildUnknownLine.cpp                         \
 				   CodeBaseForm.cpp                             \
 				   CodeBaseOpenDialog.cpp                       \
@@ -60,13 +64,17 @@ SOURCES                         += \
 
 HEADERS                         += \
 				   BuildCompileLine.h                           \
-                                   BuildLNLine.h                                \
+				   BuildForLine.h                               \
+				   BuildLNLine.h                                \
 				   BuildLine.h                                  \
 				   BuildLineBaseDisplayForm.h                   \
 				   BuildLineDisplayForm.h                       \
+				   BuildLineDisplayFormControls.h               \
+				   BuildLineForDisplayForm.h                    \
 				   BuildLineGCCDisplayForm.h                    \
 				   BuildLineLNDisplayForm.h                     \
 				   BuildLineUnknownDisplayForm.h                \
+				   BuildLineSet.h                               \
 				   BuildUnknownLine.h                           \
 				   CodeBaseForm.h                               \
 				   CodeBaseOpenDialog.h                         \

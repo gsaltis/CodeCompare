@@ -41,6 +41,7 @@ class BuildLine : public QWidget
     TypeNone,
     TypeCompile,
     TypeLN,
+    TypeFor,
     TypeUnknown
   };
   

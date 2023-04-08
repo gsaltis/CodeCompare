@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : DependencyTreeWidgetItem.h
- * DATE         : April 03 2023
+ * FILE NAME    : BuildLineSet.h
+ * DATE         : April 07 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _dependencytreewidgetitem_h_
-#define _dependencytreewidgetitem_h_
+#ifndef _buildlineset_h_
+#define _buildlineset_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -13,39 +13,44 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
-#include <QTreeWidgetItem>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
 #include "BuildLine.h"
-#include "BuildLineSet.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
 
 /*****************************************************************************!
- * Exported Class : DependencyTreeWidgetItem
+ * Exported Class : BuildLineSet
  *****************************************************************************/
-class DependencyTreeWidgetItem : public QTreeWidgetItem
+class BuildLineSet : public QWidget
 {
+  Q_OBJECT;
+
  //! Constructors
  public :
-  DependencyTreeWidgetItem      (QStringList InNames, QFileInfo InInfo);
+  BuildLineSet                  ();
 
  //! Destructor
  public :
-  ~DependencyTreeWidgetItem     ();
+  ~BuildLineSet                 ();
 
  //! Public Methods
  public :
-  QFileInfo                     GetFileInfo             (void);
-  void                          SetFileInfo             (QFileInfo InFileInfo);
-  void                          ParseMakefileOutput     (QString InMakeOutput);
-  void                          PerformMake             ();
-  BuildLine*                    GetBuildLine            (void);
-  BuildLineSet*                 GetBuildLines           (void);
+  int
+  GetLineCount
+  ();
+
+  BuildLine*
+  GetLineByIndex
+  (int InIndex);
+
+  void
+  AppendLine
+  (BuildLine* InLine);
   
  //! Public Data
  public :
@@ -58,14 +63,10 @@ class DependencyTreeWidgetItem : public QTreeWidgetItem
 
  //! Private Methods
  private :
-  BuildLine*                    ParseMakefileOutputLine (QString InOutputLine);
 
  //! Private Data
  private :
-  QFileInfo                     fileInfo;
-  BuildLine*                    buildLine;
-  BuildLineSet*                 buildLines;
-  QString                       buildString;
+  QList<BuildLine*>             lines;
   
  //! Public Slots
  public slots :
@@ -78,4 +79,4 @@ class DependencyTreeWidgetItem : public QTreeWidgetItem
 
 };
 
-#endif /* _dependencytreewidgetitem_h_*/
+#endif /* _buildlineset_h_*/

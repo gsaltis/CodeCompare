@@ -83,7 +83,7 @@ class BuildLineBaseDisplayForm : public QFrame
   void                          CreateSubWindows        ();
   void                          InitializeSubWindows    ();
   void                          resizeEvent             (QResizeEvent* InEvent);
-
+  
  //! Private Data
  private :
 
