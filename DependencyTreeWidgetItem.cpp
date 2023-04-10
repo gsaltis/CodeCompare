@@ -18,8 +18,11 @@
 #include "DependencyTreeWidgetItem.h"
 #include "BuildCompileLine.h"
 #include "BuildLNLine.h"
+#include "BuildARLine.h"
+#include "BuildRanlibLine.h"
 #include "BuildUnknownLine.h"
 #include "BuildForLine.h"
+#include "BuildEchoLine.h"
 #include "trace.h"
 
 /*****************************************************************************!
@@ -78,6 +81,12 @@ DependencyTreeWidgetItem::ParseMakefileOutput
 
   for ( int i = 0 ; i < linesCount ; i++ ) {
     line = ParseMakefileOutputLine(lines[i]);
+    if ( NULL == line ) {
+      continue;
+    }
+    if ( line->GetType() == BuildLine::TypeCompile ) {
+      QString t = ((BuildCompileLine*)line)->GetTarget();
+    }
     buildLines->AppendLine(line);
   }
   buildLine = buildLines->GetLineByIndex(0);
@@ -94,7 +103,13 @@ DependencyTreeWidgetItem::ParseMakefileOutputLine
   BuildLine*                            outputLine;
   
   outputLine = NULL;
+
+  if ( InOutputLine.startsWith("#") ) {
+    return NULL;
+  }
   elements = BuildLine::GetLineElements(InOutputLine);
+
+  
   if ( 0 == elements.count() ) {
     return outputLine;
   }
@@ -113,6 +128,20 @@ DependencyTreeWidgetItem::ParseMakefileOutputLine
     outputLine = line;
     return outputLine;
   }
+  if ( elements[0] == "ranlib" ) {
+    BuildRanlibLine*                    line;
+    line = new BuildRanlibLine();
+    line->ParseLine(InOutputLine);
+    outputLine = line;
+    return outputLine;
+  }
+  if ( elements[0] == "ar" ) {
+    BuildARLine*                        line;
+    line = new BuildARLine();
+    line->ParseLine(InOutputLine);
+    outputLine = line;
+    return outputLine;
+  }
   if ( elements[0] == "for" ) {
     BuildForLine*                       line;
     line = new BuildForLine();
@@ -120,6 +149,16 @@ DependencyTreeWidgetItem::ParseMakefileOutputLine
     outputLine = line;
     return outputLine;
   }
+  if ( elements[0] == "echo" ) {
+    BuildEchoLine*                      line;
+    line = new BuildEchoLine();
+    line->ParseLine(InOutputLine);
+    outputLine = line;
+    return outputLine;
+  }
+  
+  TRACE_FUNCTION_QSTRING(elements[0]);
+  TRACE_FUNCTION_QSTRING(InOutputLine);
   BuildUnknownLine*                     unknownBuildLine;
 
   unknownBuildLine = new BuildUnknownLine();

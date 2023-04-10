@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : BuildLine.h
+ * FILE NAME    : BuildEchoLine.h
  * DATE         : April 03 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _buildline_h_
-#define _buildline_h_
+#ifndef _buildecholine_h_
+#define _buildecholine_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -17,71 +17,49 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
+#include "BuildLine.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
 
 /*****************************************************************************!
- * Exported Class : BuildLine
+ * Exported Class : BuildEchoLine
  *****************************************************************************/
-class BuildLine : public QWidget
+class BuildEchoLine : public BuildLine
 {
   Q_OBJECT;
 
  //! Constructors
  public :
-  BuildLine                     ();
+  BuildEchoLine                 ();
 
  //! Destructor
  public :
-  ~BuildLine                    ();
+  ~BuildEchoLine                ();
 
-  enum Type {
-    TypeNone,
-    TypeCompile,
-    TypeLN,
-    TypeAR,
-    TypeRanlib,
-    TypeFor,
-    TypeEcho,
-    TypeUnknown
-  };
-  
  //! Public Methods
  public :
-  Type
-  GetType
-  ();
-
-  virtual void
-  ParseLine
-  (QString InBuildLine) = 0;
-
-  QString
-  GetText
-  (void);
-
-  static QStringList
-  GetLineElements
-  (QString InBuildLine);
+  void                          ParseLine               (QString InBuildLine);
+  QString                       GetEchoLine             (void);
+  QString                       GetAction               (void);
   
  //! Public Data
  public :
-  
+
  //! Protected Methods
  protected :
 
  //! Protected Data
  protected :
-  Type                                  buildType;
-  QString                               lineText;
 
  //! Private Methods
  private :
 
  //! Private Data
  private :
+  QString                               action;
+  QString                               echoLine;
   
  //! Public Slots
  public slots :
@@ -94,4 +72,4 @@ class BuildLine : public QWidget
 
 };
 
-#endif /* _buildline_h_*/
+#endif /* _buildecholine_h_*/

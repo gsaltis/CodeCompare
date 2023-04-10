@@ -19,7 +19,10 @@
 #include "trace.h"
 #include "BuildCompileLine.h"
 #include "BuildLNLine.h"
+#include "BuildARLine.h"
+#include "BuildRanlibLine.h"
 #include "BuildForLine.h"
+#include "BuildEchoLine.h"
 #include "BuildLine.h"
 
 /*****************************************************************************!
@@ -68,9 +71,21 @@ BuildLineDisplayForm::CreateSubWindows()
   lnForm->setParent(this);
   lnForm->hide();
   
+  arForm = new BuildLineARDisplayForm();  
+  arForm->setParent(this);
+  arForm->hide();
+  
+  ranlibForm = new BuildLineRanlibDisplayForm();  
+  ranlibForm->setParent(this);
+  ranlibForm->hide();
+  
   forForm = new BuildLineForDisplayForm();  
   forForm->setParent(this);
   forForm->hide();
+  
+  echoForm = new BuildLineEchoDisplayForm();  
+  echoForm->setParent(this);
+  echoForm->hide();
   
   unknownBuildTypeForm = new BuildLineUnknownDisplayForm();
   unknownBuildTypeForm->setParent(this);
@@ -133,6 +148,15 @@ BuildLineDisplayForm::resizeEvent
   if ( forForm ) {
     forForm->resize(width, elementHeight);
   }
+  if ( ranlibForm ) {
+    ranlibForm->resize(width, elementHeight);
+  }
+  if ( arForm ) {
+    arForm->resize(width, elementHeight);
+  }
+  if ( echoForm ) {
+    echoForm->resize(width, elementHeight);
+  }
   if ( controlsForm ) {
     controlsForm->resize(controlsFormW, controlsFormH);
     controlsForm->move(controlsFormX, controlsFormY);
@@ -153,6 +177,7 @@ BuildLineDisplayForm::SetBuildLine
   gccForm->hide();
   lnForm->hide();
   forForm->hide();
+  echoForm->hide();
   unknownBuildTypeForm->hide();
 
   lineType = buildLine->GetType();
@@ -167,6 +192,20 @@ BuildLineDisplayForm::SetBuildLine
     gccForm->SetBuildLine(compileLine);
     return;
   }
+  if ( lineType == BuildLine::TypeAR ) {
+    BuildARLine*                        arLine;
+    arLine = (BuildARLine*)buildLine;
+    arForm->show();
+    arForm->SetBuildLine(arLine);
+    return;
+  }
+  if ( lineType == BuildLine::TypeRanlib ) {
+    BuildRanlibLine*                    ranlibLine;
+    ranlibLine = (BuildRanlibLine*)buildLine;
+    ranlibForm->show();
+    ranlibForm->SetBuildLine(ranlibLine);
+    return;
+  }
   if ( lineType == BuildLine::TypeLN ) {
     BuildLNLine*                        lnLine;
     lnLine = (BuildLNLine*)buildLine;
@@ -179,6 +218,13 @@ BuildLineDisplayForm::SetBuildLine
     forLine = (BuildForLine*)buildLine;
     forForm->show();
     forForm->SetBuildLine(forLine);
+    return;
+  }
+  if ( lineType == BuildLine::TypeEcho ) {
+    BuildEchoLine*                      echoLine;
+    echoLine = (BuildEchoLine*)buildLine;
+    echoForm->show();
+    echoForm->SetBuildLine(echoLine);
     return;
   }
   unknownBuildTypeForm->show();

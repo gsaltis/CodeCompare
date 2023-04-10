@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : BuildLineDisplayForm.h
+ * FILE NAME    : BuildLineEchoDisplayForm.h
  * DATE         : April 05 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _buildlinedisplayform_h_
-#define _buildlinedisplayform_h_
+#ifndef _buildlineechodisplayform_h_
+#define _buildlineechodisplayform_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -13,43 +13,39 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
+#include <QLabel>
+#include <QListWidget>
+#include <QScrollArea>
+#include <QFrame>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildLineGCCDisplayForm.h"
-#include "BuildLineLNDisplayForm.h"
-#include "BuildLineARDisplayForm.h"
-#include "BuildLineRanlibDisplayForm.h"
-#include "BuildLineUnknownDisplayForm.h"
-#include "BuildLineDisplayFormControls.h"
-#include "BuildLineForDisplayForm.h"
-#include "BuildLineEchoDisplayForm.h"
 #include "BuildLine.h"
-#include "BuildLineSet.h"
+#include "BuildLineBaseDisplayForm.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define BUILD_LINE_DISPLAY_FORM_X       200
-#define BUILD_LINE_DISPLAY_FORM_Y       200
-#define BUILD_LINE_DISPLAY_FORM_WIDTH   200
-#define BUILD_LINE_DISPLAY_FORM_HEIGHT  200
+#define BUILD_LINE_GCC_DISPLAY_FORM_X       200
+#define BUILD_LINE_GCC_DISPLAY_FORM_Y       200
+#define BUILD_LINE_GCC_DISPLAY_FORM_WIDTH   200
+#define BUILD_LINE_GCC_DISPLAY_FORM_HEIGHT  200
 
 /*****************************************************************************!
- * Exported Class : BuildLineDisplayForm
+ * Exported Class : BuildLineEchoDisplayForm
  *****************************************************************************/
-class BuildLineDisplayForm : public QWidget
+class BuildLineEchoDisplayForm : public BuildLineBaseDisplayForm
 {
   Q_OBJECT;
 
  //! Constructors
  public :
-  BuildLineDisplayForm          ();
+  BuildLineEchoDisplayForm        ();
 
  //! Destructor
  public :
-  ~BuildLineDisplayForm         ();
+  ~BuildLineEchoDisplayForm       ();
 
  //! Public Methods
  public :
@@ -73,22 +69,16 @@ class BuildLineDisplayForm : public QWidget
 
  //! Private Data
  private :
-  BuildLineGCCDisplayForm*      gccForm;
-  BuildLineUnknownDisplayForm*  unknownBuildTypeForm;
-  BuildLineLNDisplayForm*       lnForm;
-  BuildLineARDisplayForm*       arForm;
-  BuildLineRanlibDisplayForm*   ranlibForm;
-  BuildLineEchoDisplayForm*     echoForm;
-  BuildLineForDisplayForm*      forForm;
-  BuildLineDisplayFormControls* controlsForm;
   BuildLine*                    buildLine;
-  BuildLineSet*                 buildLines;
+  QLabel*                       actionNameLabel;
+  QLabel*                       echoLineNameLabel;
+
+  QLabel*                       actionLabel;
+  QLabel*                       echoLineLabel;
   
  //! Public Slots
  public slots :
-  void                          SlotBuildLinesSelected  (BuildLineSet* InLineSet);
-  void                          SlotBuildLineSelected   (BuildLine* InBuildLine);
-  
+
  //! Public Signals
  signals :
 
@@ -97,4 +87,4 @@ class BuildLineDisplayForm : public QWidget
 
 };
 
-#endif /* _buildlinedisplayform_h_*/
+#endif /* _buildlineechodisplayform_h_*/

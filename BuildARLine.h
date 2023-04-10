@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : BuildLine.h
+ * FILE NAME    : BuildARLine.h
  * DATE         : April 03 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _buildline_h_
-#define _buildline_h_
+#ifndef _buildarline_h_
+#define _buildarline_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -17,71 +17,53 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
+#include "BuildLine.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
 
 /*****************************************************************************!
- * Exported Class : BuildLine
+ * Exported Class : BuildARLine
  *****************************************************************************/
-class BuildLine : public QWidget
+class BuildARLine : public BuildLine
 {
   Q_OBJECT;
 
  //! Constructors
  public :
-  BuildLine                     ();
+  BuildARLine                     ();
 
  //! Destructor
  public :
-  ~BuildLine                    ();
+  ~BuildARLine                    ();
 
-  enum Type {
-    TypeNone,
-    TypeCompile,
-    TypeLN,
-    TypeAR,
-    TypeRanlib,
-    TypeFor,
-    TypeEcho,
-    TypeUnknown
-  };
-  
  //! Public Methods
  public :
-  Type
-  GetType
-  ();
-
-  virtual void
-  ParseLine
-  (QString InBuildLine) = 0;
-
-  QString
-  GetText
-  (void);
-
-  static QStringList
-  GetLineElements
-  (QString InBuildLine);
+  void                          ParseLine               (QString InBuildLine);
+  QString                       GetTarget               (void);
+  QString                       GetAction               (void);
+  QStringList                   GetSources              (void);
+  QString                       GetFlags                (void);
   
  //! Public Data
  public :
-  
+
  //! Protected Methods
  protected :
 
  //! Protected Data
  protected :
-  Type                                  buildType;
-  QString                               lineText;
 
  //! Private Methods
  private :
 
  //! Private Data
  private :
+  QString                               action;
+  QString                               target;
+  QStringList                           sources;
+  QString                               flags;
   
  //! Public Slots
  public slots :
@@ -94,4 +76,4 @@ class BuildLine : public QWidget
 
 };
 
-#endif /* _buildline_h_*/
+#endif /* _buildarline_h_*/

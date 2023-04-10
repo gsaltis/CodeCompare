@@ -34,18 +34,22 @@ QT                              += core gui widgets
 DEFINES                         += \
 
 SOURCES                         += \
+				   BuildARLine.cpp                              \
 				   BuildCompileLine.cpp                         \
-				   BuildForLine.cpp                             \
 				   BuildLNLine.cpp                              \
 				   BuildLine.cpp                                \
+				   BuildLineARDisplayForm.cpp                   \
 				   BuildLineBaseDisplayForm.cpp                 \
 				   BuildLineDisplayForm.cpp                     \
 				   BuildLineDisplayFormControls.cpp             \
+				   BuildLineEchoDisplayForm.cpp                 \
 				   BuildLineForDisplayForm.cpp                  \
 				   BuildLineGCCDisplayForm.cpp                  \
 				   BuildLineLNDisplayForm.cpp                   \
-				   BuildLineUnknownDisplayForm.cpp              \
+				   BuildLineRanlibDisplayForm.cpp               \
 				   BuildLineSet.cpp                             \
+				   BuildLineUnknownDisplayForm.cpp              \
+                                   BuildRanlibLine.cpp                          \
 				   BuildUnknownLine.cpp                         \
 				   CodeBaseForm.cpp                             \
 				   CodeBaseOpenDialog.cpp                       \
@@ -59,22 +63,29 @@ SOURCES                         += \
 				   MainWindow.cpp                               \
 				   SystemConfig.cpp                             \
 				   WindowHeader.cpp                             \
+                                   BuildEchoLine.cpp                            \
+                                   BuildForLine.cpp                             \
 				   main.cpp                                     \
 				   trace.cpp                                    \
 
 HEADERS                         += \
+				   BuildARLine.h                                \
 				   BuildCompileLine.h                           \
 				   BuildForLine.h                               \
 				   BuildLNLine.h                                \
 				   BuildLine.h                                  \
+				   BuildLineARDisplayForm.h                     \
 				   BuildLineBaseDisplayForm.h                   \
 				   BuildLineDisplayForm.h                       \
 				   BuildLineDisplayFormControls.h               \
+				   BuildLineEchoDisplayForm.h                   \
 				   BuildLineForDisplayForm.h                    \
 				   BuildLineGCCDisplayForm.h                    \
 				   BuildLineLNDisplayForm.h                     \
-				   BuildLineUnknownDisplayForm.h                \
+				   BuildLineRanlibDisplayForm.h                 \
 				   BuildLineSet.h                               \
+				   BuildLineUnknownDisplayForm.h                \
+                                   BuildRanlibLine.h                            \
 				   BuildUnknownLine.h                           \
 				   CodeBaseForm.h                               \
 				   CodeBaseOpenDialog.h                         \
@@ -88,6 +99,7 @@ HEADERS                         += \
 				   MainWindow.h                                 \
 				   SystemConfig.h                               \
 				   WindowHeader.h                               \
+                                   BuildEchoLine.h                              \
 				   trace.h                                      \
 				   trace_file.h                                 \
 				   trace_net.h                                  \
