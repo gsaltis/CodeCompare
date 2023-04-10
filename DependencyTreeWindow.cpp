@@ -49,6 +49,7 @@ DependencyTreeWindow::~DependencyTreeWindow
 void
 DependencyTreeWindow::initialize()
 {
+  buildSystem = new BuildSystem();
   InitializeSubWindows();  
   CreateSubWindows();
   ActionCloseButtonPushed = new QAction("CloseButtonPushed", this);
@@ -262,6 +263,9 @@ DependencyTreeWindow::SlotpathLineSelectPushed(void)
     QFileInfo                           info = *i;
     ProcessTopLevelDirectory(info, directoryTreeWindow);
   }
+  buildSystem->GetTopLevelElements();
+  // printf("--------------------------------------------------------------------------------\n");
+  // buildSystem->Dump();
 }
 
 /*****************************************************************************!
@@ -299,7 +303,7 @@ DependencyTreeWindow::ProcessTopLevelDirectory
   if ( info.exists() ) {
     fg.setColor(Qt::black);
   }
-  treeItem = new DependencyTreeWidgetItem(QStringList(name), InInfo);
+  treeItem = new DependencyTreeWidgetItem(QStringList(name), InInfo, buildSystem);
   treeItem->setData(0, Qt::ForegroundRole, fg);
   if ( info.exists() ) {
     font = treeItem->font(0);
@@ -307,6 +311,7 @@ DependencyTreeWindow::ProcessTopLevelDirectory
     treeItem->setFont(0, font);
     treeItem->PerformMake();
   }
+
   InTreeWindow->addTopLevelItem(treeItem);
   ProcessTreeDirectory(InInfo, treeItem);
 }
@@ -340,7 +345,7 @@ DependencyTreeWindow::ProcessTreeDirectory
     }
     
     fileName = info.fileName();
-    treeItem = new DependencyTreeWidgetItem(QStringList(fileName), info);
+    treeItem = new DependencyTreeWidgetItem(QStringList(fileName), info, buildSystem);
     treeItem->setData(0, Qt::ForegroundRole, fg);
     InTreeItem->addChild(treeItem);
     if ( makeFileInfo.exists() ) {

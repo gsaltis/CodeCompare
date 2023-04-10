@@ -25,6 +25,7 @@
 #include "DependencyTreeWidgetItem.h"
 #include "BuildLineDisplayForm.h"
 #include "BuildLineSet.h"
+#include "BuildSystem.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -80,6 +81,7 @@ class DependencyTreeWindow : public QWidget
   QTreeWidget*                  directoryTreeWindow;
   DirectoryTreeElement*         topElement;
   BuildLineDisplayForm*         buildLineDisplayWindow;
+  BuildSystem*                  buildSystem;
   
  //! Public Slots
  public slots :

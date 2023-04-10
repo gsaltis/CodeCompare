@@ -36,6 +36,10 @@ DEFINES                         += \
 SOURCES                         += \
 				   BuildARLine.cpp                              \
 				   BuildCompileLine.cpp                         \
+				   BuildEchoLine.cpp                            \
+				   BuildElement.cpp                             \
+				   BuildElementSet.cpp                          \
+				   BuildForLine.cpp                             \
 				   BuildLNLine.cpp                              \
 				   BuildLine.cpp                                \
 				   BuildLineARDisplayForm.cpp                   \
@@ -49,7 +53,8 @@ SOURCES                         += \
 				   BuildLineRanlibDisplayForm.cpp               \
 				   BuildLineSet.cpp                             \
 				   BuildLineUnknownDisplayForm.cpp              \
-                                   BuildRanlibLine.cpp                          \
+				   BuildRanlibLine.cpp                          \
+				   BuildSystem.cpp                              \
 				   BuildUnknownLine.cpp                         \
 				   CodeBaseForm.cpp                             \
 				   CodeBaseOpenDialog.cpp                       \
@@ -63,14 +68,15 @@ SOURCES                         += \
 				   MainWindow.cpp                               \
 				   SystemConfig.cpp                             \
 				   WindowHeader.cpp                             \
-                                   BuildEchoLine.cpp                            \
-                                   BuildForLine.cpp                             \
 				   main.cpp                                     \
 				   trace.cpp                                    \
 
 HEADERS                         += \
 				   BuildARLine.h                                \
 				   BuildCompileLine.h                           \
+				   BuildEchoLine.h                              \
+				   BuildElement.h                               \
+				   BuildElementSet.h                            \
 				   BuildForLine.h                               \
 				   BuildLNLine.h                                \
 				   BuildLine.h                                  \
@@ -85,7 +91,8 @@ HEADERS                         += \
 				   BuildLineRanlibDisplayForm.h                 \
 				   BuildLineSet.h                               \
 				   BuildLineUnknownDisplayForm.h                \
-                                   BuildRanlibLine.h                            \
+				   BuildRanlibLine.h                            \
+				   BuildSystem.h                                \
 				   BuildUnknownLine.h                           \
 				   CodeBaseForm.h                               \
 				   CodeBaseOpenDialog.h                         \
@@ -99,7 +106,6 @@ HEADERS                         += \
 				   MainWindow.h                                 \
 				   SystemConfig.h                               \
 				   WindowHeader.h                               \
-                                   BuildEchoLine.h                              \
 				   trace.h                                      \
 				   trace_file.h                                 \
 				   trace_net.h                                  \

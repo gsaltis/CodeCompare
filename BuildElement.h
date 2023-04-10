@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : DependencyTreeWidgetItem.h
- * DATE         : April 03 2023
+ * FILE NAME    : BuildElement.h
+ * DATE         : April 10 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _dependencytreewidgetitem_h_
-#define _dependencytreewidgetitem_h_
+#ifndef _buildelement_h_
+#define _buildelement_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -13,40 +13,39 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
-#include <QTreeWidgetItem>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildLine.h"
-#include "BuildLineSet.h"
-#include "BuildSystem.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
 
 /*****************************************************************************!
- * Exported Class : DependencyTreeWidgetItem
+ * Exported Class : BuildElement
  *****************************************************************************/
-class DependencyTreeWidgetItem : public QTreeWidgetItem
+class BuildElement : public QWidget
 {
+  Q_OBJECT;
+
  //! Constructors
  public :
-  DependencyTreeWidgetItem      (QStringList InNames, QFileInfo InInfo, BuildSystem* InBuildSystem);
+  BuildElement                  (QString InName);
 
  //! Destructor
  public :
-  ~DependencyTreeWidgetItem     ();
+  ~BuildElement                 ();
 
  //! Public Methods
  public :
-  QFileInfo                     GetFileInfo             (void);
-  void                          SetFileInfo             (QFileInfo InFileInfo);
-  void                          ParseMakefileOutput     (QString InMakeOutput);
-  void                          PerformMake             ();
-  BuildLine*                    GetBuildLine            (void);
-  BuildLineSet*                 GetBuildLines           (void);
+  void
+  Dump
+  (int InIndex);
+
+  QString
+  GetName
+  ();
   
  //! Public Data
  public :
@@ -59,15 +58,11 @@ class DependencyTreeWidgetItem : public QTreeWidgetItem
 
  //! Private Methods
  private :
-  BuildLine*                    ParseMakefileOutputLine (QString InOutputLine);
 
  //! Private Data
  private :
-  QFileInfo                     fileInfo;
-  BuildLine*                    buildLine;
-  BuildLineSet*                 buildLines;
-  QString                       buildString;
-  BuildSystem*                  buildSystem;
+  class BuildElementSet*        elements;
+  QString                       name;
   
  //! Public Slots
  public slots :
@@ -80,4 +75,4 @@ class DependencyTreeWidgetItem : public QTreeWidgetItem
 
 };
 
-#endif /* _dependencytreewidgetitem_h_*/
+#endif /* _buildelement_h_*/

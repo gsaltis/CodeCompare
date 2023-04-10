@@ -29,8 +29,9 @@
  * Function : DependencyTreeWidgetItem
  *****************************************************************************/
 DependencyTreeWidgetItem::DependencyTreeWidgetItem
-(QStringList InNames, QFileInfo InInfo) : QTreeWidgetItem(InNames)
+(QStringList InNames, QFileInfo InInfo, BuildSystem* InBuildSystem) : QTreeWidgetItem(InNames)
 {
+  buildSystem = InBuildSystem;
   buildLine = NULL;
   buildLines = new BuildLineSet();
   fileInfo = QFileInfo(InInfo);
@@ -101,6 +102,11 @@ DependencyTreeWidgetItem::ParseMakefileOutputLine
 {
   QStringList                           elements;
   BuildLine*                            outputLine;
+  QStringList                           sources;
+  BuildElementSet*                      buildSet;
+  BuildElement*                         buildElement;
+  QString                               targetString;
+  BuildUnknownLine*                     unknownBuildLine;
   
   outputLine = NULL;
 
@@ -113,14 +119,28 @@ DependencyTreeWidgetItem::ParseMakefileOutputLine
   if ( 0 == elements.count() ) {
     return outputLine;
   }
+
+  //!
   if ( elements[0] == "gcc" ) {
     BuildCompileLine*                   compileBuildLine;
     
     compileBuildLine = new BuildCompileLine();
     compileBuildLine->ParseLine(InOutputLine);
     outputLine = compileBuildLine;
+    targetString = compileBuildLine->GetTarget();
+    sources = compileBuildLine->GetSources();
+    buildSet = new BuildElementSet(targetString);
+    buildSystem->BuildElementSetAdd(buildSet);
+    
+    for ( int i = 0 ;  i < sources.count(); i++ ) {
+      QString                           source;
+      buildElement = new BuildElement(sources[i]);
+      buildSet->AddElement(buildElement);
+    }
     return outputLine;
   }
+
+  //!
   if ( elements[0] == "ln" ) {
     BuildLNLine*                        line;
     line = new BuildLNLine();
@@ -128,6 +148,8 @@ DependencyTreeWidgetItem::ParseMakefileOutputLine
     outputLine = line;
     return outputLine;
   }
+
+  //!
   if ( elements[0] == "ranlib" ) {
     BuildRanlibLine*                    line;
     line = new BuildRanlibLine();
@@ -135,13 +157,26 @@ DependencyTreeWidgetItem::ParseMakefileOutputLine
     outputLine = line;
     return outputLine;
   }
+
+  //!
   if ( elements[0] == "ar" ) {
     BuildARLine*                        line;
     line = new BuildARLine();
     line->ParseLine(InOutputLine);
     outputLine = line;
+    targetString = line->GetTarget();
+    sources = line->GetSources();
+    buildSet = new BuildElementSet(targetString);
+    buildSystem->BuildElementSetAdd(buildSet);
+    for ( int i = 0 ;  i < sources.count(); i++ ) {
+      QString                           source;
+      buildElement = new BuildElement(sources[i]);
+      buildSet->AddElement(buildElement);
+    }
     return outputLine;
   }
+
+  //!
   if ( elements[0] == "for" ) {
     BuildForLine*                       line;
     line = new BuildForLine();
@@ -149,6 +184,8 @@ DependencyTreeWidgetItem::ParseMakefileOutputLine
     outputLine = line;
     return outputLine;
   }
+
+  //!
   if ( elements[0] == "echo" ) {
     BuildEchoLine*                      line;
     line = new BuildEchoLine();
@@ -157,10 +194,6 @@ DependencyTreeWidgetItem::ParseMakefileOutputLine
     return outputLine;
   }
   
-  TRACE_FUNCTION_QSTRING(elements[0]);
-  TRACE_FUNCTION_QSTRING(InOutputLine);
-  BuildUnknownLine*                     unknownBuildLine;
-
   unknownBuildLine = new BuildUnknownLine();
   unknownBuildLine->ParseLine(InOutputLine);
   outputLine = unknownBuildLine;
@@ -180,9 +213,21 @@ DependencyTreeWidgetItem::PerformMake
   QStringList                           args;
   QString                               program;
   QString                               outputString;
+  QString                               libdlPath;
+  QFileInfo                             libdlFileInfo;
+  bool                                  alreadyHasLIBDL;
   
   fullPath = fileInfo.absoluteFilePath();
-  
+
+  // Create libdl.a since some of the targets rely on -ldl
+  libdlPath = fullPath + QString("/libdl.a");
+  libdlFileInfo.setFile(libdlPath);
+  alreadyHasLIBDL = libdlFileInfo.exists();
+  QFile file(libdlPath);
+  if ( ! alreadyHasLIBDL ) {
+    file.open(QIODeviceBase::ReadWrite);
+  }
+
   makeProcess.setWorkingDirectory(fullPath);
   args << "-n";
   program = "D:\\Qt\\Tools\\mingw900_64\\bin\\make.exe";
@@ -191,6 +236,10 @@ DependencyTreeWidgetItem::PerformMake
   makeProcess.waitForFinished();
   outputString = QString(makeProcess.readAllStandardOutput());
   ParseMakefileOutput(outputString);
+  if ( ! alreadyHasLIBDL ) {
+    file.remove(); 
+    file.close();
+  }
 }
 
 /*****************************************************************************!
