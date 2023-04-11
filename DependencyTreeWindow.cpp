@@ -86,6 +86,14 @@ DependencyTreeWindow::CreateSubWindows()
   CloseButton->resize(100,20);
   connect(CloseButton, SIGNAL(pressed()), this, SLOT(SlotCloseButtonPushed()));
 
+  //! Create the CloseButton button  
+  TreeButton = new QPushButton();
+  TreeButton->setParent(this);
+  TreeButton->setText("Tree");
+  TreeButton->move(10, 10);
+  TreeButton->resize(100,20);
+  connect(TreeButton, SIGNAL(pressed()), this, SLOT(SlotTreeButtonPushed()));
+
     //! Create pathLineInput LineEdit
   pathLineInput = new QLineEdit();
   pathLineInput->setParent(this);
@@ -170,6 +178,8 @@ DependencyTreeWindow::resizeEvent
   int                                   height;
   int                                   closeButtonX, closeButtonY;
   int                                   closeButtonW, closeButtonH;
+  int                                   treeButtonX, treeButtonY;
+  int                                   treeButtonW, treeButtonH;
   int                                   pathLineInputX, pathLineInputY;
   int                                   pathLineInputW, pathLineInputH;
   int                                   pathLineSelectButtonX, pathLineSelectButtonY;
@@ -189,6 +199,11 @@ DependencyTreeWindow::resizeEvent
   closeButtonH = 20;
   closeButtonX = width - (closeButtonW + 10);
   closeButtonY = height- (closeButtonH + 10);
+
+  treeButtonW = 60;
+  treeButtonH = 20;
+  treeButtonX = width - (treeButtonW + 20 + closeButtonW);
+  treeButtonY = height- (treeButtonH + 10);
 
   pathLineInputX = 10;
   pathLineInputY = 10;
@@ -218,6 +233,9 @@ DependencyTreeWindow::resizeEvent
   CloseButton->move(closeButtonX, closeButtonY);
   CloseButton->resize(closeButtonW, closeButtonH);
 
+  TreeButton->move(treeButtonX, treeButtonY);
+  TreeButton->resize(treeButtonW, treeButtonH);
+  
   pathLineInput->move(pathLineInputX, pathLineInputY);
   pathLineInput->resize(pathLineInputW, pathLineInputH);
 
@@ -244,6 +262,15 @@ DependencyTreeWindow::SlotCloseButtonPushed(void)
 }
 
 /*****************************************************************************!
+ * Function : SlotTreeButtonPushed
+ *****************************************************************************/
+void
+DependencyTreeWindow::SlotTreeButtonPushed(void)
+{
+  emit SignalTreeWindowOpen();
+}
+
+/*****************************************************************************!
  * Function : SlotpathLineSelectPushed
  *****************************************************************************/
 void
@@ -263,9 +290,7 @@ DependencyTreeWindow::SlotpathLineSelectPushed(void)
     QFileInfo                           info = *i;
     ProcessTopLevelDirectory(info, directoryTreeWindow);
   }
-  buildSystem->GetTopLevelElements();
-  // printf("--------------------------------------------------------------------------------\n");
-  // buildSystem->Dump();
+  emit SignalBuildSystemSelected(buildSystem);
 }
 
 /*****************************************************************************!

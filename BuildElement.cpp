@@ -16,6 +16,7 @@
  * Local Headers
  *****************************************************************************/
 #include "BuildElement.h"
+#include "trace.h"
 
 /*****************************************************************************!
  * Function : BuildElement
@@ -24,6 +25,7 @@ BuildElement::BuildElement
 (QString InName) : QWidget()
 {
   name = QString(InName);
+  buildLine = NULL;
 }
 
 /*****************************************************************************!
@@ -46,7 +48,6 @@ BuildElement::Dump
   printf("%s%s\n", indentString.toStdString().c_str(), name.toStdString().c_str());
 }
 
-
 /*****************************************************************************!
  * Function : GetName
  *****************************************************************************/
@@ -57,3 +58,23 @@ BuildElement::GetName
   return name;
 }
 
+/*****************************************************************************!
+ * Function : GetBuildLine
+ *****************************************************************************/
+BuildLine*
+BuildElement::GetBuildLine(void)
+{
+  return buildLine;  
+}
+
+/*****************************************************************************!
+ * Function : SetBuildLine
+ *****************************************************************************/
+void
+BuildElement::SetBuildLine
+(BuildLine* InBuildLine)
+{
+  TRACE_FUNCTION_START();
+  buildLine = InBuildLine;
+  TRACE_FUNCTION_END();
+}

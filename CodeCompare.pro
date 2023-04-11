@@ -55,6 +55,7 @@ SOURCES                         += \
 				   BuildLineUnknownDisplayForm.cpp              \
 				   BuildRanlibLine.cpp                          \
 				   BuildSystem.cpp                              \
+                                   BuildTreeWindow.cpp                          \
 				   BuildUnknownLine.cpp                         \
 				   CodeBaseForm.cpp                             \
 				   CodeBaseOpenDialog.cpp                       \
@@ -93,6 +94,7 @@ HEADERS                         += \
 				   BuildLineUnknownDisplayForm.h                \
 				   BuildRanlibLine.h                            \
 				   BuildSystem.h                                \
+                                   BuildTreeWindow.h                            \
 				   BuildUnknownLine.h                           \
 				   CodeBaseForm.h                               \
 				   CodeBaseOpenDialog.h                         \
@@ -102,6 +104,7 @@ HEADERS                         += \
 				   DependencyTreeWindow.h                       \
 				   DirectoryReadEntry.h                         \
 				   DirectoryTreeElement.h                       \
+                                   gui.h                                        \
 				   MainDisplayWindow.h                          \
 				   MainWindow.h                                 \
 				   SystemConfig.h                               \

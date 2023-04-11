@@ -17,12 +17,11 @@
  *****************************************************************************/
 #include "MainDisplayWindow.h"
 #include "trace.h"
+#include "gui.h"
 
 /*****************************************************************************!
  * Local Macros
  *****************************************************************************/
-#define X_GAP                           10
-#define Y_GAP                           10
 
 /*****************************************************************************!
  * Function : MainDisplayWindow
@@ -91,6 +90,10 @@ MainDisplayWindow::CreateSubWindows()
   dependencyTreeWindow = new DependencyTreeWindow();
   dependencyTreeWindow->setParent(this);
   dependencyTreeWindow->hide();
+
+  buildTreeWindow = new BuildTreeWindow();
+  buildTreeWindow->setParent(this);
+  buildTreeWindow->hide();
 }
 
 /*****************************************************************************!
@@ -104,6 +107,10 @@ MainDisplayWindow::resizeEvent
   int                                   dependencyTreeWindowW;
   int                                   dependencyTreeWindowX;
   int                                   dependencyTreeWindowY;
+  int                                   buildTreeWindowH;
+  int                                   buildTreeWindowW;
+  int                                   buildTreeWindowX;
+  int                                   buildTreeWindowY;
   int                                   w;
   QSize                                 size;  
   int                                   width;
@@ -119,35 +126,43 @@ MainDisplayWindow::resizeEvent
   width = size.width();
   height = size.height();
 
-  codeNameWindowX = X_GAP;
-  codeNameWindowY = Y_GAP;
+  codeNameWindowX = GUI_X_GAP;
+  codeNameWindowY = GUI_Y_GAP;
   codeNameWindowW = 250;
-  codeNameWindowH = height - (Y_GAP * 2);
+  codeNameWindowH = height - (GUI_Y_GAP * 2);
 
-  w = width - (codeNameWindowW + (X_GAP * 5));
+  w = width - (codeNameWindowW + (GUI_X_GAP * 5));
   codeWindowWidth = w / 3;
 
   
-  track1X = (X_GAP * 2) + codeNameWindowW;
-  track1Y = Y_GAP;
+  track1X = (GUI_X_GAP * 2) + codeNameWindowW;
+  track1Y = GUI_Y_GAP;
   track1W = codeWindowWidth;
-  track1H = height - (Y_GAP * 2);
+  track1H = height - (GUI_Y_GAP * 2);
 
-  mergeTrackX = (X_GAP * 3) + codeNameWindowW + track1W;
-  mergeTrackY = Y_GAP;
+  mergeTrackX = (GUI_X_GAP * 3) + codeNameWindowW + track1W;
+  mergeTrackY = GUI_Y_GAP;
   mergeTrackW = codeWindowWidth;
-  mergeTrackH = height - (Y_GAP * 2);
+  mergeTrackH = height - (GUI_Y_GAP * 2);
   
-  track2X = (X_GAP * 4) + codeNameWindowW + track1W + mergeTrackW;
-  track2Y = Y_GAP;
+  track2X = (GUI_X_GAP * 4) + codeNameWindowW + track1W + mergeTrackW;
+  track2Y = GUI_Y_GAP;
   track2W = codeWindowWidth;
-  track2H = height - (Y_GAP * 2);
+  track2H = height - (GUI_Y_GAP * 2);
 
-  dependencyTreeWindowX = (X_GAP * 2) + codeNameWindowW;
-  dependencyTreeWindowY = Y_GAP;
-  dependencyTreeWindowW = width - (codeNameWindowW + X_GAP * 2);
-  dependencyTreeWindowH = height - (Y_GAP * 2);
-  
+  //!
+  dependencyTreeWindowX = (GUI_X_GAP * 2) + codeNameWindowW;
+  dependencyTreeWindowY = GUI_Y_GAP;
+  dependencyTreeWindowW = width - (codeNameWindowW + GUI_X_GAP * 3);
+  dependencyTreeWindowH = height - (GUI_Y_GAP * 2);
+
+  //!
+  buildTreeWindowX = (GUI_X_GAP * 2) + codeNameWindowW;
+  buildTreeWindowY = GUI_Y_GAP;
+  buildTreeWindowW = width - (codeNameWindowW + GUI_X_GAP * 3);
+  buildTreeWindowH = height - ((GUI_Y_GAP * 2) + 0);
+
+  //! 
   if ( codeWindowTrack1 ) {
     codeWindowTrack1->move(track1X, track1Y);
     codeWindowTrack1->resize(track1W, track1H);
@@ -164,10 +179,16 @@ MainDisplayWindow::resizeEvent
     codeWindowMerge->move(mergeTrackX, mergeTrackY);
     codeWindowMerge->resize(mergeTrackW, mergeTrackH);
   }
+
+  //!
   if ( dependencyTreeWindow ) {
     dependencyTreeWindow->move(dependencyTreeWindowX, dependencyTreeWindowY);
     dependencyTreeWindow->resize(dependencyTreeWindowW, dependencyTreeWindowH);
   }
+  if ( buildTreeWindow ) {
+    buildTreeWindow->move(buildTreeWindowX, buildTreeWindowY);
+    buildTreeWindow->resize(buildTreeWindowW, buildTreeWindowH);
+  }    
 }
 
 /*****************************************************************************!
@@ -205,4 +226,54 @@ MainDisplayWindow::CreateConnections(void)
           SIGNAL(SignalWindowClose()),
           this,
           SLOT(SlotDependencyWindowClose()));
+
+  connect(dependencyTreeWindow,
+          SIGNAL(SignalTreeWindowOpen()),
+          this,
+          SLOT(SlotBuildTreeWindowOpen()));
+
+  connect(buildTreeWindow,
+          SIGNAL(SignalTreeWindowClosed()),
+          this,
+          SLOT(SlotBuildTreeWindowClosed()));
+
+  connect(dependencyTreeWindow,
+          SIGNAL(SignalBuildSystemSelected(BuildSystem*)),
+          this,
+          SLOT(SlotBuildSystemSelected(BuildSystem*)));
+
+  connect(this,
+          SIGNAL(SignalBuildSystemSelected(BuildSystem*)),
+          buildTreeWindow,
+          SLOT(SlotBuildSystemSelected(BuildSystem*)));
+}
+
+/*****************************************************************************!
+ * Function : SlotBuildTreeWindowOpen
+ *****************************************************************************/
+void
+MainDisplayWindow::SlotBuildTreeWindowOpen(void)
+{
+  dependencyTreeWindow->hide();
+  buildTreeWindow->show();
+}
+
+/*****************************************************************************!
+ * Function : SlotBuildTreeWindowClosed
+ *****************************************************************************/
+void
+MainDisplayWindow::SlotBuildTreeWindowClosed(void)
+{
+  dependencyTreeWindow->show();
+  buildTreeWindow->hide();
+}
+
+/*****************************************************************************!
+ * Function : SlotBuildSystemSelected
+ *****************************************************************************/
+void
+MainDisplayWindow::SlotBuildSystemSelected
+(BuildSystem* InSystem)
+{
+  emit SignalBuildSystemSelected(InSystem);
 }

@@ -188,6 +188,19 @@
   }                                                                                             \
 
 //!
+#define TRACE_FUNCTION_BOOL(n)                                                                  \
+  {                                                                                             \
+    int i;                                                                                      \
+    for ( i = 0 ; i < TraceIndent-2 ; i += 2 ) {                                                \
+      printf("| ");                                                                             \
+    }                                                                                           \
+    printf("|_");                                                                               \
+    printf("VALUE : %*s : %04d   %35s : %s\n",                                                  \
+           TRACE_FUNCTION_NAME_LENGTH - TraceIndent, __FUNCTION__, __LINE__,                    \
+           #n, n ? "TRUE " : "FALSE");                                                          \
+  }                                                                                             \
+
+//!
 #define TRACE_FUNCTION_FLOAT(n)                                                                 \
   {                                                                                             \
     int i;                                                                                      \

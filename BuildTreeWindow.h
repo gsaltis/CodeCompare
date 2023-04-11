@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : BuildSystem.h
+ * FILE NAME    : BuildTreeWindow.h
  * DATE         : April 10 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _buildsystem_h_
-#define _buildsystem_h_
+#ifndef _buildtreewindow_h_
+#define _buildtreewindow_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -13,72 +13,75 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
+#include <QFrame>
+#include <QPushButton>
+#include <QTreeWidget>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildElementSet.h"
+#include "BuildSystem.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
+#define BUILD_TREE_WINDOW_X             200
+#define BUILD_TREE_WINDOW_Y             200
+#define BUILD_TREE_WINDOW_WIDTH         200
+#define BUILD_TREE_WINDOW_HEIGHT        200
 
 /*****************************************************************************!
- * Exported Class : BuildSystem
+ * Exported Class : BuildTreeWindow
  *****************************************************************************/
-class BuildSystem : public QWidget
+class BuildTreeWindow : public QFrame
 {
   Q_OBJECT;
 
  //! Constructors
  public :
-  BuildSystem                   ();
+  BuildTreeWindow               ();
 
  //! Destructor
  public :
-  ~BuildSystem                  ();
+  ~BuildTreeWindow              ();
 
  //! Public Methods
  public :
-  void
-  BuildElementSetAdd
-  (BuildElementSet* InSet);
-
-  void
-  Dump
-  ();
-  void                          GetTopLevelElements     (void);
-  bool                          IsSourceElement         (QString InName);
-  int                           GetCount                (void);
-  QStringList                   GetTopLevelNames        (void);
-  BuildElementSet*              GetBuildElementByName   (QString InName);
-  
+ 
  //! Public Data
  public :
 
  //! Protected Methods
  protected :
 
- //! Protected Data
+ //! Protected Data<
  protected :
 
  //! Private Methods
  private :
-  
+  void                          initialize              ();
+  void                          CreateSubWindows        ();
+  void                          InitializeSubWindows    ();
+  void                          resizeEvent             (QResizeEvent* InEvent);
+
  //! Private Data
  private :
-  QList<BuildElementSet*>       targets;
+  QPushButton*                  CloseButton;
+  QTreeWidget*                  treeWidget;
+  BuildSystem*                  buildSystem;
   
  //! Public Slots
  public slots :
+  void                          SlotCloseButtonPushed           (void);
+  void                          SlotBuildSystemSelected (BuildSystem* InSystem);
 
  //! Public Signals
  signals :
+  void                          SignalTreeWindowClosed          (void);
 
  //! Public Actions
  public :
 
 };
 
-#endif /* _buildsystem_h_*/
-
+#endif /* _buildtreewindow_h_*/

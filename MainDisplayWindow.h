@@ -20,6 +20,8 @@
 #include "CodeWindow.h"
 #include "CodeNameWindow.h"
 #include "DependencyTreeWindow.h"
+#include "BuildTreeWindow.h"
+#include "BuildSystem.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -67,15 +69,20 @@ class MainDisplayWindow : public QWidget
   CodeNameWindow*               codeNameWindow;
   CodeWindow*                   codeWindowMerge;
   DependencyTreeWindow*         dependencyTreeWindow;
-
+  BuildTreeWindow*              buildTreeWindow;
+  
  //! Public Slots
  public slots :
   void                          SlotCreateDependencyTree (void);
   void                          SlotDependencyWindowClose (void);
+  void                          SlotBuildTreeWindowOpen (void);
+  void                          SlotBuildTreeWindowClosed (void);
+  void                          SlotBuildSystemSelected (BuildSystem* InSystem);
 
  //! Public Signals
  signals :
   void                          SignalDependencyWindowClose     (void);
+  void                          SignalBuildSystemSelected (BuildSystem* InSystem);
 
  //! Public Actions
  public :

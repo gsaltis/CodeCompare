@@ -17,6 +17,7 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
+#include "BuildLine.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -46,6 +47,8 @@ class BuildElement : public QWidget
   QString
   GetName
   ();
+  BuildLine*                    GetBuildLine            (void);
+  void                          SetBuildLine            (BuildLine* InBuildLine);
   
  //! Public Data
  public :
@@ -63,7 +66,8 @@ class BuildElement : public QWidget
  private :
   class BuildElementSet*        elements;
   QString                       name;
-  
+  BuildLine*                    buildLine;
+
  //! Public Slots
  public slots :
 

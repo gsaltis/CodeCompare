@@ -18,6 +18,7 @@
  * Local Headers
  *****************************************************************************/
 #include "BuildElement.h"
+#include "BuildLine.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -53,10 +54,23 @@ class BuildElementSet : public QWidget
   SetTarget
   (QString InTarget);
   void
+
   Dump
   (int InIndent);
   bool                          IsSourceElement         (QString InName);
 
+  void
+  SetBuildLine
+  (BuildLine* InBuildLine);
+
+  int
+  GetElementCount
+  (void);
+
+  BuildElement*
+  GetElementByIndex
+  (int InIndex);
+  
  //! Public Data
  public :
 
@@ -73,7 +87,8 @@ class BuildElementSet : public QWidget
  private :
   QList<BuildElement*>          elements;
   QString                       target;
-
+  BuildLine*                    buildLine;
+  
  //! Public Slots
  public slots :
 

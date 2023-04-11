@@ -90,3 +90,54 @@ BuildSystem::IsSourceElement
   }
   return false;
 }
+
+/*****************************************************************************!
+ * Function : GetCount
+ *****************************************************************************/
+int
+BuildSystem::GetCount(void)
+{
+  return targets.count();
+}
+
+/*****************************************************************************!
+ * Function : GetTopLevelNames
+ *****************************************************************************/
+QStringList
+BuildSystem::GetTopLevelNames(void)
+{
+  QStringList                           returnNames;
+  QString                               targetName;
+  int                                   i, n;
+
+  n = targets.count();
+  for (i = 0; i < n; i++) {
+    targetName = targets[i]->GetTarget();
+    if ( IsSourceElement(targetName) ) {
+      continue;
+    }
+    returnNames << targetName;
+  }
+  return returnNames;
+}
+
+/*****************************************************************************!
+ * Function : GetBuildElementByName
+ *****************************************************************************/
+BuildElementSet*
+BuildSystem::GetBuildElementByName
+(QString InName)
+{
+  BuildElementSet*                      set;
+  int                                   i, n;
+
+  n = targets.count();
+
+  for (i = 0; i < n; i++) {
+    set = targets[i];
+    if ( set->GetTarget() == InName ) {
+      return set;
+    }
+  }
+  return NULL;
+}

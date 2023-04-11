@@ -75,6 +75,7 @@ class DependencyTreeWindow : public QWidget
  //! Private Data
  private :
   QPushButton*                  CloseButton;
+  QPushButton*                  TreeButton;
   QLineEdit*                    pathLineInput;
   QPushButton*                  pathLineSelectButton;
   QPushButton*                  BrowsePathButton;
@@ -85,15 +86,18 @@ class DependencyTreeWindow : public QWidget
   
  //! Public Slots
  public slots :
+  void                          SlotTreeButtonPushed            (void);
   void                          SlotCloseButtonPushed           (void);
   void                          SlotpathLineSelectPushed        (void);
   void                          SlotBrowsePathButtonPushed      (void);
   void                          SlotTreeWidgetItemSelected      (QTreeWidgetItem* InItem, int InColumn);
-
+  
  //! Public Signals
  signals :
   void                          SignalWindowClose       (void);
+  void                          SignalTreeWindowOpen    (void);
   void                          SignalBuildLinesSelected (BuildLineSet* InBuildLines);
+  void                          SignalBuildSystemSelected (BuildSystem* InSystem);
 
  //! Public Actions
  public :

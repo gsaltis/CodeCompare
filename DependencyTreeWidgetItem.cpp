@@ -130,12 +130,14 @@ DependencyTreeWidgetItem::ParseMakefileOutputLine
     targetString = compileBuildLine->GetTarget();
     sources = compileBuildLine->GetSources();
     buildSet = new BuildElementSet(targetString);
+    buildSet->SetBuildLine(compileBuildLine);
     buildSystem->BuildElementSetAdd(buildSet);
     
     for ( int i = 0 ;  i < sources.count(); i++ ) {
       QString                           source;
       buildElement = new BuildElement(sources[i]);
       buildSet->AddElement(buildElement);
+      buildSet->SetBuildLine(compileBuildLine);
     }
     return outputLine;
   }
@@ -172,6 +174,7 @@ DependencyTreeWidgetItem::ParseMakefileOutputLine
       QString                           source;
       buildElement = new BuildElement(sources[i]);
       buildSet->AddElement(buildElement);
+      buildSet->SetBuildLine(line);
     }
     return outputLine;
   }
@@ -230,6 +233,7 @@ DependencyTreeWidgetItem::PerformMake
 
   makeProcess.setWorkingDirectory(fullPath);
   args << "-n";
+  args << "all";
   program = "D:\\Qt\\Tools\\mingw900_64\\bin\\make.exe";
 
   makeProcess.start(program, args);

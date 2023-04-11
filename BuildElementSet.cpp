@@ -101,3 +101,35 @@ BuildElementSet::IsSourceElement
   }
   return false;
 }
+
+/*****************************************************************************!
+ * Function : SetBuildLine
+ *****************************************************************************/
+void
+BuildElementSet::SetBuildLine
+(BuildLine* InBuildLine)
+{
+  buildLine = InBuildLine;
+}
+
+/*****************************************************************************!
+ * Function : GetElementCount
+ *****************************************************************************/
+int
+BuildElementSet::GetElementCount(void)
+{
+  return elements.count();
+}
+
+/*****************************************************************************!
+ * Function : GetElementByIndex
+ *****************************************************************************/
+BuildElement*
+BuildElementSet::GetElementByIndex
+(int InIndex)
+{
+  if ( InIndex >= elements.count() ) {
+    return NULL;
+  }
+  return elements[InIndex];
+}
