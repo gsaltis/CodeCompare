@@ -43,6 +43,11 @@ class SystemConfig : public QWidget
   QPoint                        GetMainWindowLocation   (void);
   QSize                         GetMainWindowSize       (void);
   QString                       GetSourceTrackPath      (void);
+  QString                       GetMakeExeName          (void);
+  QString                       GetMakeTarget           (void);
+  QStringList                   GetMakeArgs             (void);
+  bool                          GetMakeNeedLIBDLTarget  (void);
+  void                          SetMakeNeedLIBDLTarget  (bool InMakeNeedLIBDLTarget);
 
  //! Public Data
  public :
@@ -58,15 +63,21 @@ class SystemConfig : public QWidget
  private :
   void                          ReadMainWindowGeometry  (QJsonObject &InObject);
   void                          ReadPaths               (QJsonObject &InObject);
+  void                          ReadMakeInformation     (QJsonObject &InObject);
+  void                          Initialize              (void);
 
  //! Private Data
  private :
-  int                                   MainWindowX;
-  int                                   MainWindowY;
-  int                                   MainWindowWidth;
-  int                                   MainWindowHeight;
-  QString                               SourceTrackPath;
-  
+  int                           MainWindowX;
+  int                           MainWindowY;
+  int                           MainWindowWidth;
+  int                           MainWindowHeight;
+  QString                       SourceTrackPath;
+  QString                       MakeExeName;
+  QString                       MakeTarget;
+  QStringList                   MakeArgs;
+  bool                          MakeNeedLIBDLTarget;
+
  //! Public Slots
  public slots :
 

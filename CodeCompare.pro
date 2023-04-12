@@ -55,6 +55,7 @@ SOURCES                         += \
 				   BuildLineUnknownDisplayForm.cpp              \
 				   BuildRanlibLine.cpp                          \
 				   BuildSystem.cpp                              \
+                                   BuildTreeItem.cpp                            \
                                    BuildTreeWindow.cpp                          \
 				   BuildUnknownLine.cpp                         \
 				   CodeBaseForm.cpp                             \
@@ -94,6 +95,7 @@ HEADERS                         += \
 				   BuildLineUnknownDisplayForm.h                \
 				   BuildRanlibLine.h                            \
 				   BuildSystem.h                                \
+                                   BuildTreeItem.h                              \
                                    BuildTreeWindow.h                            \
 				   BuildUnknownLine.h                           \
 				   CodeBaseForm.h                               \

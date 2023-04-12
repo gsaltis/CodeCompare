@@ -23,6 +23,7 @@
 #include "BuildUnknownLine.h"
 #include "BuildForLine.h"
 #include "BuildEchoLine.h"
+#include "main.h"
 #include "trace.h"
 
 /*****************************************************************************!
@@ -32,7 +33,6 @@ DependencyTreeWidgetItem::DependencyTreeWidgetItem
 (QStringList InNames, QFileInfo InInfo, BuildSystem* InBuildSystem) : QTreeWidgetItem(InNames)
 {
   buildSystem = InBuildSystem;
-  buildLine = NULL;
   buildLines = new BuildLineSet();
   fileInfo = QFileInfo(InInfo);
 }
@@ -90,7 +90,6 @@ DependencyTreeWidgetItem::ParseMakefileOutput
     }
     buildLines->AppendLine(line);
   }
-  buildLine = buildLines->GetLineByIndex(0);
 }
 
 /*****************************************************************************!
@@ -132,12 +131,15 @@ DependencyTreeWidgetItem::ParseMakefileOutputLine
     buildSet = new BuildElementSet(targetString);
     buildSet->SetBuildLine(compileBuildLine);
     buildSystem->BuildElementSetAdd(buildSet);
-    
+
+    QString st = text(0);
+    TRACE_FUNCTION_QSTRING(st);
+    TRACE_FUNCTION_INT(buildLines->GetLineCount());
     for ( int i = 0 ;  i < sources.count(); i++ ) {
       QString                           source;
       buildElement = new BuildElement(sources[i]);
       buildSet->AddElement(buildElement);
-      buildSet->SetBuildLine(compileBuildLine);
+      buildElement->SetBuildLine(compileBuildLine);
     }
     return outputLine;
   }
@@ -218,41 +220,38 @@ DependencyTreeWidgetItem::PerformMake
   QString                               outputString;
   QString                               libdlPath;
   QFileInfo                             libdlFileInfo;
-  bool                                  alreadyHasLIBDL;
+  bool                                  alreadyHasLIBDL = false;
+  QFile                                 file;
   
   fullPath = fileInfo.absoluteFilePath();
 
-  // Create libdl.a since some of the targets rely on -ldl
-  libdlPath = fullPath + QString("/libdl.a");
-  libdlFileInfo.setFile(libdlPath);
-  alreadyHasLIBDL = libdlFileInfo.exists();
-  QFile file(libdlPath);
-  if ( ! alreadyHasLIBDL ) {
-    file.open(QIODeviceBase::ReadWrite);
+  if ( mainSystemConfig->GetMakeNeedLIBDLTarget() ) {
+    // Create libdl.a since some of the targets rely on -ldl
+    libdlPath = fullPath + QString("/libdl.a");
+    libdlFileInfo.setFile(libdlPath);
+    alreadyHasLIBDL = libdlFileInfo.exists();
+    file.setFileName(libdlPath);
+    if ( ! alreadyHasLIBDL ) {
+      file.open(QIODeviceBase::ReadWrite);
+    }
   }
-
+  
   makeProcess.setWorkingDirectory(fullPath);
-  args << "-n";
-  args << "all";
-  program = "D:\\Qt\\Tools\\mingw900_64\\bin\\make.exe";
+
+  program = mainSystemConfig->GetMakeExeName();
+  args = mainSystemConfig->GetMakeArgs();
+  args << mainSystemConfig->GetMakeTarget();
 
   makeProcess.start(program, args);
   makeProcess.waitForFinished();
   outputString = QString(makeProcess.readAllStandardOutput());
   ParseMakefileOutput(outputString);
-  if ( ! alreadyHasLIBDL ) {
-    file.remove(); 
-    file.close();
+  if ( mainSystemConfig->GetMakeNeedLIBDLTarget() ) {
+    if ( ! alreadyHasLIBDL ) {
+      file.remove(); 
+      file.close();
+    }
   }
-}
-
-/*****************************************************************************!
- * Function : GetBuildLine
- *****************************************************************************/
-BuildLine*
-DependencyTreeWidgetItem::GetBuildLine(void)
-{
-  return buildLine;
 }
 
 /*****************************************************************************!

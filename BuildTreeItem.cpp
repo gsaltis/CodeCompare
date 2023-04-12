@@ -1,6 +1,6 @@
 /*****************************************************************************
- * FILE NAME    : BuildElement.cpp
- * DATE         : April 10 2023
+ * FILE NAME    : BuildTreeItem.cpp
+ * DATE         : April 12 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
@@ -15,54 +15,39 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildElement.h"
-#include "trace.h"
+#include "BuildTreeItem.h"
 
 /*****************************************************************************!
- * Function : BuildElement
+ * Function : BuildTreeItem
  *****************************************************************************/
-BuildElement::BuildElement
-(QString InName) : QWidget()
+BuildTreeItem::BuildTreeItem
+(QStringList InNames) : QTreeWidgetItem(InNames)
 {
-  name = QString(InName);
-  buildLine = NULL;
+  initialize();
 }
 
 /*****************************************************************************!
- * Function : ~BuildElement
+ * Function : ~BuildTreeItem
  *****************************************************************************/
-BuildElement::~BuildElement
+BuildTreeItem::~BuildTreeItem
 ()
 {
 }
 
 /*****************************************************************************!
- * Function : Dump
+ * Function : initialize
  *****************************************************************************/
 void
-BuildElement::Dump
-(int InIndex)
+BuildTreeItem::initialize()
 {
-  QString                               indentString;
-  indentString.fill(' ', InIndex);
-  printf("%s%s\n", indentString.toStdString().c_str(), name.toStdString().c_str());
-}
-
-/*****************************************************************************!
- * Function : GetName
- *****************************************************************************/
-QString
-BuildElement::GetName
-()
-{
-  return name;
+  buildLine = NULL;
 }
 
 /*****************************************************************************!
  * Function : GetBuildLine
  *****************************************************************************/
 BuildLine*
-BuildElement::GetBuildLine(void)
+BuildTreeItem::GetBuildLine(void)
 {
   return buildLine;  
 }
@@ -71,8 +56,8 @@ BuildElement::GetBuildLine(void)
  * Function : SetBuildLine
  *****************************************************************************/
 void
-BuildElement::SetBuildLine
+BuildTreeItem::SetBuildLine
 (BuildLine* InBuildLine)
 {
-  buildLine = InBuildLine;
+    buildLine = InBuildLine;
 }

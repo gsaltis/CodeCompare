@@ -30,6 +30,7 @@ QString SystemConfig::SystemName = "CodeCompare";
 SystemConfig::SystemConfig
 () : QWidget()
 {
+  Initialize();
 }
 
 /*****************************************************************************!
@@ -47,6 +48,7 @@ void
 SystemConfig::ReadJSON
 (QString InFilename)
 {
+  QJsonObject                           makeObject;
   QJsonObject                           pathsObject;
   QJsonValue                            geomValue;
   QJsonObject                           geomObject;
@@ -74,6 +76,10 @@ SystemConfig::ReadJSON
   pathsObject = docObject["Paths"].toObject();
   if ( ! pathsObject.isEmpty() ) {
     ReadPaths(pathsObject);
+  }
+  makeObject = docObject["Make"].toObject();
+  if ( ! makeObject.isEmpty() ) {
+    ReadMakeInformation(makeObject);
   }
 }
 
@@ -126,3 +132,79 @@ SystemConfig::GetSourceTrackPath(void)
 {
   return SourceTrackPath;
 }
+
+/*****************************************************************************!
+ * Function : ReadMakeInformation
+ *****************************************************************************/
+void
+SystemConfig::ReadMakeInformation
+(QJsonObject &InObject)
+{
+  MakeExeName = InObject["make"].toString();
+  MakeTarget  = InObject["target"].toString();
+  MakeNeedLIBDLTarget = InObject["needlibdl"].toBool();
+  
+  auto vl = InObject["args"].toArray().toVariantList();
+  foreach (QVariant v, vl) {
+    MakeArgs << v.toString();
+  }
+}
+
+/*****************************************************************************!
+ * Function : Initialize
+ *****************************************************************************/
+void
+SystemConfig::Initialize(void)
+{
+  MakeExeName = QString("D:\\Qt\\Tools\\mingw900_64\\bin\\make.exe");
+  MakeTarget = QString("all");
+  MakeArgs << "-n" << "-B";
+  MakeNeedLIBDLTarget = true;
+}
+
+/*****************************************************************************!
+ * Function : GetMakeExeName
+ *****************************************************************************/
+QString
+SystemConfig::GetMakeExeName(void)
+{
+  return QString(MakeExeName);
+}
+
+/*****************************************************************************!
+ * Function : GetMakeTarget
+ *****************************************************************************/
+QString
+SystemConfig::GetMakeTarget(void)
+{
+  return QString(MakeTarget);
+}
+
+/*****************************************************************************!
+ * Function : GetMakeExeName
+ *****************************************************************************/
+QStringList
+SystemConfig::GetMakeArgs(void)
+{
+  return QStringList(MakeArgs);
+}
+
+/*****************************************************************************!
+ * Function : GetMakeNeedLIBDLTarget
+ *****************************************************************************/
+bool
+SystemConfig::GetMakeNeedLIBDLTarget(void)
+{
+  return MakeNeedLIBDLTarget;  
+}
+
+/*****************************************************************************!
+ * Function : SetMakeNeedLIBDLTarget
+ *****************************************************************************/
+void
+SystemConfig::SetMakeNeedLIBDLTarget
+(bool InMakeNeedLIBDLTarget)
+{
+  MakeNeedLIBDLTarget = InMakeNeedLIBDLTarget;  
+}
+

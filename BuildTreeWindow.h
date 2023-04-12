@@ -73,7 +73,8 @@ class BuildTreeWindow : public QFrame
  //! Public Slots
  public slots :
   void                          SlotCloseButtonPushed           (void);
-  void                          SlotBuildSystemSelected (BuildSystem* InSystem);
+  void                          SlotBuildSystemSelected         (BuildSystem* InSystem);
+  void                          SlotTreeWidgetItemSelected      (QTreeWidgetItem* InItem, int InColumn);
 
  //! Public Signals
  signals :

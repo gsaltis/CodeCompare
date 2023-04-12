@@ -7,5 +7,11 @@
   },
   "Paths" : {
     "sourcepath"                        : "D:/Source/NCUCodeMerge/Track2_NCU_Code/src"
+  },
+  "Make" : {
+    "make"                              : "D:\\Qt\\Tools\\mingw900_64\\bin\\make.exe",
+    "args"                              : [ "-n", "-B" ],
+    "target"                            : "all",
+    "needlibdl"                         : true
   }
 }

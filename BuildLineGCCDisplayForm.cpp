@@ -17,6 +17,8 @@
  *****************************************************************************/
 #include "BuildLineGCCDisplayForm.h"
 #include "BuildCompileLine.h"
+#include "gui.h"
+
 #include "trace.h"
 
 /*****************************************************************************!
@@ -79,7 +81,7 @@ BuildLineGCCDisplayForm::CreateSubWindows()
                      libsNames, libsNamesScrollArea, y);
 
   //!
-  CreateGroupSection(libPathsNameLabel, "Include Header Paths", QStringList(),
+  CreateGroupSection(includePathsNameLabel, "Include Header Paths", QStringList(),
                      includesPaths, includesPathsScrollArea, y);
 
   //!
@@ -108,38 +110,67 @@ BuildLineGCCDisplayForm::resizeEvent
 (QResizeEvent* InEvent)
 {
   QSize                                 size;  
-  int                                   width;
-  int                                   elementX, elementW, elementH;
-  
+  int                                   width, height;
+
   size = InEvent->size();
   width = size.width();
+  height = size.height();
 
+  PerformResize(width, height);
+}
+
+/*****************************************************************************!
+ * Function : PerformResize
+ *****************************************************************************/
+void
+BuildLineGCCDisplayForm::PerformResize
+(int InWidth, int InHeight)
+{
+  (void)InHeight;
+  int                                   elementX, elementY, elementW, elementH;
+  int                                   y;
   
+  //! Sources Area
   elementX = sourcesNamesScrollArea->pos().x();
   elementH = sourcesNamesScrollArea->size().height();
-  elementW = width - (elementX + 10);
+  elementY = sourcesNamesScrollArea->pos().y();
+  elementW = InWidth - (elementX + 10);
   sourcesNamesScrollArea->resize(elementW, elementH);
-  elementH = sourcesNames->size().height();
-  sourcesNames->resize(elementW-3, elementH);
-  
+  y = elementY + elementH + GUI_Y_SMALL_GAP;
+
+  //! Libraries Area
   elementH = libsNamesScrollArea->size().height();
   libsNamesScrollArea->resize(elementW, elementH);
+  libsNamesScrollArea->move(libsNamesScrollArea->pos().x(), y);
   elementH = libsNames->size().height();
   libsNames->resize(elementW-3, elementH);
+  libsNameLabel->move(libsNameLabel->pos().x(), y);
+  y +=elementH + GUI_Y_SMALL_GAP;
 
+  //! Include Area
   elementH = includesPathsScrollArea->size().height();  
   includesPathsScrollArea->resize(elementW, elementH);
   elementH = includesPaths->size().height();
   includesPaths->resize(elementW-3, elementH);
+  includesPathsScrollArea->move(includesPathsScrollArea->pos().x(), y);
+  includePathsNameLabel->move(includePathsNameLabel->pos().x(), y);
+  y +=elementH + GUI_Y_SMALL_GAP;
 
+  //! Libraries Path Area
   elementH = libsPathsScrollArea->size().height();  
   libsPathsScrollArea->resize(elementW, elementH);
   elementH = libsPaths->size().height();
   libsPaths->resize(elementW-3, elementH);
+  libsPathsScrollArea->move(libsPathsScrollArea->pos().x(), y);
+  libPathsNameLabel->move(libPathsNameLabel->pos().x(), y);
+  y +=elementH + GUI_Y_SMALL_GAP;
   
+  //! Flags Area
   elementH = flagsScrollArea->size().height();
   flagsScrollArea->resize(elementW, elementH);
   elementH = flags->size().height();
+  flagsScrollArea->move(flagsScrollArea->pos().x(), y);
+  flagsNameLabel->move(flagsNameLabel->pos().x(), y);
   flags->resize(elementW-3, elementH);
 
   elementH = actionLabel->size().height();
@@ -157,7 +188,7 @@ BuildLineGCCDisplayForm::SetBuildLine
 (BuildLine* InBuildLine)
 {
   BuildCompileLine*                     compileBuildLine;
-  
+
   if ( NULL == InBuildLine ) {
     return;
   }
@@ -166,4 +197,11 @@ BuildLineGCCDisplayForm::SetBuildLine
   compileBuildLine = (BuildCompileLine*)buildLine;
   actionLabel->setText(compileBuildLine->GetAction());
   targetLabel->setText(compileBuildLine->GetTarget());
+
+  PopulateGroupSection(sourcesNames, sourcesNamesScrollArea, compileBuildLine->GetSources());
+  PopulateGroupSection(libsNames, libsNamesScrollArea, compileBuildLine->GetLibraries());
+  PopulateGroupSection(includesPaths, includesPathsScrollArea, compileBuildLine->GetIncludePaths());
+  PopulateGroupSection(libsPaths, libsPathsScrollArea, compileBuildLine->GetLibraryPaths());
+  PopulateGroupSection(flags, flagsScrollArea, compileBuildLine->GetFlags());
+  PerformResize(size().width(), size().height());
 }

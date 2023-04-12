@@ -388,12 +388,9 @@ DependencyTreeWindow::SlotTreeWidgetItemSelected
 (QTreeWidgetItem* InItem, int)
 {
   DependencyTreeWidgetItem*             treeItem;
-  BuildLine*                            buildLine;
   BuildLineSet*                         buildLines;
   
   treeItem = (DependencyTreeWidgetItem*)InItem;
-  buildLine = treeItem->GetBuildLine();
-  buildLineDisplayWindow->SetBuildLine(buildLine);
   buildLines = treeItem->GetBuildLines();
   buildLineDisplayWindow->SlotBuildLinesSelected(buildLines);
   emit SignalBuildLinesSelected(buildLines);

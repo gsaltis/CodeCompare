@@ -66,6 +66,7 @@ class BuildLineGCCDisplayForm : public BuildLineBaseDisplayForm
   void                          CreateSubWindows        ();
   void                          InitializeSubWindows    ();
   void                          resizeEvent             (QResizeEvent* InEvent);
+  void                          PerformResize           (int InWidth, int InHeight);
 
  //! Private Data
  private :

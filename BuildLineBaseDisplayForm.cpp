@@ -16,6 +16,7 @@
  * Local Headers
  *****************************************************************************/
 #include "BuildLineBaseDisplayForm.h"
+#include "gui.h"
 #include "trace.h"
 
 /*****************************************************************************!
@@ -53,7 +54,7 @@ BuildLineBaseDisplayForm::initialize()
   labelX = 10;
   elementX = labelWidth + labelX + 10;
   elementW = 120;
-  ySkip = 22;
+  ySkip = labelHeight + GUI_Y_SMALL_GAP;
   
   InitializeSubWindows();  
   CreateSubWindows();
@@ -167,6 +168,44 @@ BuildLineBaseDisplayForm::CreateGroupSection
     y2 += 20;
   }
   InY += h + 5;
+}
+
+/*****************************************************************************!
+ * Function : PopulateGroupSection
+ *****************************************************************************/
+void
+BuildLineBaseDisplayForm::PopulateGroupSection
+(QFrame* InNameArea, QScrollArea* InScrollArea, QStringList InStrings)
+{
+  int                                   w;
+  int                                   n, h, h2, y2;
+
+  n = InStrings.count();
+  h = n * 20;
+  h2 = h;
+  if ( n == 0 ) {
+    h = 20;
+    h2 = 20;
+  } else if ( n > 6 ) {
+    h = 120;
+  }
+  QObjectList ch = InNameArea->children();
+
+  for ( auto c = ch.begin(); c != ch.end(); c++ ) {
+    delete *c;
+  }
+  InScrollArea->resize(InScrollArea->size().width(), h+3);
+  InNameArea->resize(InNameArea->size().width(), h2);
+  y2 = 0;
+  w = InNameArea->size().width();
+  for ( auto st = InStrings.begin() ; st != InStrings.end() ; st++ ) {
+    QString st1 = *st;
+    QLabel* l = new QLabel(st1, InNameArea);
+    l->show();
+    l->resize(w, 20);
+    l->move(5, y2);
+    y2 += 20;
+  }
 }
 
 /*****************************************************************************!

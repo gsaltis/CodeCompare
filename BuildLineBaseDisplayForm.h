@@ -66,17 +66,21 @@ class BuildLineBaseDisplayForm : public QFrame
   (QLabel* &InNameLabel, QString InName, QString InText, QTextEdit* &InTextEdit, int &InY);
 
   void
+  PopulateGroupSection
+  (QFrame* InNameArea, QScrollArea* InScrollArea, QStringList InStrings);
+  
+  void
   initialize
   ();
   
  //! Protected Data
  protected :
-  int                                   labelX;
-  int                                   labelWidth;
-  int                                   labelHeight;
-  int                                   elementX;
-  int                                   elementW;
-  int                                   ySkip;
+  int                           labelX;
+  int                           labelWidth;
+  int                           labelHeight;
+  int                           elementX;
+  int                           elementW;
+  int                           ySkip;
 
  //! Private Methods
  private :

@@ -16,6 +16,7 @@
  * Local Headers
  *****************************************************************************/
 #include "BuildTreeWindow.h"
+#include "BuildTreeItem.h"
 #include "gui.h"
 #include "trace.h"
 #include "BuildLine.h"
@@ -28,48 +29,7 @@
  *****************************************************************************/
 bool
 CompareTopLevelNames
-(QString InString1, QString InString2)
-{
-  QString                               base1;
-  QString                               base2;
-  QString                               suffix1;
-  QString                               suffix2;
-  QFileInfo                             info1;
-  QFileInfo                             info2;
-  bool                                  b;
-    
-  info1.setFile(InString1);
-  info2.setFile(InString2);
-
-  base1 = info1.completeBaseName();
-  suffix1 = info1.suffix();
-
-  base2 = info2.completeBaseName();
-  suffix2 = info2.suffix();
-
-  do {
-    
-    if ( suffix1.isEmpty() && suffix2.isEmpty() ) {
-      b = base1 < base2;
-      break;
-    }
-    if ( suffix1.isEmpty() ) {
-      b = true;
-      break;
-    }
-    if ( suffix2.isEmpty() ) {
-      b = false;
-      break;
-    }
-
-    if ( suffix1 == suffix2 ) {
-      b = base1 < base2;
-      break;
-    }
-    b = suffix1 < suffix2;
-  } while (false);
-  return b;
-}
+(QString InString1, QString InString2);
 
 /*****************************************************************************!
  * Function : BuildTreeWindow
@@ -132,6 +92,11 @@ BuildTreeWindow::InitializeSubWindows()
 
   treeHeader = new QTreeWidgetItem(QStringList(QString("Name")));
   treeWidget->setHeaderItem(treeHeader);
+
+  connect(treeWidget,
+          SIGNAL(itemClicked(QTreeWidgetItem*, int)),
+          this,
+          SLOT(SlotTreeWidgetItemSelected(QTreeWidgetItem*, int)));
 }
 
 /*****************************************************************************!
@@ -197,9 +162,14 @@ BuildTreeWindow::SlotBuildSystemSelected
   QString                               st;
   QString                               targetName;
   QStringList                           returnNames;
-  QTreeWidgetItem*                      item1;
-  QTreeWidgetItem*                      item2;
-  QTreeWidgetItem*                      item;
+  BuildTreeItem*                        binaryItem;
+  BuildTreeItem*                        cgiItem;
+  BuildTreeItem*                        item1;
+  BuildTreeItem*                        item2;
+  BuildTreeItem*                        item;
+  BuildTreeItem*                        sharedObjectsItem;
+  BuildTreeItem*                        staticLibItem;
+  BuildTreeItem*                        unknownItem;
   int                                   i;
   int                                   j;
   int                                   k;
@@ -210,33 +180,67 @@ BuildTreeWindow::SlotBuildSystemSelected
   n = returnNames.count();
 
   std::sort(returnNames.begin(), returnNames.end(), CompareTopLevelNames);
-  
+
+  binaryItem = new BuildTreeItem(QStringList("Binaries"));
+  treeWidget->addTopLevelItem(binaryItem);
+
+  staticLibItem = new BuildTreeItem(QStringList("Static Libraries"));
+  treeWidget->addTopLevelItem(staticLibItem);
+
+  sharedObjectsItem = new BuildTreeItem(QStringList("Shared Objects"));
+  treeWidget->addTopLevelItem(sharedObjectsItem);
+
+  cgiItem = new BuildTreeItem(QStringList("CGI Binaries"));
+  treeWidget->addTopLevelItem(cgiItem);
+
+  unknownItem = NULL;
+
   for ( i = 0; i < n ; i++ ) {
     st = returnNames[i];
-    item = new QTreeWidgetItem(QStringList(st));
-    treeWidget->addTopLevelItem(item);
+    item = new BuildTreeItem(QStringList(st));
     elementSet = buildSystem->GetBuildElementByName(st);
+
+    QFileInfo fileInfo(st);
+    QString suffix = fileInfo.suffix();
+    if ( suffix == QString("so") ) {
+      sharedObjectsItem->addChild(item);
+    } else if ( suffix == QString("a") ) {
+      staticLibItem->addChild(item);
+    } else if ( suffix == QString("cgi") ) {
+      cgiItem->addChild(item);
+    } else if ( suffix == QString("") ) {
+      binaryItem->addChild(item);
+    } else {
+      if ( unknownItem == NULL ) {
+        unknownItem = new BuildTreeItem(QStringList("Unknown"));
+        treeWidget->addTopLevelItem(unknownItem);
+      }   
+      unknownItem->addChild(item);
+    }
     if ( NULL == elementSet ) {
       continue;
     }
     j = elementSet->GetElementCount();
+
+    //!
     for ( k = 0 ; k < j ; k++ ) {
       element = elementSet->GetElementByIndex(k);
       if ( NULL == element ) {
         continue;
       }
-      item1 = new QTreeWidgetItem(QStringList(element->GetName()));
+      item1 = new BuildTreeItem(QStringList(element->GetName()));
       item->addChild(item1);
       buildLine = element->GetBuildLine();
       if ( NULL == buildLine ) {
         continue;
       }
+      item1->SetBuildLine(buildLine);
       buildLineType = buildLine->GetType();
       if ( buildLineType == BuildLine::TypeCompile ) {
         BuildCompileLine*               compileLine;
         compileLine = (BuildCompileLine*)buildLine;
         targetName = compileLine->GetTarget();
-        item2 = new QTreeWidgetItem(QStringList(targetName));
+        item2 = new BuildTreeItem(QStringList(targetName));
         item1->addChild(item2);
         continue;
       }
@@ -244,7 +248,7 @@ BuildTreeWindow::SlotBuildSystemSelected
         BuildARLine*                    ARLine;
         ARLine = (BuildARLine*)buildLine;
         targetName = ARLine->GetTarget();
-        item2 = new QTreeWidgetItem(QStringList(targetName));
+        item2 = new BuildTreeItem(QStringList(targetName));
         item1->addChild(item2);
         continue;
       }
@@ -252,7 +256,7 @@ BuildTreeWindow::SlotBuildSystemSelected
         BuildLNLine*                    LNLine;
         LNLine = (BuildLNLine*)buildLine;
         targetName = LNLine->GetTarget();
-        item2 = new QTreeWidgetItem(QStringList(targetName));
+        item2 = new BuildTreeItem(QStringList(targetName));
         item1->addChild(item2);
         continue;
       }
@@ -260,3 +264,80 @@ BuildTreeWindow::SlotBuildSystemSelected
   }
 }
 
+/*****************************************************************************!
+ * Function : SlotTreeWidgetItemSelected
+ *****************************************************************************/
+void
+BuildTreeWindow::SlotTreeWidgetItemSelected
+(QTreeWidgetItem* InItem, int InColumn)
+{
+  BuildCompileLine*                     buildCompileLine;
+  BuildLine*                            buildLine;
+  BuildLine::Type                       type;
+  BuildTreeItem*                        item;
+  QStringList                           sources;
+
+  (void)InColumn;
+
+  item = (BuildTreeItem*)InItem;
+  buildLine = item->GetBuildLine();
+  if ( NULL == buildLine ) {
+    return;
+  }
+  type = buildLine->GetType();
+  if ( type == BuildLine::TypeCompile ) {
+    buildCompileLine = (BuildCompileLine*)buildLine;
+    sources = buildCompileLine->GetSources();
+    foreach (QString st, sources) {
+      TRACE_FUNCTION_QSTRING(st);
+    }
+  }
+}
+
+/*****************************************************************************!
+ * Local Functions
+ *****************************************************************************/
+bool
+CompareTopLevelNames
+(QString InString1, QString InString2)
+{
+  QString                               base1;
+  QString                               base2;
+  QString                               suffix1;
+  QString                               suffix2;
+  QFileInfo                             info1;
+  QFileInfo                             info2;
+  bool                                  b;
+    
+  info1.setFile(InString1);
+  info2.setFile(InString2);
+
+  base1 = info1.completeBaseName();
+  suffix1 = info1.suffix();
+
+  base2 = info2.completeBaseName();
+  suffix2 = info2.suffix();
+
+  do {
+    
+    if ( suffix1.isEmpty() && suffix2.isEmpty() ) {
+      b = base1 < base2;
+      break;
+    }
+    if ( suffix1.isEmpty() ) {
+      b = true;
+      break;
+    }
+    if ( suffix2.isEmpty() ) {
+      b = false;
+      break;
+    }
+
+    if ( suffix1 == suffix2 ) {
+      b = base1 < base2;
+      break;
+    }
+    b = suffix1 < suffix2;
+  } while (false);
+  return b;
+}
