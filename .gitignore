@@ -54,6 +54,7 @@ compile_commands.json
 # Directories
 release
 debug
+BuildDir
 
 # Misc files
 *~
