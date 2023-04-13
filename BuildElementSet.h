@@ -70,6 +70,7 @@ class BuildElementSet : public QWidget
   BuildElement*
   GetElementByIndex
   (int InIndex);
+  void                          Dump                    (void);
   
  //! Public Data
  public :

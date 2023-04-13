@@ -44,14 +44,12 @@ class BuildSystem : public QWidget
   BuildElementSetAdd
   (BuildElementSet* InSet);
 
-  void
-  Dump
-  ();
   void                          GetTopLevelElements     (void);
   bool                          IsSourceElement         (QString InName);
   int                           GetCount                (void);
   QStringList                   GetTopLevelNames        (void);
   BuildElementSet*              GetBuildElementByName   (QString InName);
+  void                          Dump                    (void);
   
  //! Public Data
  public :

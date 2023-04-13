@@ -19,7 +19,6 @@
 #include "DependencyTreeWindow.h"
 #include "main.h"
 #include "trace.h"
-#include "BuildTreeLineDialog.h"
 
 /*****************************************************************************!
  * Function : DependencyTreeWindow

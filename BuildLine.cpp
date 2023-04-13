@@ -66,3 +66,12 @@ BuildLine::GetLineElements
   elements = InBuildLine.split(QRegularExpression("\\s+|\n"));
   return elements;
 }
+
+/*****************************************************************************!
+ * Function : Dump
+ *****************************************************************************/
+void
+BuildLine::Dump(void)
+{
+  printf("%2d %s\n", buildType, lineText.toStdString().c_str());
+}

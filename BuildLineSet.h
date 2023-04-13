@@ -51,6 +51,7 @@ class BuildLineSet : public QWidget
   void
   AppendLine
   (BuildLine* InLine);
+  void                          Dump                    (void);
   
  //! Public Data
  public :

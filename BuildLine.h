@@ -65,6 +65,7 @@ class BuildLine : public QWidget
   static QStringList
   GetLineElements
   (QString InBuildLine);
+  void                          Dump                    (void);
   
  //! Public Data
  public :

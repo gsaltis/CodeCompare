@@ -66,3 +66,16 @@ BuildLineSet::AppendLine
   lines << InLine;
 }
 
+
+/*****************************************************************************!
+ * Function : Dump
+ *****************************************************************************/
+void
+BuildLineSet::Dump(void)
+{
+  BuildLine*                            line;
+
+  foreach (line, lines) {
+    line->Dump();
+  }
+}

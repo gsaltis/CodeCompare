@@ -39,7 +39,7 @@ BuildTreeWindow::BuildTreeWindow
 {
   QPalette pal;
   pal = palette();
-  pal.setBrush(QPalette::Window, QBrush(QColor(255, 0, 255)));
+  pal.setBrush(QPalette::Window, QBrush(QColor(224, 224, 224)));
   setPalette(pal);
   setAutoFillBackground(true);
   setFrameShadow(QFrame::Sunken);
@@ -156,12 +156,9 @@ BuildTreeWindow::SlotBuildSystemSelected
 (BuildSystem* InSystem)
 {
   BuildElement*                         element;
+  BuildElementSet*                      childSet;
   BuildElementSet*                      elementSet;
   BuildLine*                            buildLine;
-  BuildLine::Type                       buildLineType;
-  QString                               st;
-  QString                               targetName;
-  QStringList                           returnNames;
   BuildTreeItem*                        binaryItem;
   BuildTreeItem*                        cgiItem;
   BuildTreeItem*                        item1;
@@ -170,6 +167,10 @@ BuildTreeWindow::SlotBuildSystemSelected
   BuildTreeItem*                        sharedObjectsItem;
   BuildTreeItem*                        staticLibItem;
   BuildTreeItem*                        unknownItem;
+  QString                               st2;
+  QString                               st;
+  QString                               targetName;
+  QStringList                           returnNames;
   int                                   i;
   int                                   j;
   int                                   k;
@@ -228,37 +229,24 @@ BuildTreeWindow::SlotBuildSystemSelected
       if ( NULL == element ) {
         continue;
       }
-      item1 = new BuildTreeItem(QStringList(element->GetName()));
+      st2 = element->GetName();
+      item1 = new BuildTreeItem(QStringList(st2));
       item->addChild(item1);
-      buildLine = element->GetBuildLine();
-      if ( NULL == buildLine ) {
+      childSet = buildSystem->GetBuildElementByName(st2);
+      if ( NULL == childSet ) {
+        printf("Missing %s\n", st.toStdString().c_str());
         continue;
       }
-      item1->SetBuildLine(buildLine);
-      buildLineType = buildLine->GetType();
-      if ( buildLineType == BuildLine::TypeCompile ) {
-        BuildCompileLine*               compileLine;
-        compileLine = (BuildCompileLine*)buildLine;
-        targetName = compileLine->GetTarget();
-        item2 = new BuildTreeItem(QStringList(targetName));
+      for ( int i2 = 0 ; i2 < childSet->GetElementCount(); i2++ ) {
+        BuildElement* element = childSet->GetElementByIndex(i2);
+        QString elementName = element->GetName();
+        item2 = new BuildTreeItem(QStringList(elementName));
         item1->addChild(item2);
-        continue;
-      }
-      if ( buildLineType == BuildLine::TypeAR ) {
-        BuildARLine*                    ARLine;
-        ARLine = (BuildARLine*)buildLine;
-        targetName = ARLine->GetTarget();
-        item2 = new BuildTreeItem(QStringList(targetName));
-        item1->addChild(item2);
-        continue;
-      }
-      if ( buildLineType == BuildLine::TypeLN ) {
-        BuildLNLine*                    LNLine;
-        LNLine = (BuildLNLine*)buildLine;
-        targetName = LNLine->GetTarget();
-        item2 = new BuildTreeItem(QStringList(targetName));
-        item1->addChild(item2);
-        continue;
+        buildLine = element->GetBuildLine();
+        if ( NULL == buildLine ) {
+          continue;
+        }
+        item2->SetBuildLine(buildLine);
       }
     }
   }
