@@ -180,10 +180,10 @@ BuildLineDisplayForm::SetBuildLine
   echoForm->hide();
   unknownBuildTypeForm->hide();
 
-  lineType = buildLine->GetType();
   if ( buildLine == NULL ) {
     return;
   }
+  lineType = buildLine->GetType();
   if ( lineType == BuildLine::TypeCompile ) {
     BuildCompileLine*                   compileLine;
 

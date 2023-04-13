@@ -81,7 +81,7 @@ BuildLineGCCDisplayForm::CreateSubWindows()
                      libsNames, libsNamesScrollArea, y);
 
   //!
-  CreateGroupSection(includePathsNameLabel, "Include Header Paths", QStringList(),
+  CreateGroupSection(includePathsNameLabel, "Header Paths", QStringList(),
                      includesPaths, includesPathsScrollArea, y);
 
   //!

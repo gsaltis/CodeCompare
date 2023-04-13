@@ -133,8 +133,6 @@ DependencyTreeWidgetItem::ParseMakefileOutputLine
     buildSystem->BuildElementSetAdd(buildSet);
 
     QString st = text(0);
-    TRACE_FUNCTION_QSTRING(st);
-    TRACE_FUNCTION_INT(buildLines->GetLineCount());
     for ( int i = 0 ;  i < sources.count(); i++ ) {
       QString                           source;
       buildElement = new BuildElement(sources[i]);

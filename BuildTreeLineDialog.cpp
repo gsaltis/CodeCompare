@@ -114,7 +114,7 @@ BuildTreeLineDialog::CreateSubWindows(void)
                      libsNames, libsNamesScrollArea, y);
 
   //!
-  CreateGroupSection(libPathsNameLabel, "Include Header Paths", buildLine->GetIncludePaths(),
+  CreateGroupSection(libPathsNameLabel, "Header Paths", buildLine->GetIncludePaths(),
                      includesPaths, includesPathsScrollArea, y);
 
   //!
