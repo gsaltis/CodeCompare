@@ -48,7 +48,12 @@ class SystemConfig : public QWidget
   QStringList                   GetMakeArgs             (void);
   bool                          GetMakeNeedLIBDLTarget  (void);
   void                          SetMakeNeedLIBDLTarget  (bool InMakeNeedLIBDLTarget);
-
+  QString                       GetClangExecutable      ();
+  QStringList                   GetClangOptions         ();
+  QStringList                   GetClangIncludePaths    ();
+  QStringList                   GetClangHeaderOptions   ();
+  QStringList                   GetClangHeaderExcludePaths (void);
+  
  //! Public Data
  public :
   static QString                SystemName;
@@ -64,6 +69,7 @@ class SystemConfig : public QWidget
   void                          ReadMainWindowGeometry  (QJsonObject &InObject);
   void                          ReadPaths               (QJsonObject &InObject);
   void                          ReadMakeInformation     (QJsonObject &InObject);
+  void                          ReadClangInformation    (QJsonObject &InObject);
   void                          Initialize              (void);
 
  //! Private Data
@@ -78,6 +84,13 @@ class SystemConfig : public QWidget
   QStringList                   MakeArgs;
   bool                          MakeNeedLIBDLTarget;
 
+  QString                       ClangPath;
+  QStringList                   ClangOptions;
+  QStringList                   ClangIncludePaths;              // Pairs options/value
+  QStringList                   ClangHeaderGatherOptions;  
+  QStringList                   ClangCodeGatherOptions;
+  QStringList                   ClangHeaderExcludePaths;
+  
  //! Public Slots
  public slots :
 

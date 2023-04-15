@@ -48,14 +48,15 @@ void
 SystemConfig::ReadJSON
 (QString InFilename)
 {
+  QByteArray                            fileContents;
+  QFile                                 file(InFilename);
+  QJsonDocument                         doc;
+  QJsonObject                           clangObject;
+  QJsonObject                           docObject;
+  QJsonObject                           geomObject;
   QJsonObject                           makeObject;
   QJsonObject                           pathsObject;
   QJsonValue                            geomValue;
-  QJsonObject                           geomObject;
-  QJsonObject                           docObject;
-  QJsonDocument                         doc;
-  QByteArray                            fileContents;
-  QFile                                 file(InFilename);
 
   file.open(QIODeviceBase::ReadOnly);
 
@@ -80,6 +81,11 @@ SystemConfig::ReadJSON
   makeObject = docObject["Make"].toObject();
   if ( ! makeObject.isEmpty() ) {
     ReadMakeInformation(makeObject);
+  }
+
+  clangObject = docObject["Clang"].toObject();
+  if ( ! clangObject.isEmpty() ){
+    ReadClangInformation(clangObject);
   }
 }
 
@@ -208,3 +214,97 @@ SystemConfig::SetMakeNeedLIBDLTarget
   MakeNeedLIBDLTarget = InMakeNeedLIBDLTarget;  
 }
 
+/*****************************************************************************!
+ * Function : ReadClangInformation
+ *****************************************************************************/
+void
+SystemConfig::ReadClangInformation
+(QJsonObject &InObject)
+{
+  ClangPath = InObject["clang"].toString();
+
+  auto p = InObject["includepaths"].toArray();
+  for ( int i = 0 ; i < p.size(); i++ ) {
+    auto a = p[i].toObject();
+    ClangIncludePaths << a["option"].toString() << a["path"].toString();
+  }
+
+  p = InObject["options"].toArray();
+  for ( int i = 0 ; i < p.size(); i++ ) {
+    ClangOptions << p[i].toString();
+  }
+
+  auto c = InObject["headergather"].toObject();
+  p = c["options"].toArray();
+  for ( int i = 0 ; i < p.size(); i++ ) {
+    ClangHeaderGatherOptions << p[i].toString();
+  }
+
+  c = InObject["codegather"].toObject();
+  p = c["options"].toArray();
+  for ( int i = 0 ; i < p.size(); i++ ) {
+    ClangCodeGatherOptions << p[i].toString();
+  }
+
+  p = InObject["headerexcludepaths"].toArray();
+  for ( int i = 0 ; i < p.size(); i++ ) {
+    ClangHeaderExcludePaths << p[i].toString();
+  }
+}
+
+/*****************************************************************************!
+ * Function : GetClangExecutable
+ *****************************************************************************/
+QString
+SystemConfig::GetClangExecutable
+()
+{
+  return ClangPath;
+}
+
+/*****************************************************************************!
+ * Function : GetClangOptions
+ *****************************************************************************/
+QStringList
+SystemConfig::GetClangOptions
+()
+{
+  return ClangOptions;
+}
+
+/*****************************************************************************!
+ * Function : GetClangIncludePaths
+ *****************************************************************************/
+QStringList
+SystemConfig::GetClangIncludePaths
+()
+{
+  QStringList                           stlist;
+  QString                               st;
+
+  for ( int i = 0 ; i < ClangIncludePaths.count(); i += 2 ) {
+    st = ClangIncludePaths[i] + ClangIncludePaths[i+1];
+    stlist << st;
+  }
+  return stlist;
+}
+
+/*****************************************************************************!
+ * Function : GetClangHeaderOptions
+ *****************************************************************************/
+QStringList
+SystemConfig::GetClangHeaderOptions
+()
+{
+  return ClangHeaderGatherOptions;
+}
+
+
+/*****************************************************************************!
+ * Function : GetClangHeaderExcludePaths
+ *****************************************************************************/
+QStringList
+SystemConfig::GetClangHeaderExcludePaths(void)
+{
+  return ClangHeaderExcludePaths;
+}

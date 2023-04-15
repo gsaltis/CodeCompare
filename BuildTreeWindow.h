@@ -16,11 +16,16 @@
 #include <QFrame>
 #include <QPushButton>
 #include <QTreeWidget>
+#include <QTextEdit>
+#include <QSplitter>
+#include <QTabWidget>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
 #include "BuildSystem.h"
+#include "BuildTreeJSONCodeContainer.h"
+#include "BuildTreeHierarchyContainer.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -63,13 +68,20 @@ class BuildTreeWindow : public QFrame
   void                          CreateSubWindows        ();
   void                          InitializeSubWindows    ();
   void                          resizeEvent             (QResizeEvent* InEvent);
-
+  void                          DisplayFileText         (QString InFilename);
+  void                          CreateConnections       ();
+  
  //! Private Data
  private :
   QPushButton*                  CloseButton;
   QTreeWidget*                  treeWidget;
   BuildSystem*                  buildSystem;
-  
+  QTextEdit*                    fileDisplay;
+  QSplitter*                    splitter;
+  QTabWidget*                   fileTabPane;
+  BuildTreeJSONCodeContainer*   jsonDisplay;
+  BuildTreeHierarchyContainer*  hierarchyDisplay;
+   
  //! Public Slots
  public slots :
   void                          SlotCloseButtonPushed           (void);
@@ -79,6 +91,7 @@ class BuildTreeWindow : public QFrame
  //! Public Signals
  signals :
   void                          SignalTreeWindowClosed          (void);
+  void                          SignalTreeItemSelected  (QString InFilename);
 
  //! Public Actions
  public :

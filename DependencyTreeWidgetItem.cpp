@@ -71,7 +71,7 @@ DependencyTreeWidgetItem::SetFileInfo
  *****************************************************************************/
 void
 DependencyTreeWidgetItem::ParseMakefileOutput
-(QString InMakeOutput)
+(QString InMakeOutput, QString InFullPath)
 {
   QStringList                           lines;
   int                                   linesCount;
@@ -85,6 +85,7 @@ DependencyTreeWidgetItem::ParseMakefileOutput
     if ( NULL == line ) {
       continue;
     }
+    line->SetFilePath(InFullPath);
     if ( line->GetType() == BuildLine::TypeCompile ) {
       QString t = ((BuildCompileLine*)line)->GetTarget();
     }
@@ -243,7 +244,7 @@ DependencyTreeWidgetItem::PerformMake
   makeProcess.start(program, args);
   makeProcess.waitForFinished();
   outputString = QString(makeProcess.readAllStandardOutput());
-  ParseMakefileOutput(outputString);
+  ParseMakefileOutput(outputString, fullPath);
   if ( mainSystemConfig->GetMakeNeedLIBDLTarget() ) {
     if ( ! alreadyHasLIBDL ) {
       file.remove(); 

@@ -1,6 +1,6 @@
 /*****************************************************************************
- * FILE NAME    : BuildLine.cpp
- * DATE         : April 03 2023
+ * FILE NAME    : BuildTreeHierarchyContainer.cpp
+ * DATE         : April 14 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
@@ -15,82 +15,100 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildLine.h"
+#include "BuildTreeHierarchyContainer.h"
+#include "trace.h"
 
 /*****************************************************************************!
- * Function : BuildLine
+ * Function : BuildTreeHierarchyContainer
  *****************************************************************************/
-BuildLine::BuildLine
+BuildTreeHierarchyContainer::BuildTreeHierarchyContainer
 () : QWidget()
 {
-  buildType = TypeNone;
+  QPalette pal;
+  pal = palette();
+  pal.setBrush(QPalette::Window, QBrush(QColor(255, 255, 255)));
+  setPalette(pal);
+  setAutoFillBackground(true);
+  initialize();
 }
 
 /*****************************************************************************!
- * Function : ~BuildLine
+ * Function : ~BuildTreeHierarchyContainer
  *****************************************************************************/
-BuildLine::~BuildLine
+BuildTreeHierarchyContainer::~BuildTreeHierarchyContainer
 ()
 {
 }
 
 /*****************************************************************************!
- * Function : GetType
- *****************************************************************************/
-BuildLine::Type
-BuildLine::GetType
-()
-{
-  return buildType;
-}
-  
-/*****************************************************************************!
- * Function : GetText
- *****************************************************************************/
-QString
-BuildLine::GetText
-(void)
-{
-  return QString(lineText);
-}
-
-/*****************************************************************************!
- * Function : GetLineElements
- *****************************************************************************/
-QStringList
-BuildLine::GetLineElements
-(QString InBuildLine)
-{
-  QStringList                           elements;
-
-  elements = InBuildLine.split(QRegularExpression("\\s+|\n"));
-  return elements;
-}
-
-/*****************************************************************************!
- * Function : Dump
+ * Function : initialize
  *****************************************************************************/
 void
-BuildLine::Dump(void)
+BuildTreeHierarchyContainer::initialize()
 {
-  printf("%2d %s\n", buildType, lineText.toStdString().c_str());
+  InitializeSubWindows();  
+  CreateSubWindows();
+  CreateConnections();
 }
 
 /*****************************************************************************!
- * Function : GetFilePath
- *****************************************************************************/
-QString
-BuildLine::GetFilePath(void)
-{
-  return filePath;  
-}
-
-/*****************************************************************************!
- * Function : SetFilePath
+ * Function : CreateSubWindows
  *****************************************************************************/
 void
-BuildLine::SetFilePath
-(QString InFilePath)
+BuildTreeHierarchyContainer::CreateSubWindows()
 {
-  filePath = InFilePath;  
+  buildTreeHierarchyTableWindow = new BuildTreeHierarchyTable();  
+  buildTreeHierarchyTableWindow->setParent(this);
+  buildTreeHierarchyTableWindow->move(0, 0);
+}
+
+/*****************************************************************************!
+ * Function : InitializeSubWindows
+ *****************************************************************************/
+void
+BuildTreeHierarchyContainer::InitializeSubWindows()
+{
+  buildTreeHierarchyTableWindow = NULL;
+}
+
+/*****************************************************************************!
+ * Function : resizeEvent
+ *****************************************************************************/
+void
+BuildTreeHierarchyContainer::resizeEvent
+(QResizeEvent* InEvent)
+{
+  QSize                                 size;  
+  int                                   width;
+  int                                   height;
+
+  size = InEvent->size();
+  width = size.width();
+  height = size.height();
+  if ( buildTreeHierarchyTableWindow ) {
+    buildTreeHierarchyTableWindow->resize(width, height);
+  }
+}
+
+/*****************************************************************************!
+ * Function : SlotTreeItemSelected
+ *****************************************************************************/
+void
+BuildTreeHierarchyContainer::SlotTreeItemSelected
+(QString InFilename)
+{
+  TRACE_FUNCTION_QSTRING(InFilename);
+  emit SignalTreeItemSelected(InFilename);
+}
+
+/*****************************************************************************!
+ * Function : CreateConnections
+ *****************************************************************************/
+void
+BuildTreeHierarchyContainer::CreateConnections(void)
+{
+  connect(this,
+          SIGNAL(SignalTreeItemSelected(QString)),
+          buildTreeHierarchyTableWindow,
+          SLOT(SlotTreeItemSelected(QString)));
 }

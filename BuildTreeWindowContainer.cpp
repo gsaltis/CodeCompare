@@ -1,6 +1,6 @@
 /*****************************************************************************
- * FILE NAME    : BuildLine.cpp
- * DATE         : April 03 2023
+ * FILE NAME    : BuildTreeWindowContainer.cpp
+ * DATE         : April 14 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
@@ -15,82 +15,72 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildLine.h"
+#include "BuildTreeWindowContainer.h"
 
 /*****************************************************************************!
- * Function : BuildLine
+ * Function : BuildTreeWindowContainer
  *****************************************************************************/
-BuildLine::BuildLine
+BuildTreeWindowContainer::BuildTreeWindowContainer
 () : QWidget()
 {
-  buildType = TypeNone;
+  QPalette pal;
+  pal = palette();
+  pal.setBrush(QPalette::Window, QBrush(QColor(255, 255, 255)));
+  setPalette(pal);
+  setAutoFillBackground(true);
+  initialize();
 }
 
 /*****************************************************************************!
- * Function : ~BuildLine
+ * Function : ~BuildTreeWindowContainer
  *****************************************************************************/
-BuildLine::~BuildLine
+BuildTreeWindowContainer::~BuildTreeWindowContainer
 ()
 {
 }
 
 /*****************************************************************************!
- * Function : GetType
+ * Function : initialize
  *****************************************************************************/
-BuildLine::Type
-BuildLine::GetType
-()
+void
+BuildTreeWindowContainer::initialize()
 {
-  return buildType;
+  InitializeSubWindows();  
+  CreateSubWindows();
 }
+
+/*****************************************************************************!
+ * Function : CreateSubWindows
+ *****************************************************************************/
+void
+BuildTreeWindowContainer::CreateSubWindows()
+{
   
-/*****************************************************************************!
- * Function : GetText
- *****************************************************************************/
-QString
-BuildLine::GetText
-(void)
-{
-  return QString(lineText);
 }
 
 /*****************************************************************************!
- * Function : GetLineElements
- *****************************************************************************/
-QStringList
-BuildLine::GetLineElements
-(QString InBuildLine)
-{
-  QStringList                           elements;
-
-  elements = InBuildLine.split(QRegularExpression("\\s+|\n"));
-  return elements;
-}
-
-/*****************************************************************************!
- * Function : Dump
+ * Function : InitializeSubWindows
  *****************************************************************************/
 void
-BuildLine::Dump(void)
+BuildTreeWindowContainer::InitializeSubWindows()
 {
-  printf("%2d %s\n", buildType, lineText.toStdString().c_str());
+  
 }
 
 /*****************************************************************************!
- * Function : GetFilePath
- *****************************************************************************/
-QString
-BuildLine::GetFilePath(void)
-{
-  return filePath;  
-}
-
-/*****************************************************************************!
- * Function : SetFilePath
+ * Function : resizeEvent
  *****************************************************************************/
 void
-BuildLine::SetFilePath
-(QString InFilePath)
+BuildTreeWindowContainer::resizeEvent
+(QResizeEvent* InEvent)
 {
-  filePath = InFilePath;  
+  QSize					size;  
+  int					width;
+  int					height;
+
+  size = InEvent->size();
+  width = size.width();
+  height = size.height();
+  (void)height;
+  (void)width;
 }

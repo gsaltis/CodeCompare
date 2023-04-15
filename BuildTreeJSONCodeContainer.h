@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : DependencyTreeWidgetItem.h
- * DATE         : April 03 2023
+ * FILE NAME    : BuildTreeJSONCodeContainer.h
+ * DATE         : April 14 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _dependencytreewidgetitem_h_
-#define _dependencytreewidgetitem_h_
+#ifndef _buildtreejsoncodecontainer_h_
+#define _buildtreejsoncodecontainer_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -13,40 +13,37 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
-#include <QTreeWidgetItem>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildLine.h"
-#include "BuildLineSet.h"
-#include "BuildSystem.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
+#define BUILD_TREE_JSONCODE_CONTAINER_X 200
+#define BUILD_TREE_JSONCODE_CONTAINER_Y 200
+#define BUILD_TREE_JSONCODE_CONTAINER_WIDTH 200
+#define BUILD_TREE_JSONCODE_CONTAINER_HEIGHT 200
 
 /*****************************************************************************!
- * Exported Class : DependencyTreeWidgetItem
+ * Exported Class : BuildTreeJSONCodeContainer
  *****************************************************************************/
-class DependencyTreeWidgetItem : public QTreeWidgetItem
+class BuildTreeJSONCodeContainer : public QWidget
 {
+  Q_OBJECT;
+
  //! Constructors
  public :
-  DependencyTreeWidgetItem      (QStringList InNames, QFileInfo InInfo, BuildSystem* InBuildSystem);
+  BuildTreeJSONCodeContainer    ();
 
  //! Destructor
  public :
-  ~DependencyTreeWidgetItem     ();
+  ~BuildTreeJSONCodeContainer   ();
 
  //! Public Methods
  public :
-  QFileInfo                     GetFileInfo             (void);
-  void                          SetFileInfo             (QFileInfo InFileInfo);
-  void                          ParseMakefileOutput     (QString InMakeOutput, QString InFullPath);
-  void                          PerformMake             ();
-  BuildLineSet*                 GetBuildLines           (void);
-  
+
  //! Public Data
  public :
 
@@ -58,15 +55,14 @@ class DependencyTreeWidgetItem : public QTreeWidgetItem
 
  //! Private Methods
  private :
-  BuildLine*                    ParseMakefileOutputLine (QString InOutputLine);
+  void                          initialize              ();
+  void                          CreateSubWindows        ();
+  void                          InitializeSubWindows    ();
+  void                          resizeEvent             (QResizeEvent* InEvent);
 
  //! Private Data
  private :
-  BuildLineSet*                 buildLines;
-  BuildSystem*                  buildSystem;
-  QFileInfo                     fileInfo;
-  QString                       buildString;
-  
+
  //! Public Slots
  public slots :
 
@@ -78,4 +74,4 @@ class DependencyTreeWidgetItem : public QTreeWidgetItem
 
 };
 
-#endif /* _dependencytreewidgetitem_h_*/
+#endif /* _buildtreejsoncodecontainer_h_*/

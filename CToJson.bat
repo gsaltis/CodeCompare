@@ -1,0 +1,1 @@
+clang -c -isystem d:/Source/NCUCodeMerge/arm926/host-cross/arm-wrs-linux-gnueabi/sysroot/usr/include -Xclang -ast-dump=json -ID:/Source/NCUCodeMerge/Track2_NCU_CODE/src/include -ferror-limit=9999 %1 > %1.json 2> %1.errors

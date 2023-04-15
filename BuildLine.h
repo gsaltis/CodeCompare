@@ -13,6 +13,7 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
+#include <QString>
 
 /*****************************************************************************!
  * Local Headers
@@ -66,6 +67,8 @@ class BuildLine : public QWidget
   GetLineElements
   (QString InBuildLine);
   void                          Dump                    (void);
+  QString                       GetFilePath             (void);
+  void                          SetFilePath             (QString InFilePath);
   
  //! Public Data
  public :
@@ -84,6 +87,8 @@ class BuildLine : public QWidget
  //! Private Data
  private :
   
+  QString                       filePath;
+
  //! Public Slots
  public slots :
 

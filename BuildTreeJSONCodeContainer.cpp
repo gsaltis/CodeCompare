@@ -1,6 +1,6 @@
 /*****************************************************************************
- * FILE NAME    : BuildLine.cpp
- * DATE         : April 03 2023
+ * FILE NAME    : BuildTreeJSONCodeContainer.cpp
+ * DATE         : April 14 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
@@ -15,82 +15,72 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildLine.h"
+#include "BuildTreeJSONCodeContainer.h"
 
 /*****************************************************************************!
- * Function : BuildLine
+ * Function : BuildTreeJSONCodeContainer
  *****************************************************************************/
-BuildLine::BuildLine
+BuildTreeJSONCodeContainer::BuildTreeJSONCodeContainer
 () : QWidget()
 {
-  buildType = TypeNone;
+  QPalette pal;
+  pal = palette();
+  pal.setBrush(QPalette::Window, QBrush(QColor(255, 255, 255)));
+  setPalette(pal);
+  setAutoFillBackground(true);
+  initialize();
 }
 
 /*****************************************************************************!
- * Function : ~BuildLine
+ * Function : ~BuildTreeJSONCodeContainer
  *****************************************************************************/
-BuildLine::~BuildLine
+BuildTreeJSONCodeContainer::~BuildTreeJSONCodeContainer
 ()
 {
 }
 
 /*****************************************************************************!
- * Function : GetType
+ * Function : initialize
  *****************************************************************************/
-BuildLine::Type
-BuildLine::GetType
-()
+void
+BuildTreeJSONCodeContainer::initialize()
 {
-  return buildType;
+  InitializeSubWindows();  
+  CreateSubWindows();
 }
+
+/*****************************************************************************!
+ * Function : CreateSubWindows
+ *****************************************************************************/
+void
+BuildTreeJSONCodeContainer::CreateSubWindows()
+{
   
-/*****************************************************************************!
- * Function : GetText
- *****************************************************************************/
-QString
-BuildLine::GetText
-(void)
-{
-  return QString(lineText);
 }
 
 /*****************************************************************************!
- * Function : GetLineElements
- *****************************************************************************/
-QStringList
-BuildLine::GetLineElements
-(QString InBuildLine)
-{
-  QStringList                           elements;
-
-  elements = InBuildLine.split(QRegularExpression("\\s+|\n"));
-  return elements;
-}
-
-/*****************************************************************************!
- * Function : Dump
+ * Function : InitializeSubWindows
  *****************************************************************************/
 void
-BuildLine::Dump(void)
+BuildTreeJSONCodeContainer::InitializeSubWindows()
 {
-  printf("%2d %s\n", buildType, lineText.toStdString().c_str());
+  
 }
 
 /*****************************************************************************!
- * Function : GetFilePath
- *****************************************************************************/
-QString
-BuildLine::GetFilePath(void)
-{
-  return filePath;  
-}
-
-/*****************************************************************************!
- * Function : SetFilePath
+ * Function : resizeEvent
  *****************************************************************************/
 void
-BuildLine::SetFilePath
-(QString InFilePath)
+BuildTreeJSONCodeContainer::resizeEvent
+(QResizeEvent* InEvent)
 {
-  filePath = InFilePath;  
+  QSize					size;  
+  int					width;
+  int					height;
+
+  size = InEvent->size();
+  width = size.width();
+  height = size.height();
+  (void)height;
+  (void)width;
 }

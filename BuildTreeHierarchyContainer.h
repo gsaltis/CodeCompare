@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : DependencyTreeWidgetItem.h
- * DATE         : April 03 2023
+ * FILE NAME    : BuildTreeHierarchyContainer.h
+ * DATE         : April 14 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _dependencytreewidgetitem_h_
-#define _dependencytreewidgetitem_h_
+#ifndef _buildtreehierarchycontainer_h_
+#define _buildtreehierarchycontainer_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -13,40 +13,38 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
-#include <QTreeWidgetItem>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildLine.h"
-#include "BuildLineSet.h"
-#include "BuildSystem.h"
+#include "BuildTreeHierarchyTable.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
+#define BUILD_TREE_HIERARCHY_CONTAINER_X 200
+#define BUILD_TREE_HIERARCHY_CONTAINER_Y 200
+#define BUILD_TREE_HIERARCHY_CONTAINER_WIDTH 200
+#define BUILD_TREE_HIERARCHY_CONTAINER_HEIGHT 200
 
 /*****************************************************************************!
- * Exported Class : DependencyTreeWidgetItem
+ * Exported Class : BuildTreeHierarchyContainer
  *****************************************************************************/
-class DependencyTreeWidgetItem : public QTreeWidgetItem
+class BuildTreeHierarchyContainer : public QWidget
 {
+  Q_OBJECT;
+
  //! Constructors
  public :
-  DependencyTreeWidgetItem      (QStringList InNames, QFileInfo InInfo, BuildSystem* InBuildSystem);
+  BuildTreeHierarchyContainer   ();
 
  //! Destructor
  public :
-  ~DependencyTreeWidgetItem     ();
+  ~BuildTreeHierarchyContainer  ();
 
  //! Public Methods
  public :
-  QFileInfo                     GetFileInfo             (void);
-  void                          SetFileInfo             (QFileInfo InFileInfo);
-  void                          ParseMakefileOutput     (QString InMakeOutput, QString InFullPath);
-  void                          PerformMake             ();
-  BuildLineSet*                 GetBuildLines           (void);
-  
+
  //! Public Data
  public :
 
@@ -58,24 +56,27 @@ class DependencyTreeWidgetItem : public QTreeWidgetItem
 
  //! Private Methods
  private :
-  BuildLine*                    ParseMakefileOutputLine (QString InOutputLine);
+  void                          initialize              ();
+  void                          CreateSubWindows        ();
+  void                          InitializeSubWindows    ();
+  void                          resizeEvent             (QResizeEvent* InEvent);
+  void                          CreateConnections       (void);
 
  //! Private Data
  private :
-  BuildLineSet*                 buildLines;
-  BuildSystem*                  buildSystem;
-  QFileInfo                     fileInfo;
-  QString                       buildString;
-  
+  BuildTreeHierarchyTable*      buildTreeHierarchyTableWindow;
+
  //! Public Slots
  public slots :
+  void                          SlotTreeItemSelected    (QString InFilename);
 
  //! Public Signals
  signals :
-
+  void                          SignalTreeItemSelected  (QString InFilename);
+  
  //! Public Actions
  public :
 
 };
 
-#endif /* _dependencytreewidgetitem_h_*/
+#endif /* _buildtreehierarchycontainer_h_*/

@@ -55,8 +55,12 @@ SOURCES                         += \
 				   BuildLineUnknownDisplayForm.cpp              \
 				   BuildRanlibLine.cpp                          \
 				   BuildSystem.cpp                              \
-                                   BuildTreeItem.cpp                            \
-                                   BuildTreeWindow.cpp                          \
+				   BuildTreeHierarchyContainer.cpp              \
+				   BuildTreeHierarchyTable.cpp                  \
+				   BuildTreeItem.cpp                            \
+				   BuildTreeJSONCodeContainer.cpp               \
+				   BuildTreeWindow.cpp                          \
+				   BuildTreeWindowContainer.cpp                 \
 				   BuildUnknownLine.cpp                         \
 				   CodeBaseForm.cpp                             \
 				   CodeBaseOpenDialog.cpp                       \
@@ -95,8 +99,12 @@ HEADERS                         += \
 				   BuildLineUnknownDisplayForm.h                \
 				   BuildRanlibLine.h                            \
 				   BuildSystem.h                                \
-                                   BuildTreeItem.h                              \
-                                   BuildTreeWindow.h                            \
+				   BuildTreeHierarchyContainer.h                \
+				   BuildTreeHierarchyTable.h                    \
+				   BuildTreeItem.h                              \
+				   BuildTreeJSONCodeContainer.h                 \
+				   BuildTreeWindow.h                            \
+				   BuildTreeWindowContainer.h                   \
 				   BuildUnknownLine.h                           \
 				   CodeBaseForm.h                               \
 				   CodeBaseOpenDialog.h                         \
@@ -106,11 +114,11 @@ HEADERS                         += \
 				   DependencyTreeWindow.h                       \
 				   DirectoryReadEntry.h                         \
 				   DirectoryTreeElement.h                       \
-                                   gui.h                                        \
 				   MainDisplayWindow.h                          \
 				   MainWindow.h                                 \
 				   SystemConfig.h                               \
 				   WindowHeader.h                               \
+				   gui.h                                        \
 				   trace.h                                      \
 				   trace_file.h                                 \
 				   trace_net.h                                  \

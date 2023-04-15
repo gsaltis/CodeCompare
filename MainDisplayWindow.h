@@ -21,6 +21,7 @@
 #include "CodeNameWindow.h"
 #include "DependencyTreeWindow.h"
 #include "BuildTreeWindow.h"
+#include "BuildTreeWindowContainer.h"
 #include "BuildSystem.h"
 
 /*****************************************************************************!
@@ -70,6 +71,7 @@ class MainDisplayWindow : public QWidget
   CodeWindow*                   codeWindowMerge;
   DependencyTreeWindow*         dependencyTreeWindow;
   BuildTreeWindow*              buildTreeWindow;
+  BuildTreeWindowContainer*     buildTreeContainer;
   
  //! Public Slots
  public slots :

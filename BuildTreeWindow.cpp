@@ -39,6 +39,7 @@ BuildTreeWindow::BuildTreeWindow
 {
   QPalette pal;
   pal = palette();
+  setWindowTitle("BuildTreeWindow");
   pal.setBrush(QPalette::Window, QBrush(QColor(224, 224, 224)));
   setPalette(pal);
   setAutoFillBackground(true);
@@ -63,6 +64,7 @@ BuildTreeWindow::initialize()
 {
   InitializeSubWindows();  
   CreateSubWindows();
+  CreateConnections();
 }
 
 /*****************************************************************************!
@@ -71,6 +73,8 @@ BuildTreeWindow::initialize()
 void
 BuildTreeWindow::CreateSubWindows()
 {
+  QTreeWidgetItem*                      treeHeader;
+  
   //! Create the CloseButton button  
   CloseButton = new QPushButton();
   CloseButton->setParent(this);
@@ -78,6 +82,25 @@ BuildTreeWindow::CreateSubWindows()
   CloseButton->move(10, 10);
   CloseButton->resize(100,20);
   connect(CloseButton, SIGNAL(pressed()), this, SLOT(SlotCloseButtonPushed()));
+
+  splitter = new QSplitter(this);
+  treeWidget = new QTreeWidget(this);
+
+  treeHeader = new QTreeWidgetItem(QStringList(QString("Name")));
+  treeWidget->setHeaderItem(treeHeader);
+
+  fileTabPane = new QTabWidget();
+  fileDisplay = new QTextEdit(this);
+
+  jsonDisplay = new BuildTreeJSONCodeContainer();
+  hierarchyDisplay = new BuildTreeHierarchyContainer();
+  
+  fileTabPane->addTab(fileDisplay, QString("Code Text"));
+  fileTabPane->addTab(jsonDisplay, QString("JSON"));
+  fileTabPane->addTab(hierarchyDisplay, QString("Hierarchy"));
+  
+  splitter->addWidget(treeWidget);
+  splitter->addWidget(fileTabPane);
 }
 
 /*****************************************************************************!
@@ -86,17 +109,25 @@ BuildTreeWindow::CreateSubWindows()
 void
 BuildTreeWindow::InitializeSubWindows()
 {
-  QTreeWidgetItem*                      treeHeader;
-  treeWidget = new QTreeWidget(this);
-  treeWidget->move(GUI_X_GAP, GUI_Y_GAP);
 
-  treeHeader = new QTreeWidgetItem(QStringList(QString("Name")));
-  treeWidget->setHeaderItem(treeHeader);
+}
 
+/*****************************************************************************!
+ * Function : CreateConnections
+ *****************************************************************************/
+void
+BuildTreeWindow::CreateConnections()
+{
   connect(treeWidget,
           SIGNAL(itemClicked(QTreeWidgetItem*, int)),
           this,
           SLOT(SlotTreeWidgetItemSelected(QTreeWidgetItem*, int)));
+
+  connect(this,
+          SIGNAL(SignalTreeItemSelected(QString)),
+          hierarchyDisplay,
+          SLOT(SlotTreeItemSelected(QString)));
+                 
 }
 
 /*****************************************************************************!
@@ -106,34 +137,29 @@ void
 BuildTreeWindow::resizeEvent
 (QResizeEvent* InEvent)
 {
-  int                                   width34;
-  int                                   width14;
   int                                   height;
   QSize                                 size;  
   int                                   width;
   int                                   closeButtonX, closeButtonY;
   int                                   closeButtonW, closeButtonH;
-  int                                   treeWidgetW, treeWidgetH;
-  int                                   treeWidgetX, treeWidgetY;
+  int                                   splitterX, splitterY, splitterW, splitterH;
   
   size = InEvent->size();
   width = size.width();
   height = size.height();
-  width34 = width * 3 / 4;
-  width14 = width - width34;
-  (void)width14;
+
   closeButtonW = 60;
   closeButtonH = 20;
   closeButtonX = width - (closeButtonW + GUI_X_GAP);
   closeButtonY = height- (closeButtonH + GUI_Y_GAP);
 
-  treeWidgetX = GUI_X_GAP;
-  treeWidgetY = GUI_Y_GAP;
-  treeWidgetW = width34 - (GUI_X_GAP * 3);
-  treeWidgetH = height - (GUI_Y_GAP * 2);
+  splitterX = GUI_X_GAP;
+  splitterY = GUI_Y_GAP;
+  splitterW = width - (GUI_X_GAP * 2);
+  splitterH = height - (GUI_Y_GAP + 50);
 
-  treeWidget->move(treeWidgetX, treeWidgetY);
-  treeWidget->resize(treeWidgetW, treeWidgetH);
+  splitter->move(splitterX, splitterY);
+  splitter->resize(splitterW, splitterH);
   
   CloseButton->move(closeButtonX, closeButtonY);
   CloseButton->resize(closeButtonW, closeButtonH);
@@ -237,6 +263,8 @@ BuildTreeWindow::SlotBuildSystemSelected
         printf("Missing %s\n", st.toStdString().c_str());
         continue;
       }
+
+      // Create the actual source files elements
       for ( int i2 = 0 ; i2 < childSet->GetElementCount(); i2++ ) {
         BuildElement* element = childSet->GetElementByIndex(i2);
         QString elementName = element->GetName();
@@ -263,6 +291,8 @@ BuildTreeWindow::SlotTreeWidgetItemSelected
   BuildLine*                            buildLine;
   BuildLine::Type                       type;
   BuildTreeItem*                        item;
+  QString                               fileName;
+  QString                               filePath;
   QStringList                           sources;
 
   (void)InColumn;
@@ -275,9 +305,12 @@ BuildTreeWindow::SlotTreeWidgetItemSelected
   type = buildLine->GetType();
   if ( type == BuildLine::TypeCompile ) {
     buildCompileLine = (BuildCompileLine*)buildLine;
+    filePath = buildCompileLine->GetFilePath();
     sources = buildCompileLine->GetSources();
     foreach (QString st, sources) {
-      TRACE_FUNCTION_QSTRING(st);
+      fileName = filePath + QString("/") + st;
+      DisplayFileText(fileName);
+      emit SignalTreeItemSelected(fileName);
     }
   }
 }
@@ -328,4 +361,29 @@ CompareTopLevelNames
     b = suffix1 < suffix2;
   } while (false);
   return b;
+}
+
+/*****************************************************************************!
+ * Function : DisplayFileText
+ *****************************************************************************/
+void
+BuildTreeWindow::DisplayFileText
+(QString InFilename)
+{
+  QString                               st;
+  QByteArray                            ba;
+  QFile                                         file(InFilename);
+
+  TRACE_FUNCTION_QSTRING(InFilename);
+  fileDisplay->setText(QString(""));
+
+  if ( ! file.exists() ) {
+    return;
+  }
+
+  file.open(QIODeviceBase::ReadOnly);
+  ba = file.readAll();
+  st = QString(ba);
+  fileDisplay->setText(st);
+  file.close();
 }
