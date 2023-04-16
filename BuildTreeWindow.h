@@ -26,6 +26,7 @@
 #include "BuildSystem.h"
 #include "BuildTreeJSONCodeContainer.h"
 #include "BuildTreeHierarchyContainer.h"
+#include "TitledWindow.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -81,7 +82,8 @@ class BuildTreeWindow : public QFrame
   QTabWidget*                   fileTabPane;
   BuildTreeJSONCodeContainer*   jsonDisplay;
   BuildTreeHierarchyContainer*  hierarchyDisplay;
-   
+  TitledWindow*                 fileTabContainer;
+
  //! Public Slots
  public slots :
   void                          SlotCloseButtonPushed           (void);

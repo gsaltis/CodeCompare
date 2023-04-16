@@ -1,47 +1,47 @@
 /*****************************************************************************
- * FILE NAME    : BuildTreeHierarchyTable.h
- * DATE         : April 14 2023
+ * FILE NAME    : BuildTreeHierarchyTableItem.h
+ * DATE         : April 15 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _buildtreehierarchytable_h_
-#define _buildtreehierarchytable_h_
+#ifndef _buildtreehierarchytableitem_h_
+#define _buildtreehierarchytableitem_h_
 
 /*****************************************************************************!
  * Global Headers
  *****************************************************************************/
 #include <QtCore>
 #include <QtGui>
-#include <QScrollArea>
 #include <QWidget>
+#include <QLabel>
+#include <QFrame>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildTreeHierarchyTableItem.h"
 
 /*****************************************************************************!
  * Exported Macros
- *****************************************************************************/
-#define BUILD_TREE_HIERARCHY_TABLE_X    200
-#define BUILD_TREE_HIERARCHY_TABLE_Y    200
-#define BUILD_TREE_HIERARCHY_TABLE_WIDTH 200
-#define BUILD_TREE_HIERARCHY_TABLE_HEIGHT 200
+nn *****************************************************************************/
+#define BUILD_TREE_HIERARCHY_TABLE_ITEM_X 5
+#define BUILD_TREE_HIERARCHY_TABLE_ITEM_Y 200
+#define BUILD_TREE_HIERARCHY_TABLE_ITEM_WIDTH 200
+#define BUILD_TREE_HIERARCHY_TABLE_ITEM_HEIGHT 17
 
 /*****************************************************************************!
- * Exported Class : BuildTreeHierarchyTable
+ * Exported Class : BuildTreeHierarchyTableItem
  *****************************************************************************/
-class BuildTreeHierarchyTable : public QScrollArea
+class BuildTreeHierarchyTableItem : public QFrame
 {
   Q_OBJECT;
 
  //! Constructors
  public :
-  BuildTreeHierarchyTable       ();
+  BuildTreeHierarchyTableItem   (QString InName, QWidget* InParent);
 
  //! Destructor
  public :
-  ~BuildTreeHierarchyTable      ();
+  ~BuildTreeHierarchyTableItem  ();
 
  //! Public Methods
  public :
@@ -64,12 +64,11 @@ class BuildTreeHierarchyTable : public QScrollArea
 
  //! Private Data
  private :
-  QWidget*                              container;
-  QList<BuildTreeHierarchyTableItem*>   elements;
+  QLabel*                       nameLabel;
+  QString                       name;
   
  //! Public Slots
  public slots :
-  void                          SlotTreeItemSelected    (QString InFilename);
 
  //! Public Signals
  signals :
@@ -79,4 +78,4 @@ class BuildTreeHierarchyTable : public QScrollArea
 
 };
 
-#endif /* _buildtreehierarchytable_h_*/
+#endif /* _buildtreehierarchytableitem_h_*/

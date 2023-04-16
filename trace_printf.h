@@ -99,6 +99,32 @@
   }                                                                                             \
 
 //!
+#define TRACE_FUNCTION_QPOINT(n)                                                                \
+  {                                                                                             \
+    struct timeval tv;                                                                          \
+    struct tm* t2;                                                                              \
+    int i;                                                                                      \
+    time_t                              t;                                                      \
+    QString                             f;                                                      \
+    for ( i = 0 ; i < TraceIndent-2 ; i += 2 ) {                                                \
+      printf("| ");                                                                             \
+    }                                                                                           \
+    printf("|_");                                                                               \
+    gettimeofday(&tv, NULL);                                                                    \
+    t2 = localtime((time_t*)&(tv.tv_sec));                                                      \
+    t = (time_t)tv.tv_sec;                                                                      \
+    t2 = localtime(&t);                                                                         \
+    f = QString(__FILE__) + QString(":") + QString(__FUNCTION__);                               \
+    printf("QPOINT : %*s : %04d %02d:%02d:%02d.%06d : %35s : x : %4d y : %4d\n",                \
+           (TRACE_FUNCTION_NAME_LENGTH - 3) - TraceIndent,                                      \
+           f.toStdString().c_str(),                                                             \
+           __LINE__,                                                                            \
+           (int)t2->tm_hour, (int)t2->tm_min, (int)t2->tm_sec, (int)tv.tv_usec,                 \
+           #n, n.x(), n.y());                                                                   \
+    fflush(stdout);                                                                             \
+  }                                                                                             \
+
+//!
 #define TRACE_FUNCTION_END()                                                                    \
   {                                                                                             \
     struct timeval tv;                                                                          \

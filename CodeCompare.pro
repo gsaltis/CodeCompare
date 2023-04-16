@@ -57,6 +57,7 @@ SOURCES                         += \
 				   BuildSystem.cpp                              \
 				   BuildTreeHierarchyContainer.cpp              \
 				   BuildTreeHierarchyTable.cpp                  \
+				   BuildTreeHierarchyTableItem.cpp              \
 				   BuildTreeItem.cpp                            \
 				   BuildTreeJSONCodeContainer.cpp               \
 				   BuildTreeWindow.cpp                          \
@@ -73,6 +74,7 @@ SOURCES                         += \
 				   MainDisplayWindow.cpp                        \
 				   MainWindow.cpp                               \
 				   SystemConfig.cpp                             \
+				   TitledWindow.cpp                             \
 				   WindowHeader.cpp                             \
 				   main.cpp                                     \
 				   trace.cpp                                    \
@@ -101,6 +103,7 @@ HEADERS                         += \
 				   BuildSystem.h                                \
 				   BuildTreeHierarchyContainer.h                \
 				   BuildTreeHierarchyTable.h                    \
+				   BuildTreeHierarchyTableItem.h                \
 				   BuildTreeItem.h                              \
 				   BuildTreeJSONCodeContainer.h                 \
 				   BuildTreeWindow.h                            \
@@ -117,6 +120,7 @@ HEADERS                         += \
 				   MainDisplayWindow.h                          \
 				   MainWindow.h                                 \
 				   SystemConfig.h                               \
+				   TitledWindow.h                               \
 				   WindowHeader.h                               \
 				   gui.h                                        \
 				   trace.h                                      \

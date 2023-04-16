@@ -23,7 +23,7 @@
  * Function : BuildTreeHierarchyTable
  *****************************************************************************/
 BuildTreeHierarchyTable::BuildTreeHierarchyTable
-() : QTableWidget()
+() : QScrollArea()
 {
   QPalette pal;
   pal = palette();
@@ -47,8 +47,8 @@ BuildTreeHierarchyTable::~BuildTreeHierarchyTable
 void
 BuildTreeHierarchyTable::initialize()
 {
-  InitializeSubWindows();  
   CreateSubWindows();
+  InitializeSubWindows();
 }
 
 /*****************************************************************************!
@@ -57,7 +57,14 @@ BuildTreeHierarchyTable::initialize()
 void
 BuildTreeHierarchyTable::CreateSubWindows()
 {
-  
+  container = new QWidget();
+  setWidget(container);
+  container->move(0, 0);
+  container->resize(size());
+  QPalette pal = container->palette();
+  pal.setBrush(QPalette::Window, QBrush(QColor(128, 128, 0)));
+  container->setPalette(pal);
+  container->setAutoFillBackground(true);
 }
 
 /*****************************************************************************!
@@ -66,7 +73,6 @@ BuildTreeHierarchyTable::CreateSubWindows()
 void
 BuildTreeHierarchyTable::InitializeSubWindows()
 {
-  setColumnCount(1);
 }
 
 /*****************************************************************************!
@@ -76,15 +82,17 @@ void
 BuildTreeHierarchyTable::resizeEvent
 (QResizeEvent* InEvent)
 {
+  int                                   containerH;
   QSize                                 size;  
   int                                   width;
-  int                                   height;
 
   size = InEvent->size();
   width = size.width();
-  height = size.height();
-  (void)height;
-  (void)width;
+  containerH = container->size().height();
+  container->resize(width, containerH);
+  foreach (auto b, elements) {
+    b->resize(width, BUILD_TREE_HIERARCHY_TABLE_ITEM_HEIGHT);
+  }
 }
 
 /*****************************************************************************!
@@ -94,9 +102,6 @@ void
 BuildTreeHierarchyTable::SlotTreeItemSelected
 (QString InFilename)
 {
-  int                                   i;
-  QString                               st2;
-  bool                                  found;
   QString                               allLines;
   QStringList                           args;
   QString                               clangExe;
@@ -107,22 +112,24 @@ BuildTreeHierarchyTable::SlotTreeItemSelected
   QString                               errorOutputString;
   QString                               excludeLine;
   QStringList                           excludeLines;
+  bool                                  found;
   QString                               headerLine;
   QStringList                           headerLines;
+  BuildTreeHierarchyTableItem*          item;
   QString                               outputString;
   QProcess                              process;
-  QString                               st;
   QString                               sourcePath = getenv("ACU_SOURCE_DIR");
   int                                   sourcePathLen = sourcePath.length();
+  QString                               st2;
+  QString                               st;
+  int                                   y;
 
   sourcePath = QDir::toNativeSeparators(sourcePath);
-  TRACE_FUNCTION_QSTRING(sourcePath);
   clangExe = mainSystemConfig->GetClangExecutable();
   clangOptions = mainSystemConfig->GetClangOptions();
   clangIncludePaths = mainSystemConfig->GetClangIncludePaths();
   clangHeaderOptions = mainSystemConfig->GetClangHeaderOptions();
   excludeLines = mainSystemConfig->GetClangHeaderExcludePaths();
-  TRACE_FUNCTION_INT(excludeLines.count());
   
   (void)clangExe;
   (void)process;
@@ -147,6 +154,9 @@ BuildTreeHierarchyTable::SlotTreeItemSelected
       }
     }
     if ( !found ) {
+      if ( headerLine.isEmpty() ) {
+        continue;
+      }
       if (headerLine[0] != QChar('.') ) {
         continue;
       }
@@ -157,14 +167,19 @@ BuildTreeHierarchyTable::SlotTreeItemSelected
         st = st.sliced(sourcePathLen);
       }
       st = QString("$ACU_SOURCE_DIR") + st;
-      TRACE_FUNCTION_QSTRING(st);
       headerLines << st;
     }
   }
-  i = 0;
-  setRowCount(headerLines.count());
+
+  y = 0;
+
+  container->resize(size().width(), headerLines.count() * BUILD_TREE_HIERARCHY_TABLE_ITEM_HEIGHT);
+  headerLines.sort();
   foreach (headerLine, headerLines) {
-    setItem(i, 0, new QTableWidgetItem(headerLine));
-    i++;
+    item = new BuildTreeHierarchyTableItem(headerLine, container);
+    item->show();
+    item->move(0, y);
+    y += BUILD_TREE_HIERARCHY_TABLE_ITEM_HEIGHT;
+    elements << item;
   }
 }

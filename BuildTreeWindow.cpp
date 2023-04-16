@@ -74,6 +74,7 @@ void
 BuildTreeWindow::CreateSubWindows()
 {
   QTreeWidgetItem*                      treeHeader;
+  QFont                                 font;
   
   //! Create the CloseButton button  
   CloseButton = new QPushButton();
@@ -90,6 +91,12 @@ BuildTreeWindow::CreateSubWindows()
   treeWidget->setHeaderItem(treeHeader);
 
   fileTabPane = new QTabWidget();
+  fileTabContainer = new TitledWindow(fileTabPane, QString(""));
+  fileTabContainer->setParent(this);
+  font = QFont();
+  font.setBold(true);
+  fileTabContainer->SetHeaderFont(font);
+  
   fileDisplay = new QTextEdit(this);
 
   jsonDisplay = new BuildTreeJSONCodeContainer();
@@ -100,7 +107,7 @@ BuildTreeWindow::CreateSubWindows()
   fileTabPane->addTab(hierarchyDisplay, QString("Hierarchy"));
   
   splitter->addWidget(treeWidget);
-  splitter->addWidget(fileTabPane);
+  splitter->addWidget(fileTabContainer);
 }
 
 /*****************************************************************************!
@@ -310,6 +317,7 @@ BuildTreeWindow::SlotTreeWidgetItemSelected
     foreach (QString st, sources) {
       fileName = filePath + QString("/") + st;
       DisplayFileText(fileName);
+      fileTabContainer->SetHeaderText(fileName);
       emit SignalTreeItemSelected(fileName);
     }
   }
