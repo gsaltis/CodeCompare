@@ -308,3 +308,14 @@ SystemConfig::GetClangHeaderExcludePaths(void)
 {
   return ClangHeaderExcludePaths;
 }
+
+/*****************************************************************************!
+ * Function : 
+ *****************************************************************************/
+QStringList
+SystemConfig::GetClangCodeGatherOptions
+()
+{
+  return ClangCodeGatherOptions;
+}
+

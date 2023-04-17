@@ -134,7 +134,11 @@ BuildTreeWindow::CreateConnections()
           SIGNAL(SignalTreeItemSelected(QString)),
           hierarchyDisplay,
           SLOT(SlotTreeItemSelected(QString)));
-                 
+
+  connect(this,
+          SIGNAL(SignalTreeItemSelected(QString)),
+          jsonDisplay,
+          SLOT(SlotTreeItemSelected(QString)));
 }
 
 /*****************************************************************************!

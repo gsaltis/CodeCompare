@@ -13,6 +13,9 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
+#include <QTreeWidget>
+#include <QTextEdit>
+#include <QTreeWidgetItem>
 
 /*****************************************************************************!
  * Local Headers
@@ -58,13 +61,20 @@ class BuildTreeJSONCodeContainer : public QWidget
   void                          initialize              ();
   void                          CreateSubWindows        ();
   void                          InitializeSubWindows    ();
-  void                          resizeEvent             (QResizeEvent* InEvent);
+  void                          resizeEvent                             (QResizeEvent* InEvent);
+  void                          ProcessInnerTranslationUnitArray        (QJsonArray InTUArray, QString InFilename);
+  void                          FontifyTreeItem         (QTreeWidgetItem* InTreeWidget, QString InKind);
+  void                          ProcessInnerObject      (QTreeWidgetItem* InTreeItem, QJsonArray InArray);
 
  //! Private Data
  private :
-
+  QTreeWidget*                  jsonFileDisplay;
+  QTextEdit*                    errorWindow;
+  int                           errorWindowHeight;
+  
  //! Public Slots
  public slots :
+  void                          SlotTreeItemSelected    (QString InFilename);
 
  //! Public Signals
  signals :

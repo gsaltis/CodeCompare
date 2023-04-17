@@ -53,6 +53,7 @@ class SystemConfig : public QWidget
   QStringList                   GetClangIncludePaths    ();
   QStringList                   GetClangHeaderOptions   ();
   QStringList                   GetClangHeaderExcludePaths (void);
+  QStringList                   GetClangCodeGatherOptions();
   
  //! Public Data
  public :
