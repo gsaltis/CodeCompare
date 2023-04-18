@@ -278,18 +278,8 @@ DependencyTreeWindow::SlotpathLineSelectPushed(void)
   QString                               sourceDirectoryName;
 
   sourceDirectoryName = pathLineInput->text();
-  
-  QDir                                  dir(sourceDirectoryName, QString(""), QDir::Name,
-                                            QDir::Dirs | QDir::NoDotAndDotDot);
 
-  QFileInfoList                         list = dir.entryInfoList();
-
-  directoryTreeWindow->clear();
-  for (auto i = list.begin() ; i != list.end(); i++ ) {
-    QFileInfo                           info = *i;
-    ProcessTopLevelDirectory(info, directoryTreeWindow);
-  }
-  emit SignalBuildSystemSelected(buildSystem);
+  SlotSourceDirectorySelected(sourceDirectoryName);
 }
 
 /*****************************************************************************!
@@ -393,4 +383,37 @@ DependencyTreeWindow::SlotTreeWidgetItemSelected
   buildLines = treeItem->GetBuildLines();
   buildLineDisplayWindow->SlotBuildLinesSelected(buildLines);
   emit SignalBuildLinesSelected(buildLines);
+}
+
+/*****************************************************************************!
+ * Function : SlotSourceDirectorySelected
+ *****************************************************************************/
+void
+DependencyTreeWindow::SlotSourceDirectorySelected
+(QString InSourceDirectoryName)
+{
+
+  QDir                                  dir(InSourceDirectoryName,
+                                            QString(""), QDir::Name,
+                                            QDir::Dirs | QDir::NoDotAndDotDot);
+
+  QFileInfoList                         list = dir.entryInfoList();
+
+  directoryTreeWindow->clear();
+  for (auto i = list.begin() ; i != list.end(); i++ ) {
+    QFileInfo                           info = *i;
+    ProcessTopLevelDirectory(info, directoryTreeWindow);
+  }
+  emit SignalBuildSystemSelected(buildSystem);  
+}
+
+
+/*****************************************************************************!
+ * Function : SetCodeBaseDirectoryName
+ *****************************************************************************/
+void
+DependencyTreeWindow::SetCodeBaseDirectoryName
+(QString InCodeBaseDirectoryName)
+{
+  SlotSourceDirectorySelected(InCodeBaseDirectoryName);
 }

@@ -45,7 +45,8 @@ class MainDisplayWindow : public QWidget
 
  //! Public Methods
  public :
-
+  void                          SetCodeBaseDirectoryName        (QString InCodeBaseDirectoryName);
+  
  //! Public Data
  public :
 

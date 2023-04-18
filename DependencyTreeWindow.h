@@ -52,6 +52,7 @@ class DependencyTreeWindow : public QWidget
 
  //! Public Methods
  public :
+  void                          SetCodeBaseDirectoryName(QString InCodeBaseDirectoryName);
 
  //! Public Data
  public :
@@ -71,7 +72,7 @@ class DependencyTreeWindow : public QWidget
   void                          ProcessTopLevelDirectory(QFileInfo InInfo, QTreeWidget* InTreeWindow);
   void                          ProcessTreeDirectory    (QFileInfo InInfo, QTreeWidgetItem* InTreeItem);
   void                          ConnectWindows          ();
-
+  
  //! Private Data
  private :
   QPushButton*                  CloseButton;
@@ -91,6 +92,7 @@ class DependencyTreeWindow : public QWidget
   void                          SlotpathLineSelectPushed        (void);
   void                          SlotBrowsePathButtonPushed      (void);
   void                          SlotTreeWidgetItemSelected      (QTreeWidgetItem* InItem, int InColumn);
+  void                          SlotSourceDirectorySelected     (QString InSourceDirectoryName);
   
  //! Public Signals
  signals :

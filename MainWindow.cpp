@@ -193,3 +193,13 @@ MainWindow::SlotDependencyTreeWindowClose(void)
 {
   ActionCreateDependencyTree->setEnabled(true);
 }
+
+/*****************************************************************************!
+ * Function : SetCodeBaseDirectoryName
+ *****************************************************************************/
+void
+MainWindow::SetCodeBaseDirectoryName
+(QString InCodeBaseDirectoryName)
+{
+  displayWindow->SetCodeBaseDirectoryName(InCodeBaseDirectoryName);
+}

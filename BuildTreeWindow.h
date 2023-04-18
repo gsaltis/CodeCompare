@@ -27,6 +27,7 @@
 #include "BuildTreeJSONCodeContainer.h"
 #include "BuildTreeHierarchyContainer.h"
 #include "TitledWindow.h"
+#include "CodeHighlighter.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -53,13 +54,14 @@ class BuildTreeWindow : public QFrame
 
  //! Public Methods
  public :
+  void                          SetCodeBaseDirectoryName        (QString InCodeBaseDirectoryName);
  
  //! Public Data
  public :
 
  //! Protected Methods
  protected :
-
+  
  //! Protected Data<
  protected :
 
@@ -71,6 +73,7 @@ class BuildTreeWindow : public QFrame
   void                          resizeEvent             (QResizeEvent* InEvent);
   void                          DisplayFileText         (QString InFilename);
   void                          CreateConnections       ();
+  void                          SetFileDisplayTabWidth  (int InTabWidth);
   
  //! Private Data
  private :
@@ -83,7 +86,9 @@ class BuildTreeWindow : public QFrame
   BuildTreeJSONCodeContainer*   jsonDisplay;
   BuildTreeHierarchyContainer*  hierarchyDisplay;
   TitledWindow*                 fileTabContainer;
-
+  int                           fileDisplayTabWidth;
+  CodeHighlighter*              codeHighlighter;
+  
  //! Public Slots
  public slots :
   void                          SlotCloseButtonPushed           (void);

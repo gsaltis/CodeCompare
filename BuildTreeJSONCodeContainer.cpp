@@ -59,13 +59,18 @@ BuildTreeJSONCodeContainer::initialize()
 void
 BuildTreeJSONCodeContainer::CreateSubWindows()
 {
+  splitter = new QSplitter(this);
   jsonFileDisplay = new QTreeWidget(this);
   jsonFileDisplay->move(0, 0);
   jsonFileDisplay->setColumnCount(2);
-  // jsonFileDisplay->setHeaderItem(new QTreeWidgetItem(QStringList("", "")));
-  
+
   errorWindow = new QTextEdit(this);
+  splitter->addWidget(jsonFileDisplay);
+  splitter->addWidget(errorWindow);
+  splitter->setOrientation(Qt::Vertical);
+
   errorWindowHeight = 200;
+  errorWindow->setMaximumHeight(errorWindowHeight);
 }
 
 /*****************************************************************************!
@@ -92,8 +97,6 @@ void
 BuildTreeJSONCodeContainer::resizeEvent
 (QResizeEvent* InEvent)
 {
-  int                                   errorWindowY;
-  int                                   fileDisplayH;
   QSize                                 size;  
   int                                   width;
   int                                   height;
@@ -101,12 +104,7 @@ BuildTreeJSONCodeContainer::resizeEvent
   size = InEvent->size();
   width = size.width();
   height = size.height();
-  fileDisplayH = height  - errorWindowHeight;
-
-  errorWindowY = fileDisplayH;
-  jsonFileDisplay->resize(width, fileDisplayH);
-  errorWindow->move(0, errorWindowY);
-  errorWindow->resize(width, errorWindowHeight);
+  splitter->resize(width, height);
 }
 
 /*****************************************************************************!
@@ -228,6 +226,8 @@ void
 BuildTreeJSONCodeContainer::ProcessInnerTranslationUnitArray
 (QJsonArray InTUArray, QString InFilename)
 {
+  QSize                                 size2;
+  QFont                                 font;
   QString                               fileName;
   bool                                  inTargetFile;
   QStringList                           keys;
@@ -237,8 +237,30 @@ BuildTreeJSONCodeContainer::ProcessInnerTranslationUnitArray
   QJsonObject                           obj;
   QTreeWidgetItem*                      treeItem1;
   QTreeWidgetItem*                      treeItem2;
-
+  QSize                                 size;
+  QTreeWidgetItem*                      headerItem;
+  
   jsonFileDisplay->clear();
+  headerItem = new QTreeWidgetItem();
+  size = headerItem->sizeHint(0);
+  size.setWidth(400);
+  size.setHeight(30);
+  
+  headerItem->setSizeHint(0, size);
+
+  size2 = headerItem->sizeHint(0);
+  
+  headerItem->setTextAlignment(0, Qt::AlignCenter | Qt::AlignVCenter);
+  headerItem->setTextAlignment(1, Qt::AlignLeft | Qt::AlignVCenter);
+  font = headerItem->font(0);
+  font.setBold(true);
+  headerItem->setFont(0, font);
+  headerItem->setText(0, QString("Name"));
+  headerItem->setBackground(0, QBrush(QColor(255, 192, 192)));
+  headerItem->setText(1, QString("Value"));
+  
+  jsonFileDisplay->setHeaderItem(headerItem);
+
   inTargetFile = false;
   for ( int i = 0 ; i < InTUArray.size() ; i++ ) {
     obj = InTUArray[i].toObject();
@@ -258,22 +280,45 @@ BuildTreeJSONCodeContainer::ProcessInnerTranslationUnitArray
     treeItem1 = new QTreeWidgetItem(QStringList(name));
     jsonFileDisplay->addTopLevelItem(treeItem1);
     keys = obj.keys();
+
+    //!
     foreach ( auto key, keys) {
       treeItem2 = new QTreeWidgetItem(QStringList(key));
       treeItem1->addChild(treeItem2);
       FontifyTreeItem(treeItem1, kind);
+
+      //!
       if ( key == "kind" ) {
         treeItem2->setText(1, kind);
         continue;
       }
+
+      //!
       if ( key == "isUsed" ) {
         bool b = obj[key].toBool();
         treeItem2->setText(1, b ? "True" : "False");
         continue;
       }
+
+      //!
       if ( key == "inner" ) {
-        ProcessInnerObject(treeItem2, obj[key].toArray());
+        ProcessTopLevelInnerObject(treeItem2, obj[key].toArray());
         continue;
+      }
+      
+      //!
+      if ( key == "type" ) {
+        QJsonObject                     obj2 = obj["type"].toObject();
+        QString                         qualType = obj2["qualType"].toString();
+        int                             n = qualType.indexOf(" ");
+        QString                         st = qualType.sliced(0, n);
+        treeItem2->setText(1, st);
+      }
+
+      //!
+      if ( key == "storageClass" ) {
+        QString                         storageClass = obj["storageClass"].toString();
+        treeItem2->setText(1, storageClass);
       }
     }
   }
@@ -300,10 +345,10 @@ BuildTreeJSONCodeContainer::FontifyTreeItem
 }
 
 /*****************************************************************************!
- * Function : ProcessInnerObject
+ * Function : ProcessTopLevelInnerObject
  *****************************************************************************/
 void
-BuildTreeJSONCodeContainer::ProcessInnerObject
+BuildTreeJSONCodeContainer::ProcessTopLevelInnerObject
 (QTreeWidgetItem* InTreeItem, QJsonArray InArray)
 {
   int                                   i;
@@ -311,14 +356,155 @@ BuildTreeJSONCodeContainer::ProcessInnerObject
   QString                               name;
   QJsonObject                           obj;
   QTreeWidgetItem*                      treeItem1;
-
+  QJsonArray                            innerArray;
+  
   for (i = 0; i < InArray.size(); i++) {
     obj = InArray[i].toObject();
     kind = obj["kind"].toString();
     name = obj["name"].toString();
+    innerArray = obj["inner"].toArray();
     treeItem1 = new QTreeWidgetItem();
     InTreeItem->addChild(treeItem1);
     treeItem1->setText(0, kind);
     treeItem1->setText(1, name);
+    if ( kind == "CompoundStmt" ) {
+      ProcessCompoundStatement(treeItem1, innerArray);
+    }
   }
 }
+
+/*****************************************************************************!
+ * Function : ProcessCompoundStatement
+ *****************************************************************************/
+void
+BuildTreeJSONCodeContainer::ProcessCompoundStatement
+(QTreeWidgetItem* InTreeItem, QJsonArray InArray)
+{
+  for ( int i = 0 ; i < InArray.size(); i++ ) {
+    QJsonObject                         obj = InArray[i].toObject();
+    QString                             kind = obj["kind"].toString();
+    QTreeWidgetItem*                    treeItem1;
+
+    treeItem1 = new QTreeWidgetItem();
+    treeItem1->setText(0, kind);
+    InTreeItem->addChild(treeItem1);
+    if ( kind == "CallExpr" ) {
+      ProcessCallExpr(treeItem1, obj);
+    }
+    if ( kind == "DeclStmt" ) {
+      ProcessDeclStmt(treeItem1, obj);
+    }
+  }
+}
+
+/*****************************************************************************!
+ * Function : ProcessCallExpr
+ *****************************************************************************/
+void
+BuildTreeJSONCodeContainer::ProcessCallExpr
+(QTreeWidgetItem* InTreeItem, QJsonObject InObject)
+{
+  QString                               name;
+  QTreeWidgetItem*                      item;
+  QTreeWidgetItem*                      item2;
+  QStringList                           keys, keys2;
+  QJsonObject                           obj2;
+  QJsonArray                            array1;
+  QJsonValue                            value;
+  
+  keys = InObject.keys();
+  foreach ( auto key, keys ) {
+    item = new QTreeWidgetItem();
+    item->setText(0, key);
+    value = InObject[key];
+
+    if ( !value.isObject() && !value.isArray() ) {
+      ProcessSingleItem(value, item);
+      continue;
+    }
+    InTreeItem->addChild(item);
+    if ( key == "inner" ) {
+      array1 = value.toArray();
+      for ( int i1 = 0 ; i1 < array1.size(); i1++ ) {
+        obj2 = array1[i1].toObject();
+        keys2 = obj2.keys();
+        foreach ( auto key2, keys2) {
+          item2 = new QTreeWidgetItem();
+          item2->setText(0, key2);
+          item->addChild(item2);
+          if ( key2 == "name" ) {
+            name = obj2[key2].toString();
+            InTreeItem->setText(1, name);
+          }
+        }
+      }
+    }
+  }
+}
+
+/*****************************************************************************!
+ * Function : ProcessDeclStmt
+ *****************************************************************************/
+void
+BuildTreeJSONCodeContainer::ProcessDeclStmt
+(QTreeWidgetItem* InTreeItem, QJsonObject InObject)
+{
+  QString                               name;
+  QTreeWidgetItem*                      item;
+  QTreeWidgetItem*                      item2;
+  QStringList                           keys, keys2;
+  QJsonObject                           obj2;
+  QJsonArray                            array1;
+  QJsonValue                            value;
+  
+  keys = InObject.keys();
+
+  foreach ( auto key, keys ) {
+    item = new QTreeWidgetItem();
+    item->setText(0, key);
+    InTreeItem->addChild(item);
+    value = InObject[key];
+    if ( !value.isObject() && !value.isArray() ) {
+      ProcessSingleItem(value, item);
+      continue;
+    }
+    if ( key == "inner" ) {
+      array1 = InObject[key].toArray();
+      for ( int i1 = 0 ; i1 < array1.size(); i1++ ) {
+        value = array1[i1];
+        if ( !value.isObject() && !value.isArray() ) {
+          ProcessSingleItem(value, item);
+          continue;
+        }
+        obj2 = value.toObject();
+        keys2 = obj2.keys();
+        foreach ( auto key2, keys2) {
+          item2 = new QTreeWidgetItem();
+          item2->setText(0, key2);
+          item->addChild(item2);
+          if ( key2 == "name" ) {
+            name = obj2[key2].toString();
+            InTreeItem->setText(1, name);
+          }
+        }
+      }
+    }
+  }
+}
+
+/*****************************************************************************!
+ * Function : ProcessSingleItem
+ *****************************************************************************/
+void
+BuildTreeJSONCodeContainer::ProcessSingleItem
+(QJsonValue InValue, QTreeWidgetItem* InItem)
+{
+  if ( InValue.isString() ) {
+    InItem->setText(1, InValue.toString());
+    return;
+  }
+  if ( InValue.isBool() ) {
+    InItem->setText(1, InValue.toBool() ? "true" : "false");
+    return;
+  }
+}  

@@ -65,6 +65,7 @@ SOURCES                         += \
 				   BuildUnknownLine.cpp                         \
 				   CodeBaseForm.cpp                             \
 				   CodeBaseOpenDialog.cpp                       \
+                                   CodeHighlighter.cpp                          \
 				   CodeNameWindow.cpp                           \
 				   CodeWindow.cpp                               \
 				   DependencyTreeWidgetItem.cpp                 \
@@ -111,6 +112,7 @@ HEADERS                         += \
 				   BuildUnknownLine.h                           \
 				   CodeBaseForm.h                               \
 				   CodeBaseOpenDialog.h                         \
+                                   CodeHighlighter.h                            \
 				   CodeNameWindow.h                             \
 				   CodeWindow.h                                 \
 				   DependencyTreeWidgetItem.h                   \

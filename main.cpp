@@ -1,4 +1,4 @@
-/*****************************************************************************
+ /*****************************************************************************
  FILE NAME      : main.cpp
  DATE           : March 22 2023
  PROJECT        : CodeCompare
@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <QtGui>
+#include <QCommandLineParser>
 
 /*****************************************************************************!
  * Local Headers
@@ -21,6 +22,7 @@
 #include "MainWindow.h"
 #include "main.h"
 #include "SystemConfig.h"
+#include "trace.h"
 
 /*****************************************************************************!
  * Local Macros
@@ -39,6 +41,9 @@ MainConfigFilename = "System.json";
 SystemConfig*
 mainSystemConfig;
 
+QString
+mainCodeBase = QString("");
+
 /*****************************************************************************!
  * Function : main
  *****************************************************************************/
@@ -48,18 +53,31 @@ main
 {
   QApplication                          application(argc, argv);
   MainWindow*                           w;
+  QCommandLineParser                    commandLineParser;
 
   application.setApplicationName("CodeCompare");
   application.setApplicationVersion("0.0.0");
   application.setOrganizationName("Greg Saltis");
   application.setOrganizationDomain("www.gsaltis.com");
 
+  commandLineParser.setApplicationDescription("CodeCompare");
+  commandLineParser.addHelpOption();
+  commandLineParser.addVersionOption();
+  QCommandLineOption codeBaseNameOption(QStringList() << "c" << "codebase",
+                                       QCoreApplication::translate("main", "Specifiy a codebase <basepath>."),
+                                       QCoreApplication::translate("main", "basepath"));
+  commandLineParser.addOption(codeBaseNameOption);
+  commandLineParser.process(application);
+  mainCodeBase = commandLineParser.value(codeBaseNameOption);
+  
   mainSystemConfig = new SystemConfig();
   mainSystemConfig->ReadJSON(MainConfigFilename);
   w = new MainWindow(NULL);
   w->resize(mainSystemConfig->GetMainWindowSize());
   w->move(mainSystemConfig->GetMainWindowLocation());
   w->show();
-  
+  if ( ! mainCodeBase.isEmpty() ) {
+    w->SetCodeBaseDirectoryName(mainCodeBase);
+  }
   return application.exec();
 }

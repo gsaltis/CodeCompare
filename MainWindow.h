@@ -47,13 +47,14 @@ class MainWindow : public QMainWindow
 
  //! Public Methods
  public :
+  void                          SetCodeBaseDirectoryName(QString InCodeBaseDirectoryName);
 
  //! Public Data
  public :
 
  //! Protected Methods
  protected :
-
+  
  //! Protected Data
  protected :
 

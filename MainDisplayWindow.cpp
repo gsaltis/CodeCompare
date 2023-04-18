@@ -277,3 +277,14 @@ MainDisplayWindow::SlotBuildSystemSelected
 {
   emit SignalBuildSystemSelected(InSystem);
 }
+
+/*****************************************************************************!
+ * Function : SetCodeBaseDirectory
+ *****************************************************************************/
+void
+MainDisplayWindow::SetCodeBaseDirectoryName
+(QString InCodeBaseDirectoryName)
+{
+  SlotBuildTreeWindowOpen();
+  dependencyTreeWindow->SetCodeBaseDirectoryName(InCodeBaseDirectoryName);
+}

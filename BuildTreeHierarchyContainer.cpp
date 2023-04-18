@@ -97,7 +97,6 @@ void
 BuildTreeHierarchyContainer::SlotTreeItemSelected
 (QString InFilename)
 {
-  TRACE_FUNCTION_QSTRING(InFilename);
   emit SignalTreeItemSelected(InFilename);
 }
 

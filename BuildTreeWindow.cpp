@@ -23,6 +23,7 @@
 #include "BuildCompileLine.h"
 #include "BuildARLine.h"
 #include "BuildLNLine.h"
+#include "CodeHighlighter.h"
 
 /*****************************************************************************!
  * Local Functions
@@ -93,12 +94,16 @@ BuildTreeWindow::CreateSubWindows()
   fileTabPane = new QTabWidget();
   fileTabContainer = new TitledWindow(fileTabPane, QString(""));
   fileTabContainer->setParent(this);
+
   font = QFont();
   font.setBold(true);
   fileTabContainer->SetHeaderFont(font);
   
   fileDisplay = new QTextEdit(this);
-
+  fileDisplay->setFont(QFont("Courier", 10));
+  SetFileDisplayTabWidth(4);
+  codeHighlighter = new CodeHighlighter(fileDisplay->document());
+  
   jsonDisplay = new BuildTreeJSONCodeContainer();
   hierarchyDisplay = new BuildTreeHierarchyContainer();
   
@@ -259,7 +264,7 @@ BuildTreeWindow::SlotBuildSystemSelected
       continue;
     }
     j = elementSet->GetElementCount();
-
+    
     //!
     for ( k = 0 ; k < j ; k++ ) {
       element = elementSet->GetElementByIndex(k);
@@ -386,7 +391,6 @@ BuildTreeWindow::DisplayFileText
   QByteArray                            ba;
   QFile                                         file(InFilename);
 
-  TRACE_FUNCTION_QSTRING(InFilename);
   fileDisplay->setText(QString(""));
 
   if ( ! file.exists() ) {
@@ -398,4 +402,29 @@ BuildTreeWindow::DisplayFileText
   st = QString(ba);
   fileDisplay->setText(st);
   file.close();
+}
+
+/*****************************************************************************!
+ * Function : SetFileDisplayTabWidth
+ *****************************************************************************/
+void
+BuildTreeWindow::SetFileDisplayTabWidth
+(int InTabWidth)
+{
+  QFont                                 font;
+  font = fileDisplay->font();
+  QFontMetrics                          fm(font);
+  int width = fm.averageCharWidth();
+  fileDisplay->setTabStopDistance(InTabWidth * width);
+  fileDisplayTabWidth = InTabWidth;
+}
+
+/*****************************************************************************!
+ * Function : SetCodeBaseDirectoryName
+ *****************************************************************************/
+void
+BuildTreeWindow::SetCodeBaseDirectoryName
+(QString InCodeBaseDirectoryName)
+{
+  emit SignalTreeItemSelected(InCodeBaseDirectoryName);
 }

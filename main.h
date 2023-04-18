@@ -28,4 +28,7 @@
 extern SystemConfig*
 mainSystemConfig;
 
+extern QString
+mainCodeBase;
+
 #endif /* _main_h_*/

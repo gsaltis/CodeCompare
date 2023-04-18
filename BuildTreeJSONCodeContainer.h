@@ -16,6 +16,8 @@
 #include <QTreeWidget>
 #include <QTextEdit>
 #include <QTreeWidgetItem>
+#include <QSplitter>
+#include <QJsonValue>
 
 /*****************************************************************************!
  * Local Headers
@@ -63,14 +65,19 @@ class BuildTreeJSONCodeContainer : public QWidget
   void                          InitializeSubWindows    ();
   void                          resizeEvent                             (QResizeEvent* InEvent);
   void                          ProcessInnerTranslationUnitArray        (QJsonArray InTUArray, QString InFilename);
-  void                          FontifyTreeItem         (QTreeWidgetItem* InTreeWidget, QString InKind);
-  void                          ProcessInnerObject      (QTreeWidgetItem* InTreeItem, QJsonArray InArray);
+  void                          FontifyTreeItem                         (QTreeWidgetItem* InTreeWidget, QString InKind);
+  void                          ProcessTopLevelInnerObject              (QTreeWidgetItem* InTreeItem, QJsonArray InArray);
+  void                          ProcessCompoundStatement                (QTreeWidgetItem* InTreeItem, QJsonArray InArray);
+  void                          ProcessCallExpr         (QTreeWidgetItem* InTreeItem, QJsonObject InObject);
+  void                          ProcessDeclStmt         (QTreeWidgetItem* InTreeItem, QJsonObject InObject);
+  void                          ProcessSingleItem       (QJsonValue InValue, QTreeWidgetItem* InItem);
 
  //! Private Data
  private :
   QTreeWidget*                  jsonFileDisplay;
   QTextEdit*                    errorWindow;
   int                           errorWindowHeight;
+  QSplitter*                    splitter;
   
  //! Public Slots
  public slots :

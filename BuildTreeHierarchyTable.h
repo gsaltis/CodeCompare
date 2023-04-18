@@ -14,6 +14,7 @@
 #include <QtGui>
 #include <QScrollArea>
 #include <QWidget>
+#include <QTreeWidget>
 
 /*****************************************************************************!
  * Local Headers
@@ -31,7 +32,7 @@
 /*****************************************************************************!
  * Exported Class : BuildTreeHierarchyTable
  *****************************************************************************/
-class BuildTreeHierarchyTable : public QScrollArea
+class BuildTreeHierarchyTable : public QTreeWidget
 {
   Q_OBJECT;
 
@@ -58,14 +59,9 @@ class BuildTreeHierarchyTable : public QScrollArea
  //! Private Methods
  private :
   void                          initialize              ();
-  void                          CreateSubWindows        ();
-  void                          InitializeSubWindows    ();
-  void                          resizeEvent             (QResizeEvent* InEvent);
 
  //! Private Data
  private :
-  QWidget*                              container;
-  QList<BuildTreeHierarchyTableItem*>   elements;
   
  //! Public Slots
  public slots :
