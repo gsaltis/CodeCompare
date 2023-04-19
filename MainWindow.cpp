@@ -203,3 +203,13 @@ MainWindow::SetCodeBaseDirectoryName
 {
   displayWindow->SetCodeBaseDirectoryName(InCodeBaseDirectoryName);
 }
+
+/*****************************************************************************!
+ * Function : SetTracksDirectoryNames
+ *****************************************************************************/
+void
+MainWindow::SetTracksDirectoryNames
+(QString InTrack1DirectoryName, QString InTrack2DirectoryName)
+{
+  displayWindow->SetTracksDirectoryNames(InTrack1DirectoryName, InTrack2DirectoryName);
+}

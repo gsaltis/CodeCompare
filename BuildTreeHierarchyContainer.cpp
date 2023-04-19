@@ -95,9 +95,9 @@ BuildTreeHierarchyContainer::resizeEvent
  *****************************************************************************/
 void
 BuildTreeHierarchyContainer::SlotTreeItemSelected
-(QString InFilename)
+(BuildLine* InLine, QString InFilename)
 {
-  emit SignalTreeItemSelected(InFilename);
+  emit SignalTreeItemSelected(InLine, InFilename);
 }
 
 /*****************************************************************************!
@@ -107,7 +107,7 @@ void
 BuildTreeHierarchyContainer::CreateConnections(void)
 {
   connect(this,
-          SIGNAL(SignalTreeItemSelected(QString)),
+          SIGNAL(SignalTreeItemSelected(BuildLine*, QString)),
           buildTreeHierarchyTableWindow,
-          SLOT(SlotTreeItemSelected(QString)));
+          SLOT(SlotTreeItemSelected(BuildLine*, QString)));
 }

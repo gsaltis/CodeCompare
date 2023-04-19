@@ -64,10 +64,9 @@ MainDisplayWindow::Initialize()
 void
 MainDisplayWindow::InitializeSubWindows()
 {
-  codeWindowTrack1 = NULL;
-  codeWindowTrack2 = NULL;
-  codeNameWindow = NULL;
-  codeWindowMerge = NULL;
+  codeWindow1 = NULL;
+  codeWindow2 = NULL;
+  sourceFileCompareTree = NULL;
   dependencyTreeWindow = NULL;
 }
 
@@ -77,15 +76,27 @@ MainDisplayWindow::InitializeSubWindows()
 void
 MainDisplayWindow::CreateSubWindows()
 {
-  codeWindowTrack1 = new CodeWindow();
-  codeWindowTrack1->setParent(this);
-  codeWindowTrack1->AddDirectory("D:\\Source\\NCUCodeMerge\\Track2_NCU_CODE");
-  codeWindowTrack2 = new CodeWindow();
-  codeWindowTrack2->setParent(this);
-  codeNameWindow = new CodeNameWindow();
-  codeNameWindow->setParent(this);
-  codeWindowMerge = new CodeWindow();
-  codeWindowMerge->setParent(this);
+  QTreeWidgetItem*                      headerItem;
+
+  splitter = new QSplitter(this);
+
+  codeWindow1 = new QTextEdit(this);
+  codeWindow2 = new QTextEdit(this);
+  sourceFileCompareTree = new QTreeWidget(this);
+  headerItem = new QTreeWidgetItem();
+  headerItem->setText(0, "Track 1");
+  headerItem->setText(1, "Track 2");
+  sourceFileCompareTree->setColumnCount(2);
+  sourceFileCompareTree->setHeaderItem(headerItem);
+  
+  codeWindowContainer1 = new TitledWindow(codeWindow1, QString("Track 2"));
+  codeWindowContainer2 = new TitledWindow(codeWindow2, QString("Track 3"));
+  sourceFileCompareContainer = new TitledWindow(sourceFileCompareTree, QString("File Comparison"));
+  sourceFileCompareTree->resize(300, 100);
+  
+  splitter->addWidget(sourceFileCompareContainer);
+  splitter->addWidget(codeWindowContainer1);
+  splitter->addWidget(codeWindowContainer2);
 
   dependencyTreeWindow = new DependencyTreeWindow();
   dependencyTreeWindow->setParent(this);
@@ -111,80 +122,46 @@ MainDisplayWindow::resizeEvent
   int                                   buildTreeWindowW;
   int                                   buildTreeWindowX;
   int                                   buildTreeWindowY;
-  int                                   w;
   QSize                                 size;  
   int                                   width;
   int                                   height;
-  int                                   track1X, track1Y, track1W, track1H;
-  int                                   track2X, track2Y, track2W, track2H;
-  int                                   mergeTrackX, mergeTrackY, mergeTrackW, mergeTrackH;
-  int                                   codeNameWindowX, codeNameWindowY;
-  int                                   codeNameWindowW, codeNameWindowH;
-  int                                   codeWindowWidth;
+  int                                   splitterX, splitterY, splitterW, splitterH;
   
   size = InEvent->size();
   width = size.width();
   height = size.height();
 
-  codeNameWindowX = GUI_X_GAP;
-  codeNameWindowY = GUI_Y_GAP;
-  codeNameWindowW = 250;
-  codeNameWindowH = height - (GUI_Y_GAP * 2);
-
-  w = width - (codeNameWindowW + (GUI_X_GAP * 5));
-  codeWindowWidth = w / 3;
-
-  
-  track1X = (GUI_X_GAP * 2) + codeNameWindowW;
-  track1Y = GUI_Y_GAP;
-  track1W = codeWindowWidth;
-  track1H = height - (GUI_Y_GAP * 2);
-
-  mergeTrackX = (GUI_X_GAP * 3) + codeNameWindowW + track1W;
-  mergeTrackY = GUI_Y_GAP;
-  mergeTrackW = codeWindowWidth;
-  mergeTrackH = height - (GUI_Y_GAP * 2);
-  
-  track2X = (GUI_X_GAP * 4) + codeNameWindowW + track1W + mergeTrackW;
-  track2Y = GUI_Y_GAP;
-  track2W = codeWindowWidth;
-  track2H = height - (GUI_Y_GAP * 2);
-
   //!
-  dependencyTreeWindowX = (GUI_X_GAP * 2) + codeNameWindowW;
+  splitterX = (GUI_X_GAP);
+  splitterY = GUI_Y_GAP;
+  splitterW = width - (GUI_X_GAP * 2);
+  splitterH = height - (GUI_Y_GAP * 2);
+  
+  //!
+  dependencyTreeWindowX = (GUI_X_GAP);
   dependencyTreeWindowY = GUI_Y_GAP;
-  dependencyTreeWindowW = width - (codeNameWindowW + GUI_X_GAP * 3);
+  dependencyTreeWindowW = width - (GUI_X_GAP * 2);
   dependencyTreeWindowH = height - (GUI_Y_GAP * 2);
 
   //!
-  buildTreeWindowX = (GUI_X_GAP * 2) + codeNameWindowW;
+  buildTreeWindowX = (GUI_X_GAP);
   buildTreeWindowY = GUI_Y_GAP;
-  buildTreeWindowW = width - (codeNameWindowW + GUI_X_GAP * 3);
+  buildTreeWindowW = width - (GUI_X_GAP * 2);
   buildTreeWindowH = height - ((GUI_Y_GAP * 2) + 0);
-
-  //! 
-  if ( codeWindowTrack1 ) {
-    codeWindowTrack1->move(track1X, track1Y);
-    codeWindowTrack1->resize(track1W, track1H);
-  }
-  if ( codeWindowTrack2 ) {
-    codeWindowTrack2->move(track2X, track2Y);
-    codeWindowTrack2->resize(track2W, track2H);
-  }
-  if ( codeNameWindow ) {
-    codeNameWindow->move(codeNameWindowX, codeNameWindowY);
-    codeNameWindow->resize(codeNameWindowW, codeNameWindowH);
-  }
-  if ( codeWindowMerge ) {
-    codeWindowMerge->move(mergeTrackX, mergeTrackY);
-    codeWindowMerge->resize(mergeTrackW, mergeTrackH);
-  }
 
   //!
   if ( dependencyTreeWindow ) {
     dependencyTreeWindow->move(dependencyTreeWindowX, dependencyTreeWindowY);
     dependencyTreeWindow->resize(dependencyTreeWindowW, dependencyTreeWindowH);
   }
+
+  //!
+  if ( splitter ) {
+    splitter->move(splitterX, splitterY);
+    splitter->resize(splitterW, splitterH);
+  }
+
+  //!
   if ( buildTreeWindow ) {
     buildTreeWindow->move(buildTreeWindowX, buildTreeWindowY);
     buildTreeWindow->resize(buildTreeWindowW, buildTreeWindowH);
@@ -197,9 +174,7 @@ MainDisplayWindow::resizeEvent
 void
 MainDisplayWindow::SlotCreateDependencyTree(void)
 {
-  codeWindowTrack1->hide();
-  codeWindowTrack2->hide();
-  codeWindowMerge->hide();
+  splitter->hide();
   dependencyTreeWindow->show();
 }
 
@@ -210,9 +185,7 @@ void
 MainDisplayWindow::SlotDependencyWindowClose(void)
 {
   emit SignalDependencyWindowClose();
-  codeWindowTrack1->show();
-  codeWindowTrack2->show();
-  codeWindowMerge->show();
+  splitter->show();
   dependencyTreeWindow->hide();
 }
 
@@ -287,4 +260,22 @@ MainDisplayWindow::SetCodeBaseDirectoryName
 {
   SlotBuildTreeWindowOpen();
   dependencyTreeWindow->SetCodeBaseDirectoryName(InCodeBaseDirectoryName);
+}
+
+/*****************************************************************************!
+ * Function : SetTracksDirectoryNames
+ *****************************************************************************/
+void
+MainDisplayWindow::SetTracksDirectoryNames
+(QString InTrack1DirectoryName, QString InTrack2DirectoryName)
+{
+  Track1DirectoryName = InTrack1DirectoryName;
+  Track2DirectoryName = InTrack2DirectoryName;
+
+  if ( codeWindowContainer1 ) {
+    codeWindowContainer1->SetHeaderText(Track1DirectoryName);
+  }
+  if ( codeWindowContainer2 ) {
+    codeWindowContainer2->SetHeaderText(Track2DirectoryName);
+  }
 }

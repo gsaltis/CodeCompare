@@ -22,6 +22,7 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
+#include "BuildLine.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -81,7 +82,7 @@ class BuildTreeJSONCodeContainer : public QWidget
   
  //! Public Slots
  public slots :
-  void                          SlotTreeItemSelected    (QString InFilename);
+  void                          SlotTreeItemSelected    (BuildLine* InBuildLine, QString InFilename);
 
  //! Public Signals
  signals :

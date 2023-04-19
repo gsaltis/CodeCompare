@@ -23,6 +23,7 @@
 #include "BuildTreeWindow.h"
 #include "BuildTreeWindowContainer.h"
 #include "BuildSystem.h"
+#include "TitledWindow.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -46,6 +47,7 @@ class MainDisplayWindow : public QWidget
  //! Public Methods
  public :
   void                          SetCodeBaseDirectoryName        (QString InCodeBaseDirectoryName);
+  void                          SetTracksDirectoryNames         (QString InTrack1DirectoryName, QString InTrack2DirectoryName);
   
  //! Public Data
  public :
@@ -66,10 +68,16 @@ class MainDisplayWindow : public QWidget
 
  //! Private Data
  private :
-  CodeWindow*                   codeWindowTrack1;
-  CodeWindow*                   codeWindowTrack2;
-  CodeNameWindow*               codeNameWindow;
-  CodeWindow*                   codeWindowMerge;
+  QString                       Track1DirectoryName;
+  QString                       Track2DirectoryName;
+  QSplitter*                    splitter;
+  TitledWindow*                 codeWindowContainer1;
+  TitledWindow*                 codeWindowContainer2;
+  TitledWindow*                 sourceFileCompareContainer;
+  QTextEdit*                    codeWindow1;
+  QTextEdit*                    codeWindow2;
+  QTreeWidget*                  sourceFileCompareTree;
+  
   DependencyTreeWindow*         dependencyTreeWindow;
   BuildTreeWindow*              buildTreeWindow;
   BuildTreeWindowContainer*     buildTreeContainer;

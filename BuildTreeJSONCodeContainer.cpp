@@ -20,6 +20,7 @@
 #include "main.h"
 #include "SystemConfig.h"
 #include "trace.h"
+#include "BuildCompileLine.h"
 
 /*****************************************************************************!
  * Function : BuildTreeJSONCodeContainer
@@ -112,7 +113,7 @@ BuildTreeJSONCodeContainer::resizeEvent
  *****************************************************************************/
 void
 BuildTreeJSONCodeContainer::SlotTreeItemSelected
-(QString InFilename)
+(BuildLine* InBuildLine, QString InFilename)
 {
   QStringList                           topKeys;
   QJsonObject                           topObject;
@@ -134,20 +135,24 @@ BuildTreeJSONCodeContainer::SlotTreeItemSelected
   QString                               st2;
   QString                               st;
   QJsonDocument                         jsonCodeDoc;
+  QStringList                           lineArgs;
   
   clangExe = mainSystemConfig->GetClangExecutable();
   clangOptions = mainSystemConfig->GetClangOptions();
   clangIncludePaths = mainSystemConfig->GetClangIncludePaths();
   clangCodeGatherOptions = mainSystemConfig->GetClangCodeGatherOptions();
   excludeLines = mainSystemConfig->GetClangHeaderExcludePaths();
-  
+
+  lineArgs = ((BuildCompileLine*)InBuildLine)->GetFlags();
   args << clangOptions;
   args << clangIncludePaths;
   args << clangHeaderOptions;
   args << clangCodeGatherOptions;
+  args << lineArgs;
   args << InFilename;
 
   st = args.join(" ");
+  TRACE_FUNCTION_QSTRING(st);
   process.start(clangExe, args);
   process.waitForFinished();
   

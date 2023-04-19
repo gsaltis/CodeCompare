@@ -28,6 +28,8 @@
 #include "BuildTreeHierarchyContainer.h"
 #include "TitledWindow.h"
 #include "CodeHighlighter.h"
+#include "BuildLine.h"
+#include "BuildCompileLine.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -54,7 +56,6 @@ class BuildTreeWindow : public QFrame
 
  //! Public Methods
  public :
-  void                          SetCodeBaseDirectoryName        (QString InCodeBaseDirectoryName);
  
  //! Public Data
  public :
@@ -62,7 +63,7 @@ class BuildTreeWindow : public QFrame
  //! Protected Methods
  protected :
   
- //! Protected Data<
+ //! Protected Data
  protected :
 
  //! Private Methods
@@ -74,6 +75,7 @@ class BuildTreeWindow : public QFrame
   void                          DisplayFileText         (QString InFilename);
   void                          CreateConnections       ();
   void                          SetFileDisplayTabWidth  (int InTabWidth);
+  void                          PopulateCompileOptions  (BuildCompileLine* InCompileLine);
   
  //! Private Data
  private :
@@ -88,6 +90,8 @@ class BuildTreeWindow : public QFrame
   TitledWindow*                 fileTabContainer;
   int                           fileDisplayTabWidth;
   CodeHighlighter*              codeHighlighter;
+  QTreeWidget*                  compilerOptionsTree;
+  TitledWindow*                 compilerOptionsWindow;
   
  //! Public Slots
  public slots :
@@ -98,7 +102,7 @@ class BuildTreeWindow : public QFrame
  //! Public Signals
  signals :
   void                          SignalTreeWindowClosed          (void);
-  void                          SignalTreeItemSelected  (QString InFilename);
+  void                          SignalTreeItemSelected          (BuildLine* InLine, QString InFilename);
 
  //! Public Actions
  public :

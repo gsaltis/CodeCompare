@@ -18,6 +18,7 @@
  * Local Headers
  *****************************************************************************/
 #include "BuildTreeHierarchyTable.h"
+#include "BuildLine.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -68,11 +69,11 @@ class BuildTreeHierarchyContainer : public QWidget
 
  //! Public Slots
  public slots :
-  void                          SlotTreeItemSelected    (QString InFilename);
+  void                          SlotTreeItemSelected    (BuildLine* InBuildLine, QString InFilename);
 
  //! Public Signals
  signals :
-  void                          SignalTreeItemSelected  (QString InFilename);
+  void                          SignalTreeItemSelected  (BuildLine* InBuildLine, QString InFilename);
   
  //! Public Actions
  public :

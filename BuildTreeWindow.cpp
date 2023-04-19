@@ -74,8 +74,10 @@ BuildTreeWindow::initialize()
 void
 BuildTreeWindow::CreateSubWindows()
 {
+  QPalette                              pal;
   QTreeWidgetItem*                      treeHeader;
   QFont                                 font;
+  QColor                                fileDisplayBackground = QColor(224, 224, 224);
   
   //! Create the CloseButton button  
   CloseButton = new QPushButton();
@@ -100,9 +102,14 @@ BuildTreeWindow::CreateSubWindows()
   fileTabContainer->SetHeaderFont(font);
   
   fileDisplay = new QTextEdit(this);
-  fileDisplay->setFont(QFont("Courier", 10));
+  fileDisplay->setFont(QFont("Courier", 9));
   SetFileDisplayTabWidth(4);
   codeHighlighter = new CodeHighlighter(fileDisplay->document());
+
+  pal = fileDisplay->palette();
+  pal.setBrush(QPalette::Base, QBrush(fileDisplayBackground));
+  fileDisplay->setPalette(pal);
+  fileDisplay->setAutoFillBackground(true);
   
   jsonDisplay = new BuildTreeJSONCodeContainer();
   hierarchyDisplay = new BuildTreeHierarchyContainer();
@@ -110,9 +117,13 @@ BuildTreeWindow::CreateSubWindows()
   fileTabPane->addTab(fileDisplay, QString("Code Text"));
   fileTabPane->addTab(jsonDisplay, QString("JSON"));
   fileTabPane->addTab(hierarchyDisplay, QString("Hierarchy"));
+
+  compilerOptionsTree = new QTreeWidget();
+  compilerOptionsWindow = new TitledWindow(compilerOptionsTree, QString("Compiler Options"));
   
   splitter->addWidget(treeWidget);
   splitter->addWidget(fileTabContainer);
+  splitter->addWidget(compilerOptionsWindow);
 }
 
 /*****************************************************************************!
@@ -136,14 +147,14 @@ BuildTreeWindow::CreateConnections()
           SLOT(SlotTreeWidgetItemSelected(QTreeWidgetItem*, int)));
 
   connect(this,
-          SIGNAL(SignalTreeItemSelected(QString)),
+          SIGNAL(SignalTreeItemSelected(BuildLine*, QString)),
           hierarchyDisplay,
-          SLOT(SlotTreeItemSelected(QString)));
+          SLOT(SlotTreeItemSelected(BuildLine*, QString)));
 
   connect(this,
-          SIGNAL(SignalTreeItemSelected(QString)),
+          SIGNAL(SignalTreeItemSelected(BuildLine*, QString)),
           jsonDisplay,
-          SLOT(SlotTreeItemSelected(QString)));
+          SLOT(SlotTreeItemSelected(BuildLine*, QString)));
 }
 
 /*****************************************************************************!
@@ -327,7 +338,8 @@ BuildTreeWindow::SlotTreeWidgetItemSelected
       fileName = filePath + QString("/") + st;
       DisplayFileText(fileName);
       fileTabContainer->SetHeaderText(fileName);
-      emit SignalTreeItemSelected(fileName);
+      emit SignalTreeItemSelected(buildLine, fileName);
+      PopulateCompileOptions(buildCompileLine);
     }
   }
 }
@@ -420,11 +432,21 @@ BuildTreeWindow::SetFileDisplayTabWidth
 }
 
 /*****************************************************************************!
- * Function : SetCodeBaseDirectoryName
+ * Function : PopulateCompileOptions
  *****************************************************************************/
 void
-BuildTreeWindow::SetCodeBaseDirectoryName
-(QString InCodeBaseDirectoryName)
+BuildTreeWindow::PopulateCompileOptions
+(BuildCompileLine* InCompileLine)
 {
-  emit SignalTreeItemSelected(InCodeBaseDirectoryName);
+  QTreeWidgetItem*                      treeItem;
+  QStringList                           flags;
+  
+  compilerOptionsTree->clear();
+
+  flags = InCompileLine->GetFlags();
+  foreach (auto flag, flags) {
+    treeItem = new QTreeWidgetItem();
+    treeItem->setText(0, flag);
+    compilerOptionsTree->addTopLevelItem(treeItem);
+  }
 }

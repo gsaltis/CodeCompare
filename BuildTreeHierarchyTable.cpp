@@ -49,7 +49,7 @@ BuildTreeHierarchyTable::initialize()
  *****************************************************************************/
 void
 BuildTreeHierarchyTable::SlotTreeItemSelected
-(QString InFilename)
+(BuildLine* InBuildLine, QString InFilename)
 {
   QTreeWidgetItem*                      treeItem;
   int                                   depth;
