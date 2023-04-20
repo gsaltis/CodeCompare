@@ -72,7 +72,8 @@ BuildTreeHierarchyTable::SlotTreeItemSelected
   QString                               st2;
   QString                               st;
   QList<QTreeWidgetItem*>               headerItems;
-  
+
+  (void)InBuildLine;
   sourcePath = QDir::toNativeSeparators(sourcePath);
   clangExe = mainSystemConfig->GetClangExecutable();
   clangOptions = mainSystemConfig->GetClangOptions();

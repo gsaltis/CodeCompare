@@ -269,6 +269,18 @@ void
 MainDisplayWindow::SetTracksDirectoryNames
 (QString InTrack1DirectoryName, QString InTrack2DirectoryName)
 {
+  QDir                                  dir1;
+  QDir                                  dir2;
+  QFileInfo                             entryFile1;
+  QFileInfo                             entryFile2;
+  QFileInfoList                         entryFileList1;
+  QFileInfoList                         entryFileList2;
+  QString                               fileName1;
+  QString                               fileName2;
+  QString                               fileName;
+  int                                   i1, i2, n, n2, nm;
+  QTreeWidgetItem*                      treeItem;
+  
   Track1DirectoryName = InTrack1DirectoryName;
   Track2DirectoryName = InTrack2DirectoryName;
 
@@ -277,5 +289,333 @@ MainDisplayWindow::SetTracksDirectoryNames
   }
   if ( codeWindowContainer2 ) {
     codeWindowContainer2->SetHeaderText(Track2DirectoryName);
+  }
+
+  //! Get the directories
+  dir1.setPath(Track1DirectoryName);
+  dir1.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+  entryFileList1 = dir1.entryInfoList();
+  n = entryFileList1.size();
+
+  dir2.setPath(Track2DirectoryName);
+  dir2.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+  entryFileList2 = dir2.entryInfoList();
+  n2 = entryFileList2.size();
+
+  i1 = 0;
+  i2 = 0;
+  nm = n;
+  if ( n2 < n ) {
+    nm = n2;
+  }
+
+  //! Walk the directories
+  entryFile1 = entryFileList1[i1];
+  entryFile2 = entryFileList2[i2];
+  do {
+    fileName1 = entryFile1.fileName();
+    fileName2 = entryFile2.fileName();
+    
+    treeItem = new QTreeWidgetItem();
+
+    //! Directory name are equal
+    if ( fileName1 == fileName2 ) {
+      treeItem->setText(0, fileName1);
+      treeItem->setText(1, fileName2);
+      sourceFileCompareTree->addTopLevelItem(treeItem);
+      SetTracksDirectoryNamesPair(treeItem,
+                                  entryFile1.absoluteFilePath(),
+                                  entryFile2.absoluteFilePath());
+      // SetTrackSubDir(entryFile1, treeItem);
+      i1++;
+      i2++;
+      if ( i1 == nm || i2 == nm ) {
+        break;
+      }
+      entryFile1 = entryFileList1[i1];
+      entryFile2 = entryFileList1[i2];
+    }
+
+    //! Extra filename in track 1
+    else if ( fileName1 < fileName2 ) {
+      treeItem->setText(0, fileName1);
+      sourceFileCompareTree->addTopLevelItem(treeItem);
+      SetTrackSubDirSingle(entryFile1, treeItem, 0);
+      i1++;
+      if ( i1 == nm ) {
+        break;
+      }
+      entryFile1 = entryFileList1[i1];
+    }
+
+    //! Extra filename in track 2
+    else {
+      treeItem->setText(0, fileName2);
+      sourceFileCompareTree->addTopLevelItem(treeItem);
+      SetTrackSubDirSingle(entryFile1, treeItem, 1);
+      i2++;
+      if ( i2 == nm ) {
+        break;
+      }
+      entryFile2 = entryFileList2[i2];
+    }
+  } while (i1 != nm && i2 != nm );
+
+  //! Get the file names
+  dir1.setPath(Track1DirectoryName);
+  dir1.setFilter(QDir::Files | QDir::NoDotAndDotDot);
+  entryFileList1 = dir1.entryInfoList();
+  n = entryFileList1.size();
+
+  dir2.setPath(Track2DirectoryName);
+  dir2.setFilter(QDir::Files | QDir::NoDotAndDotDot);
+  entryFileList2 = dir2.entryInfoList();
+  n2 = entryFileList2.size();
+
+  i1 = 0;
+  i2 = 0;
+  nm = n;
+  if ( n2 < n ) {
+    nm = n2;
+  }
+
+  //! Walk the file list
+  entryFile1 = entryFileList1[i1];
+  entryFile2 = entryFileList2[i2];
+  do {
+    fileName1 = entryFile1.fileName();
+    fileName2 = entryFile2.fileName();
+    
+    treeItem = new QTreeWidgetItem();
+
+    //! File names are equal
+    if ( fileName1 == fileName2 ) {
+      treeItem->setText(0, fileName1);
+      treeItem->setText(1, fileName2);
+      sourceFileCompareTree->addTopLevelItem(treeItem);
+      i1++;
+      i2++;
+      if ( i1 == nm || i2 == nm ) {
+        break;
+      }
+      entryFile1 = entryFileList1[i1];
+      entryFile2 = entryFileList1[i2];
+    }
+
+    //! Extra file name in track 1
+    else if ( fileName1 < fileName2 ) {
+      treeItem->setText(0, fileName1);
+      sourceFileCompareTree->addTopLevelItem(treeItem);
+      i1++;
+      if ( i1 == nm ) {
+        break;
+      }
+      entryFile1 = entryFileList1[i1];
+    }
+
+    //! Extra file name in track 2
+    else {
+      treeItem->setText(0, fileName2);
+      sourceFileCompareTree->addTopLevelItem(treeItem);
+      i2++;
+      if ( i2 == nm ) {
+        break;
+      }
+      entryFile2 = entryFileList2[i2];
+    }
+  } while (i1 != nm && i2 != nm );
+}
+
+/*****************************************************************************!
+ * Function : SetTracksDirectoryNamesPair
+ *****************************************************************************/
+void
+MainDisplayWindow::SetTracksDirectoryNamesPair
+(QTreeWidgetItem* InItem, QString  InDirName1, QString InDirName2)
+{
+  QDir                                  dir1;
+  QDir                                  dir2;
+  QFileInfo                             entryFile1;
+  QFileInfo                             entryFile2;
+  QFileInfoList                         entryFileList1;
+  QFileInfoList                         entryFileList2;
+  QString                               fileName1;
+  QString                               fileName2;
+  QString                               fileName;
+  int                                   i1, i2, n, n2, nm;
+  QTreeWidgetItem*                      treeItem;
+
+  if ( codeWindowContainer1 ) {
+    //! Get the directories
+    dir1.setPath(InDirName1);
+    dir1.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+    entryFileList1 = dir1.entryInfoList();
+    n = entryFileList1.size();
+
+    dir2.setPath(InDirName2);
+    dir2.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+    entryFileList2 = dir2.entryInfoList();
+    n2 = entryFileList2.size();
+    i1 = 0;
+    i2 = 0;
+    nm = n;
+    if ( n2 < n ) {
+      nm = n2;
+    }
+
+    //! Walk the directories
+    if ( n > 0 && n2 > 0 ) {
+      entryFile1 = entryFileList1[i1];
+      entryFile2 = entryFileList2[i2];
+      do {
+        fileName1 = entryFile1.fileName();
+        fileName2 = entryFile2.fileName();
+      
+        treeItem = new QTreeWidgetItem();
+      
+        //! Directory name are equal
+        if ( fileName1 == fileName2 ) {
+          treeItem->setText(0, fileName1);
+          treeItem->setText(1, fileName2);
+          InItem->addChild(treeItem);
+          // SetTrackSubDir(entryFile1, treeItem);
+          i1++;
+          i2++;
+          if ( i1 == nm || i2 == nm ) {
+            break;
+          }
+          entryFile1 = entryFileList1[i1];
+          entryFile2 = entryFileList1[i2];
+        }
+      
+        //! Extra filename in track 1
+        else if ( fileName1 < fileName2 ) {
+          treeItem->setText(0, fileName1);
+          InItem->addChild(treeItem);
+          SetTrackSubDirSingle(entryFile1, treeItem, 0);
+          i1++;
+          if ( i1 == nm ) {
+            break;
+          }
+          entryFile1 = entryFileList1[i1];
+        }
+      
+        //! Extra filename in track 2
+        else {
+          treeItem->setText(0, fileName2);
+          InItem->addChild(treeItem);
+          SetTrackSubDirSingle(entryFile1, treeItem, 1);
+          i2++;
+          if ( i2 == nm ) {
+            break;
+          }
+          entryFile2 = entryFileList2[i2];
+        }
+      } while (i1 != nm && i2 != nm );
+    }
+    //! Get the file names
+    dir1.setPath(InDirName1);
+    dir1.setFilter(QDir::Files | QDir::NoDotAndDotDot);
+    entryFileList1 = dir1.entryInfoList();
+    n = entryFileList1.size();
+
+    dir2.setPath(InDirName2);
+    dir2.setFilter(QDir::Files | QDir::NoDotAndDotDot);
+    entryFileList2 = dir2.entryInfoList();
+    n2 = entryFileList2.size();
+
+    i1 = 0;
+    i2 = 0;
+    nm = n;
+    if ( n2 < n ) {
+      nm = n2;
+    }
+
+    //! Walk the file list
+    entryFile1 = entryFileList1[i1];
+    entryFile2 = entryFileList2[i2];
+    do {
+      fileName1 = entryFile1.fileName();
+      fileName2 = entryFile2.fileName();
+    
+      treeItem = new QTreeWidgetItem();
+
+      //! File names are equal
+      if ( fileName1 == fileName2 ) {
+        treeItem->setText(0, fileName1);
+        treeItem->setText(1, fileName2);
+        InItem->addChild(treeItem);
+        i1++;
+        i2++;
+        if ( i1 == nm || i2 == nm ) {
+          break;
+        }
+        entryFile1 = entryFileList1[i1];
+        entryFile2 = entryFileList1[i2];
+      }
+
+      //! Extra file name in track 1
+      else if ( fileName1 < fileName2 ) {
+        treeItem->setText(0, fileName1);
+        InItem->addChild(treeItem);
+        i1++;
+        if ( i1 == nm ) {
+          break;
+        }
+        entryFile1 = entryFileList1[i1];
+      }
+
+      //! Extra file name in track 2
+      else {
+        treeItem->setText(0, fileName2);
+        InItem->addChild(treeItem);
+        i2++;
+        if ( i2 == nm ) {
+          break;
+        }
+        entryFile2 = entryFileList2[i2];
+      }
+    } while (i1 != nm && i2 != nm );
+  }
+}
+
+/*****************************************************************************!
+ * Function : SetTrackSubDirSingle
+ *****************************************************************************/
+void
+MainDisplayWindow::SetTrackSubDirSingle
+(QFileInfo InFileInfo, QTreeWidgetItem* InItem, int InColumn)
+{
+  QTreeWidgetItem*                      treeItem;
+  QString                               fileName;
+  QFileInfoList                         entryFileList;
+  QString                               absFilePath;
+  QDir                                  dir;
+  
+  absFilePath = InFileInfo.absoluteFilePath();
+
+  dir.setPath(absFilePath);
+  dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+  entryFileList = dir.entryInfoList();
+  foreach(auto entryFile, entryFileList) {
+    fileName = entryFile.fileName();
+    treeItem = new QTreeWidgetItem();
+    treeItem->setText(0, fileName);
+    InItem->addChild(treeItem);
+    if ( entryFile.isDir() ) {
+      SetTrackSubDirSingle(entryFile, treeItem, InColumn);
+    }
+  }
+  dir.setPath(absFilePath);
+  dir.setFilter(QDir::Files | QDir::NoDotAndDotDot);
+  entryFileList = dir.entryInfoList();
+  foreach(auto entryFile, entryFileList) {
+    fileName = entryFile.fileName();
+    treeItem = new QTreeWidgetItem();
+    treeItem->setText(0, fileName);
+    InItem->addChild(treeItem);
+    if ( entryFile.isDir() ) {
+      SetTrackSubDirSingle(entryFile, treeItem, InColumn);
+    }
   }
 }

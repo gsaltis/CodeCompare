@@ -65,6 +65,8 @@ class MainDisplayWindow : public QWidget
   void                          CreateSubWindows        ();
   void                          resizeEvent             (QResizeEvent* InEvent);
   void                          CreateConnections       (void);
+  void                          SetTrackSubDirSingle    (QFileInfo InFileInfo, QTreeWidgetItem* InItem, int InColumn);
+  void                          SetTracksDirectoryNamesPair (QTreeWidgetItem* InItem, QString  InDirName1, QString InDirName2);
 
  //! Private Data
  private :
