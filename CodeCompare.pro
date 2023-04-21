@@ -65,13 +65,15 @@ SOURCES                         += \
 				   BuildUnknownLine.cpp                         \
 				   CodeBaseForm.cpp                             \
 				   CodeBaseOpenDialog.cpp                       \
-                                   CodeHighlighter.cpp                          \
+				   CodeCompareDir.cpp                           \
+				   CodeHighlighter.cpp                          \
 				   CodeNameWindow.cpp                           \
 				   CodeWindow.cpp                               \
 				   DependencyTreeWidgetItem.cpp                 \
 				   DependencyTreeWindow.cpp                     \
 				   DirectoryReadEntry.cpp                       \
 				   DirectoryTreeElement.cpp                     \
+				   FileTreeWidgetItem.cpp                       \
 				   MainDisplayWindow.cpp                        \
 				   MainWindow.cpp                               \
 				   SystemConfig.cpp                             \
@@ -112,13 +114,15 @@ HEADERS                         += \
 				   BuildUnknownLine.h                           \
 				   CodeBaseForm.h                               \
 				   CodeBaseOpenDialog.h                         \
-                                   CodeHighlighter.h                            \
+				   CodeCompareDir.h                             \
+				   CodeHighlighter.h                            \
 				   CodeNameWindow.h                             \
 				   CodeWindow.h                                 \
 				   DependencyTreeWidgetItem.h                   \
 				   DependencyTreeWindow.h                       \
 				   DirectoryReadEntry.h                         \
 				   DirectoryTreeElement.h                       \
+				   FileTreeWidgetItem.h                         \
 				   MainDisplayWindow.h                          \
 				   MainWindow.h                                 \
 				   SystemConfig.h                               \
