@@ -54,6 +54,8 @@ class SystemConfig : public QWidget
   QStringList                   GetClangHeaderOptions   ();
   QStringList                   GetClangHeaderExcludePaths (void);
   QStringList                   GetClangCodeGatherOptions();
+  bool                          GetDiffMissingIsDiff    ();
+  QString                       GetDiff                 ();
   
  //! Public Data
  public :
@@ -72,6 +74,7 @@ class SystemConfig : public QWidget
   void                          ReadMakeInformation     (QJsonObject &InObject);
   void                          ReadClangInformation    (QJsonObject &InObject);
   void                          Initialize              (void);
+  void                          ReadDiffInformation     (QJsonObject &InObject);
 
  //! Private Data
  private :
@@ -91,6 +94,9 @@ class SystemConfig : public QWidget
   QStringList                   ClangHeaderGatherOptions;  
   QStringList                   ClangCodeGatherOptions;
   QStringList                   ClangHeaderExcludePaths;
+
+  QString                       DiffExeName;
+  bool                          DiffMissingIsDiff;
   
  //! Public Slots
  public slots :

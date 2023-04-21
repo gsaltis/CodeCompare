@@ -56,6 +56,7 @@ SystemConfig::ReadJSON
   QJsonObject                           geomObject;
   QJsonObject                           makeObject;
   QJsonObject                           pathsObject;
+  QJsonObject                           diffObject;
   QJsonValue                            geomValue;
 
   file.open(QIODeviceBase::ReadOnly);
@@ -86,6 +87,11 @@ SystemConfig::ReadJSON
   clangObject = docObject["Clang"].toObject();
   if ( ! clangObject.isEmpty() ){
     ReadClangInformation(clangObject);
+  }
+
+  diffObject = docObject["Diff"].toObject();
+  if ( ! diffObject.isEmpty() ){
+    ReadDiffInformation(diffObject);
   }
 }
 
@@ -319,3 +325,34 @@ SystemConfig::GetClangCodeGatherOptions
   return ClangCodeGatherOptions;
 }
 
+
+/*****************************************************************************!
+ * Function : ReadDiffInformation
+ *****************************************************************************/
+void
+SystemConfig::ReadDiffInformation
+(QJsonObject &InObject)
+{
+  DiffExeName = InObject["diff"].toString();
+  DiffMissingIsDiff = InObject["missing"].toBool();
+}
+
+/*****************************************************************************!
+ * Function : GetDiff
+ *****************************************************************************/
+QString
+SystemConfig::GetDiff
+()
+{
+  return DiffExeName;
+}
+
+/*****************************************************************************!
+ * Function : GetDiffMissingIsDiff
+ *****************************************************************************/
+bool
+SystemConfig::GetDiffMissingIsDiff
+()
+{
+  return DiffMissingIsDiff;
+}

@@ -69,9 +69,10 @@ class MainDisplayWindow : public QWidget
   void                          SetTrackSubDirSingle    (QFileInfo InFileInfo, QTreeWidgetItem* InItem, int InColumn);
   void                          SetTracksDirectoryNamesPair (QTreeWidgetItem* InItem, QString  InDirName1, QString InDirName2);
   void                          PopulateTreeDirectory           (QStringList InEntryList1, QStringList InEntryList2, FileTreeWidgetItem* InHead);
-  void                          PopulateTreeFiles               (QStringList InEntryList1, QStringList InEntryList2, FileTreeWidgetItem* InHead);
+  bool                          PopulateTreeFiles               (QStringList InEntryList1, QStringList InEntryList2, FileTreeWidgetItem* InHead);
   void                          PopulateDirectoriesAndFiles     (FileTreeWidgetItem* InHead, QString InTrack1DirectoryName, QString InTrack2DirectoryName);
-
+  bool                          FilesAreDifferent               (QString InFilename1, QString InFilename2);
+  
  //! Private Data
  private :
   QString                       Track1DirectoryName;

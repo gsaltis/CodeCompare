@@ -3,5 +3,12 @@
     <file>images/OpenFile.png</file>
     <file>images/Right.png</file>
     <file>images/Left.png</file>
+    <file>images/FileSame.png</file>
+    <file>images/FileMissing.png</file>
+    <file>images/FileDifferent.png</file>
+    <file>images/FolderSame.png</file>
+    <file>images/FolderDifferent.png</file>
+    <file>images/Folder.png</file>
+    <file>images/File.png</file>
 </qresource>
 </RCC>

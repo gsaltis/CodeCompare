@@ -20,6 +20,7 @@
 #include "MainDisplayWindow.h"
 #include "gui.h"
 #include "trace.h"
+#include "main.h"
 
 /*****************************************************************************!
  * Local Macros
@@ -298,12 +299,10 @@ MainDisplayWindow::PopulateDirectoriesAndFiles
 {
   QStringList                           entryFileList1;
   QStringList                           entryFileList2;
-  FileTreeWidgetItem*                   directoryItems;
-  FileTreeWidgetItem*                   fileItems;
   CodeCompareDir*                       dir1;
   CodeCompareDir*                       dir2;
-
-  TRACE_FUNCTION_START();
+  bool                                  dirsDiff;
+  
   //! Get the directories
   if ( ! InTrack2DirectoryName.isEmpty() ) {
     dir1 = new CodeCompareDir(InTrack1DirectoryName);
@@ -317,9 +316,7 @@ MainDisplayWindow::PopulateDirectoriesAndFiles
     delete dir2;
   }
   if ( entryFileList1.size() > 0 && entryFileList2.size() > 0 ) {
-    directoryItems = new FileTreeWidgetItem("", InHead);
-    directoryItems->setText(0, "Directories");
-    PopulateTreeDirectory(entryFileList1, entryFileList2, directoryItems);
+    PopulateTreeDirectory(entryFileList1, entryFileList2, InHead);
   }
 
   //! Get the file names
@@ -333,14 +330,18 @@ MainDisplayWindow::PopulateDirectoriesAndFiles
     entryFileList2 = dir2->ReadFiles();
     delete dir2;
   }
-  TRACE_FUNCTION_INT(entryFileList1.size());
-  TRACE_FUNCTION_INT(entryFileList2.size());
   if ( entryFileList1.size() > 0 && entryFileList2.size() > 0 ) {
-    fileItems = new FileTreeWidgetItem("", InHead);
-    fileItems->setText(0, "Files");
-    PopulateTreeFiles(entryFileList1, entryFileList2, fileItems);
+    dirsDiff = PopulateTreeFiles(entryFileList1, entryFileList2, InHead);
+    QString                           pixmapName;
+    if ( dirsDiff ) {
+      pixmapName = ":/images/FolderDifferent.png";
+      dirsDiff = true;
+    } else {
+      pixmapName = ":/images/FolderSame.png";
+    }
+    QPixmap                   pixmap(pixmapName);
+    InHead->setIcon(0, pixmap);
   }
-  TRACE_FUNCTION_END();
 }
 
 /*****************************************************************************!
@@ -385,28 +386,36 @@ MainDisplayWindow::PopulateTreeDirectory
     //! Directory name are equal
     if ( fileName1 == fileName2 ) {
       treeItem = new FileTreeWidgetItem(filePath1, filePath2, InHead);
+      QPixmap                   pixmap(":/images/Folder.png");
+      treeItem->setIcon(0, QIcon(pixmap));
       PopulateDirectoriesAndFiles(treeItem, filePath1, filePath2);
       i1++;
       i2++;
     }
     //! Extra filename in track 1
     else if ( fileName1 < fileName2 || i2 == n2 ) {
-      new FileTreeWidgetItem(entryFile1.absoluteFilePath(), QString(""), InHead);
+      treeItem = new FileTreeWidgetItem(entryFile1.absoluteFilePath(), QString(""), InHead);
+      QPixmap                   pixmap(":/images/Folder.png");
+      treeItem->setIcon(0, QIcon(pixmap));
       i1++;
     }
 
     //! Extra filename in track 2
     else {
-      new FileTreeWidgetItem(QString(""), entryFile2.absoluteFilePath(), InHead);
+      treeItem = new FileTreeWidgetItem(QString(""), entryFile2.absoluteFilePath(), InHead);
+      QPixmap                   pixmap(":/images/Folder.png");
+      treeItem->setIcon(0, QIcon(pixmap));
       i2++;
     }
+    treeItem->setForeground(0, QBrush(QColor(192, 0, 0)));
+    treeItem->setForeground(1, QBrush(QColor(192, 0, 0)));
   } while (i1 != n1 && i2 != n2 );
 }
 
 /*****************************************************************************!
  * Function : PopulateTreeFiles
  *****************************************************************************/
-void
+bool
 MainDisplayWindow::PopulateTreeFiles
 (QStringList InEntryList1, QStringList InEntryList2, FileTreeWidgetItem* InHead)
 {
@@ -415,13 +424,15 @@ MainDisplayWindow::PopulateTreeFiles
   QString                               fileName1, fileName2, st;
   QString                               filePath1, filePath2;
   int                                   i1, i2, n1, n2;
-
+  FileTreeWidgetItem*                   treeItem;
+  bool                                  dirsDiff;
+  
   //! Walk the directories
   n1 = InEntryList1.size();
   n2 = InEntryList2.size();
 
   if ( n1 == 0 && n2 == 0 ) {
-    return;
+    return true;
   }
   i1 = 0;
   i2 = 0;
@@ -443,20 +454,64 @@ MainDisplayWindow::PopulateTreeFiles
     
     //! Directory name are equal
     if ( fileName1 == fileName2 ) {
-      new FileTreeWidgetItem(filePath1, filePath2, InHead);
+      QString                           pixmapName;
+      if ( FilesAreDifferent(filePath1, filePath2) ) {
+        pixmapName = ":/images/FileDifferent.png";
+        dirsDiff = true;
+      } else {
+        pixmapName = ":/images/FileSame.png";
+      }
+      QPixmap                   pixmap(pixmapName);
+      treeItem = new FileTreeWidgetItem(filePath1, filePath2, InHead);
+      treeItem->setIcon(0, QIcon(pixmap));
       i1++;
       i2++;
     }
     //! Extra filename in track 1
     else if ( fileName1 < fileName2 || i2 == n2 ) {
-       new FileTreeWidgetItem(entryFile1.absoluteFilePath(), QString(""), InHead);
+      dirsDiff = true;
+      treeItem = new FileTreeWidgetItem(entryFile1.absoluteFilePath(), QString(""), InHead);
+      if ( mainSystemConfig->GetDiffMissingIsDiff() ) {
+        QPixmap                   pixmap(":/images/FileMissing.png");
+        treeItem->setIcon(0, QIcon(pixmap));
+      } else {
+        QPixmap                   pixmap(":/images/File.png");
+        treeItem->setIcon(0, QIcon(pixmap));
+      }
       i1++;
     }
 
     //! Extra filename in track 2
     else {
-      new FileTreeWidgetItem(QString(""), entryFile2.absoluteFilePath(), InHead);
+      dirsDiff = true;
+      treeItem = new FileTreeWidgetItem(QString(""), entryFile2.absoluteFilePath(), InHead);
+      if ( mainSystemConfig->GetDiffMissingIsDiff() ) {
+        QPixmap                   pixmap(":/images/FileMissing.png");
+        treeItem->setIcon(0, QIcon(pixmap));
+      } else {
+        QPixmap                   pixmap(":/images/File.png");
+        treeItem->setIcon(0, QIcon(pixmap));
+      }
       i2++;
     }
+    treeItem->setForeground(0, QBrush(QColor(0, 0, 192)));
+    treeItem->setForeground(1, QBrush(QColor(0, 0, 192)));
   } while (i1 != n1 && i2 != n2 );
+  return dirsDiff;
+}
+
+/*****************************************************************************!
+ * Function : FilesAreDifferent
+ *****************************************************************************/
+bool
+MainDisplayWindow::FilesAreDifferent
+(QString InFileName1, QString InFileName2)
+{
+  QFileInfo                             fileInfo1(InFileName1);
+  QFileInfo                             fileInfo2(InFileName2);
+
+  if ( fileInfo2.size() != fileInfo1.size() ) {
+    return false;
+  }
+  return true;
 }

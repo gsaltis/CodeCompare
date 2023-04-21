@@ -109,7 +109,7 @@ CodeCompareDir::ReadFiles
     }
   }
   closedir(dir);
-  returnNames.sort();
+  returnNames.sort(Qt::CaseInsensitive);
   return returnNames;
 }
 
