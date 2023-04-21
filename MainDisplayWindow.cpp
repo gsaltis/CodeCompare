@@ -99,8 +99,6 @@ MainDisplayWindow::CreateSubWindows()
   splitter = new QSplitter(this);
 
   codeWindow1 = new CodeEditor();
-  codeWindow1->show();
-  codeWindow1->setText(QString("Hi Mom"));
   codeWindow2 = new CodeEditor();
 
   sourceFileCompareTree = new QTreeWidget(this);
@@ -488,6 +486,8 @@ MainDisplayWindow::PopulateTreeFiles
       QString                           pixmapName;
       if ( FilesAreDifferent(filePath1, filePath2) ) {
         pixmapName = ":/images/FileDifferent.png";
+        TRACE_FUNCTION_QSTRING(filePath1);
+        TRACE_FUNCTION_QSTRING(filePath2);
         dirsDiff = true;
       } else {
         pixmapName = ":/images/FileSame.png";
@@ -540,11 +540,24 @@ MainDisplayWindow::FilesAreDifferent
 {
   QFileInfo                             fileInfo1(InFileName1);
   QFileInfo                             fileInfo2(InFileName2);
+  QProcess                              diffProcess;
+  QString                               stdOutput;
+  QString                               errorOutput;
+  QStringList                           args;
+  QString                               program = mainSystemConfig->GetDiff();
 
-  if ( fileInfo2.size() != fileInfo1.size() ) {
-    return false;
+  if ( fileInfo1.size() != fileInfo2.size() ) {
+    return true;
   }
-  return true;
+  args << "-q" << InFileName1 << InFileName2;
+  diffProcess.start(program, args);
+  diffProcess.waitForFinished();
+  stdOutput = QString(diffProcess.readAllStandardOutput().trimmed());
+  errorOutput = QString(diffProcess.readAllStandardError().trimmed());
+  if ( ! stdOutput.isEmpty() ) {
+    return true;
+  }
+  return false;
 }
 
 /*****************************************************************************!
@@ -594,11 +607,16 @@ MainDisplayWindow::SlotTreeWidgetItemSelected
   QString                               fileName1;
   QString                               fileName2;
   FileTreeWidgetItem*                   item;
-  
+
+  codeWindow1->setText("");
+  codeWindow2->setText("");
   item = (FileTreeWidgetItem*)InItem;
   fileName1 = item->GetAbsoluteFileName1();
   fileName2 = item->GetAbsoluteFileName2();
 
+  codeWindowContainer1->SetHeaderText(fileName1);
+  codeWindowContainer2->SetHeaderText(fileName2);
+  
   PopulateCodeDisplay(fileName1, codeWindow1);
   PopulateCodeDisplay(fileName2, codeWindow2);
 }

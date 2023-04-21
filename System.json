@@ -9,7 +9,7 @@
     "sourcepath"                        : "D:/Source/NCUCodeMerge/Track2_NCU_Code/src"
   },
   "Diff" : {
-    "diff"                              : "C:\\Program Files (x86)\\Vim\\vim82.diff.exe",
+    "diff"                              : "C:\\Program Files (x86)\\Vim\\vim82\\diff.exe",
     "missing"                           : false
   },
   "Make" : {
