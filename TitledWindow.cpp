@@ -16,6 +16,7 @@
  * Local Headers
  *****************************************************************************/
 #include "TitledWindow.h"
+#include "trace.h"
 
 /*****************************************************************************!
  * Function : TitledWindow
@@ -31,6 +32,26 @@ TitledWindow::TitledWindow
   headerText = InText;
   container = InContainer;
   container->setParent(this);
+  toolbar = NULL;
+  initialize();
+}
+
+/*****************************************************************************!
+ * Function : TitledWindow
+ *****************************************************************************/
+TitledWindow::TitledWindow
+(QWidget* InContainer, QToolBar* InToolBar, QString InText) : QWidget()
+{
+  QPalette pal;
+  pal = palette();
+  pal.setBrush(QPalette::Window, QBrush(QColor(255, 255, 255)));
+  setPalette(pal);
+  setAutoFillBackground(true);
+  headerText = InText;
+  container = InContainer;
+  container->setParent(this);
+  toolbar = InToolBar;
+  toolbar->setParent(this);
   initialize();
 }
 
@@ -48,7 +69,6 @@ TitledWindow::~TitledWindow
 void
 TitledWindow::initialize()
 {
-
   headerHeight = 20;
   headerAlignment = Qt::AlignTop;
   InitializeSubWindows();  
@@ -81,7 +101,6 @@ TitledWindow::CreateSubWindows()
   headerLabel->setText(headerText);
   headerLabel->setAlignment(Qt::AlignLeft);
   headerLabel->setFont(headerFont);
-
 }
 
 /*****************************************************************************!
@@ -162,22 +181,44 @@ TitledWindow::SetSize
   int                                   containerY;
   int                                   width;
   int                                   height;
+  int                                   toolbarH, toolbarW, toolbarX, toolbarY;
 
   height = InSize.height();
   width  = InSize.width();
 
-  containerH = height - headerHeight;
+  toolbarY = toolbarX = toolbarW = toolbarH = 0;
+  if ( toolbar ) {
+    toolbarH = toolbar->size().height();
+    toolbarX = 23;
+  }
+  containerH = height - (headerHeight + toolbarH + (toolbar ? 1 : 0));
   headerY = 0 ;
   containerY = headerHeight;
-
+  toolbarW = width - 2;
+  
   if ( headerAlignment == Qt::AlignBottom ) {
-    containerY = 0;
+    toolbarY = 0;
+    containerY = toolbarH;
     headerY = height - headerHeight;
   }
 
   if ( container ) {
     container->resize(width, containerH);
     container->move(0, containerY);
+    toolbarY = height - (toolbarH + 1);
+  }
+
+  if ( toolbar ) {
+    TRACE_FUNCTION_INT(width);
+    TRACE_FUNCTION_INT(height);
+    TRACE_FUNCTION_INT(toolbarX);
+    TRACE_FUNCTION_INT(toolbarY);
+    TRACE_FUNCTION_INT(toolbarW);
+    TRACE_FUNCTION_INT(toolbarH);
+    TRACE_FUNCTION_INT(containerH);
+    TRACE_FUNCTION_INT(containerY);
+    toolbar->move(toolbarX, toolbarY);
+    toolbar->resize(toolbarW, toolbarH);
   }
   
   header->resize(width, headerHeight);

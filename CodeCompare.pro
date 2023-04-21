@@ -66,6 +66,7 @@ SOURCES                         += \
 				   CodeBaseForm.cpp                             \
 				   CodeBaseOpenDialog.cpp                       \
 				   CodeCompareDir.cpp                           \
+                                   CodeEditor.cpp                               \
 				   CodeHighlighter.cpp                          \
 				   CodeNameWindow.cpp                           \
 				   CodeWindow.cpp                               \
@@ -115,6 +116,7 @@ HEADERS                         += \
 				   CodeBaseForm.h                               \
 				   CodeBaseOpenDialog.h                         \
 				   CodeCompareDir.h                             \
+                                   CodeEditor.h                                 \
 				   CodeHighlighter.h                            \
 				   CodeNameWindow.h                             \
 				   CodeWindow.h                                 \

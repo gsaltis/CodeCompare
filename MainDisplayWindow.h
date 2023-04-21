@@ -13,6 +13,8 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
+#include <QToolBar>
+#include <QAction>
 
 /*****************************************************************************!
  * Local Headers
@@ -25,6 +27,7 @@
 #include "BuildSystem.h"
 #include "TitledWindow.h"
 #include "FileTreeWidgetItem.h"
+#include "CodeEditor.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -72,6 +75,9 @@ class MainDisplayWindow : public QWidget
   bool                          PopulateTreeFiles               (QStringList InEntryList1, QStringList InEntryList2, FileTreeWidgetItem* InHead);
   void                          PopulateDirectoriesAndFiles     (FileTreeWidgetItem* InHead, QString InTrack1DirectoryName, QString InTrack2DirectoryName);
   bool                          FilesAreDifferent               (QString InFilename1, QString InFilename2);
+  void                          CreateActions           ();
+  void                          SourceTreeCollapseItem  (QTreeWidgetItem* InItem);
+  void                          PopulateCodeDisplay     (QString InFilename, CodeEditor* InCodeWindow);
   
  //! Private Data
  private :
@@ -81,10 +87,10 @@ class MainDisplayWindow : public QWidget
   TitledWindow*                 codeWindowContainer1;
   TitledWindow*                 codeWindowContainer2;
   TitledWindow*                 sourceFileCompareContainer;
-  QTextEdit*                    codeWindow1;
-  QTextEdit*                    codeWindow2;
+  CodeEditor*                   codeWindow1;
+  CodeEditor*                   codeWindow2;
   QTreeWidget*                  sourceFileCompareTree;
-  
+  QToolBar*                     sourceFileCompareToolBar;
   DependencyTreeWindow*         dependencyTreeWindow;
   BuildTreeWindow*              buildTreeWindow;
   BuildTreeWindowContainer*     buildTreeContainer;
@@ -96,6 +102,9 @@ class MainDisplayWindow : public QWidget
   void                          SlotBuildTreeWindowOpen (void);
   void                          SlotBuildTreeWindowClosed (void);
   void                          SlotBuildSystemSelected (BuildSystem* InSystem);
+  void                          SlotOnlyDifferences     (void);
+  void                          SlotCollapseSourceCompareTree (void);
+  void                          SlotTreeWidgetItemSelected (QTreeWidgetItem* InItem, int InIndex);
 
  //! Public Signals
  signals :
@@ -104,6 +113,8 @@ class MainDisplayWindow : public QWidget
 
  //! Public Actions
  public :
+  QAction*                      ActionOnlyDifferences;
+  QAction*                      ActionCollapseSourceCompareTree;
 
 };
 

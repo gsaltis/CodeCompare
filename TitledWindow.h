@@ -14,6 +14,7 @@
 #include <QtGui>
 #include <QWidget>
 #include <QLabel>
+#include <QToolBar>
 
 /*****************************************************************************!
  * Local Headers
@@ -38,6 +39,7 @@ class TitledWindow : public QWidget
  //! Constructors
  public :
   TitledWindow                  (QWidget* InWidget, QString InText);
+  TitledWindow                  (QWidget* InWidget, QToolBar* InToolbar, QString InText);
 
  //! Destructor
  public :
@@ -82,6 +84,7 @@ class TitledWindow : public QWidget
   int                           headerHeight;
   QLabel*                       headerLabel;
   QString                       headerText;
+  QToolBar*                     toolbar;
   
  //! Public Slots
  public slots :

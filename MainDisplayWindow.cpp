@@ -56,6 +56,7 @@ MainDisplayWindow::~MainDisplayWindow
 void
 MainDisplayWindow::Initialize()
 {
+  CreateActions();
   InitializeSubWindows();  
   CreateSubWindows();
   CreateConnections();
@@ -74,6 +75,20 @@ MainDisplayWindow::InitializeSubWindows()
 }
 
 /*****************************************************************************!
+ * Function : CreateActions
+ *****************************************************************************/
+void
+MainDisplayWindow::CreateActions()
+{
+  ActionOnlyDifferences = new QAction(QIcon(QPixmap(":/images/NotEqual.png")), "Only Show Differences", this);
+  connect(ActionOnlyDifferences, SIGNAL(triggered()), this, SLOT(SlotOnlyDifferences()));
+
+  ActionCollapseSourceCompareTree = new QAction(QIcon(QPixmap(":/images/Collapse.png")),
+                                                "Collapse Source Compare Tree", this);
+  connect(ActionCollapseSourceCompareTree, SIGNAL(triggered()), this, SLOT(SlotCollapseSourceCompareTree()));
+}
+
+/*****************************************************************************!
  * Function : CreateSubWindows
  *****************************************************************************/
 void
@@ -83,18 +98,29 @@ MainDisplayWindow::CreateSubWindows()
 
   splitter = new QSplitter(this);
 
-  codeWindow1 = new QTextEdit(this);
-  codeWindow2 = new QTextEdit(this);
+  codeWindow1 = new CodeEditor();
+  codeWindow1->show();
+  codeWindow1->setText(QString("Hi Mom"));
+  codeWindow2 = new CodeEditor();
+
   sourceFileCompareTree = new QTreeWidget(this);
   headerItem = new QTreeWidgetItem();
   headerItem->setText(0, "Track 1");
   headerItem->setText(1, "Track 2");
+
   sourceFileCompareTree->setColumnCount(2);
   sourceFileCompareTree->setHeaderItem(headerItem);
+  sourceFileCompareToolBar = new QToolBar();
+  sourceFileCompareToolBar->resize(100, 32);
+  sourceFileCompareToolBar->setIconSize(QSize(32, 32));
+  sourceFileCompareToolBar->addAction(ActionCollapseSourceCompareTree);
+  sourceFileCompareToolBar->addAction(ActionOnlyDifferences);
   
   codeWindowContainer1 = new TitledWindow(codeWindow1, QString("Track 2"));
   codeWindowContainer2 = new TitledWindow(codeWindow2, QString("Track 3"));
-  sourceFileCompareContainer = new TitledWindow(sourceFileCompareTree, QString("File Comparison"));
+  sourceFileCompareContainer = new TitledWindow(sourceFileCompareTree,
+                                                sourceFileCompareToolBar,
+                                                QString("File Comparison"));
   sourceFileCompareTree->resize(300, 100);
   
   splitter->addWidget(sourceFileCompareContainer);
@@ -222,6 +248,11 @@ MainDisplayWindow::CreateConnections(void)
           SIGNAL(SignalBuildSystemSelected(BuildSystem*)),
           buildTreeWindow,
           SLOT(SlotBuildSystemSelected(BuildSystem*)));
+
+  connect(sourceFileCompareTree,
+          SIGNAL(itemClicked(QTreeWidgetItem*, int)),
+          this,
+          SLOT(SlotTreeWidgetItemSelected(QTreeWidgetItem*, int)));
 }
 
 /*****************************************************************************!
@@ -514,4 +545,81 @@ MainDisplayWindow::FilesAreDifferent
     return false;
   }
   return true;
+}
+
+/*****************************************************************************!
+ * Function : SlotOnlyDifferences
+ *****************************************************************************/
+void
+MainDisplayWindow::SlotOnlyDifferences(void)
+{
+  
+}
+
+/*****************************************************************************!
+ * Function : SlotCollapseSourceCompareTree
+ *****************************************************************************/
+void
+MainDisplayWindow::SlotCollapseSourceCompareTree(void)
+{
+  QTreeWidgetItem*                      treeItem;
+
+  treeItem = sourceFileCompareTree->topLevelItem(0);
+  SourceTreeCollapseItem(treeItem);
+  sourceFileCompareTree->expandItem(treeItem);
+}
+
+/*****************************************************************************!
+ * Function : SourceTreeCollapseItem
+ *****************************************************************************/
+void
+MainDisplayWindow::SourceTreeCollapseItem
+(QTreeWidgetItem* InItem)
+{
+  int                                   i, n;
+  n = InItem->childCount();
+  for (i = 0; i < n; i++) {
+    sourceFileCompareTree->collapseItem(InItem->child(i));
+    SourceTreeCollapseItem(InItem->child(i));
+  }
+}
+
+/*****************************************************************************!
+ * Function : SlotTreeWidgetItemSelected
+ *****************************************************************************/
+void
+MainDisplayWindow::SlotTreeWidgetItemSelected
+(QTreeWidgetItem* InItem, int)
+{
+  QString                               fileName1;
+  QString                               fileName2;
+  FileTreeWidgetItem*                   item;
+  
+  item = (FileTreeWidgetItem*)InItem;
+  fileName1 = item->GetAbsoluteFileName1();
+  fileName2 = item->GetAbsoluteFileName2();
+
+  PopulateCodeDisplay(fileName1, codeWindow1);
+  PopulateCodeDisplay(fileName2, codeWindow2);
+}
+
+/*****************************************************************************!
+ * Function : PopulateCodeDisplay
+ *****************************************************************************/
+void
+MainDisplayWindow::PopulateCodeDisplay
+(QString InFilename, CodeEditor* InCodeWindow)
+{
+  QByteArray                            fileContents;
+  QString                               fileContentsString;
+  QFile                                 file(InFilename);
+  file.open(QIODeviceBase::ReadOnly);
+
+  fileContents = file.readAll();
+  file.close();
+  if ( fileContents.isNull() ) {
+    return;
+  }
+  fileContentsString = QString(fileContents);
+  InCodeWindow->setText(fileContentsString);
 }
