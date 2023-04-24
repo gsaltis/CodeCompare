@@ -102,6 +102,11 @@ SourceFileCompareAnalyzeStatsWindow::SetFileItem
 {
   QString                               fileName1;
   fileItem = InFileItem;
-  fileName1 = fileItem->GetAbsoluteFileName1();
-  LabelFileName1->setText(fileName1);
+  if ( fileItem ) {
+    fileName1 = fileItem->GetAbsoluteFileName1();
+    LabelFileName1->setText(fileName1);
+    return;
+  }
+  LabelFileName1->setText("");
 }
+

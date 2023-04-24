@@ -81,6 +81,8 @@ class MainDisplayWindow : public QWidget
   void                          PopulateCodeDisplay             (QString InFilename, CodeEditor* InCodeWindow);
   void                          DiffFiles                       (FileTreeWidgetItem* InItem, QString InFilename1, QString InFilename2);
   void                          AnalyzeDifferences              (FileTreeWidgetItem* InItem);
+  void                          CreateComparisonSummary         (void);
+  void                          CreateComparisonSummaryItems    (QFile* InFile, FileTreeWidgetItem* InItem);
 
  //! Private Data
  private :
@@ -99,7 +101,8 @@ class MainDisplayWindow : public QWidget
   BuildTreeWindowContainer*     buildTreeContainer;
   bool                          displayDiffsAtStart;
   SourceFileCompareTreeContainer* compareContainer;
-  
+  int                           filesDifferCount;
+
  //! Public Slots
  public slots :
   void                          SlotCreateDependencyTree (void);

@@ -370,3 +370,13 @@ SourceFileCompareTreeContainer::GetItemSourceFileCount //
   }
 }
 
+/*****************************************************************************!
+ * Function : SetFilesDifferCount
+ *****************************************************************************/
+void
+SourceFileCompareTreeContainer::SetFilesDifferCount
+(int InFilesDiffCount)
+{
+  statsWindow->SetFileDifferCount(InFilesDiffCount);
+  statsAnalyzeWindow->SetFileDifferCount(InFilesDiffCount);  
+}

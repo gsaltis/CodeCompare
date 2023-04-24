@@ -54,6 +54,7 @@ class SourceFileCompareTreeContainer : public QWidget
   void                          SetDisplayStatsWindow           (bool InDisplayStatsWindow);
   void                          SetDisplayAnalyzeStatsWindow    (bool InDisplayAnalyzeStatsWindow);
   void                          SetFileTreeItem                 (FileTreeWidgetItem* InItem);
+  void                          SetFilesDifferCount             (int InCount);
   
  //! Public Data
  public :

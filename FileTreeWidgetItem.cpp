@@ -259,5 +259,10 @@ QList<int>
 FileTreeWidgetItem::GetChangeLinesCount
 ()
 {
+  if ( ! FilesDiffer ) {
+    QList<int>                  n;
+    n << 0 << 0 << 0;
+    return n;
+  }
   return diffs.GetCounts();
 }

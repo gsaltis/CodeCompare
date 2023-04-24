@@ -12,6 +12,7 @@
 #include <QtGui>
 #include <QWidget>
 #include <QApplication>
+#include <QMessageBox>
 
 /*****************************************************************************!
  * Local Headers
@@ -701,8 +702,10 @@ MainDisplayWindow::DiffFiles
   if ( !stdOutput.isEmpty() ) {
     InItem->ParseDiffLines(stdOutput);
     InItem->SetFilesDiffer(true);
+    filesDifferCount++;
   } else {
     InItem->SetFilesDiffer(false);
+    compareContainer->SetFilesDifferCount(filesDifferCount);
   }
   errorOutput = QString(diffProcess.readAllStandardError().trimmed());
 }
@@ -724,11 +727,14 @@ MainDisplayWindow::SlotAnalyzeDifferences(void)
 {
   FileTreeWidgetItem*                   treeItem;
 
+  filesDifferCount = 0;
   compareContainer->SetDisplayAnalyzeStatsWindow(!compareContainer->GetDisplayAnalyzeStatsWindow());
   
   treeItem = (FileTreeWidgetItem*)sourceFileCompareTree->topLevelItem(0);
 
   AnalyzeDifferences(treeItem);
+  compareContainer->SetFileTreeItem(NULL);
+  CreateComparisonSummary();
 }
 
 /*****************************************************************************!
@@ -752,5 +758,61 @@ MainDisplayWindow::AnalyzeDifferences
     }
     compareContainer->SetFileTreeItem(item);
     application->processEvents();
+  }
+}
+
+/*****************************************************************************!
+ * Function : CreateComparisonSummary
+ *****************************************************************************/
+void
+MainDisplayWindow::CreateComparisonSummary(void)
+{
+  FileTreeWidgetItem*                   treeItem;
+  QFile                                 file;
+  QString                               filename = "CodeComparison.csv";
+  
+  file.setFileName(filename);
+  if ( !file.open(QIODeviceBase::ReadWrite | QIODeviceBase::Truncate) ) {
+    QString message = QString("Could not open ") + filename;
+    QMessageBox::critical(this, filename, message);
+    return;
+  }
+
+  treeItem = (FileTreeWidgetItem*)sourceFileCompareTree->topLevelItem(0);
+  CreateComparisonSummaryItems(&file, treeItem);
+  file.close();
+}
+
+/*****************************************************************************!
+ * Function : CreateComparisonSummaryItems
+ *****************************************************************************/
+void
+MainDisplayWindow::CreateComparisonSummaryItems
+(QFile* InFile, FileTreeWidgetItem* InItem)
+{
+  FileTreeWidgetItem*                   item;
+  int                                   i, n;
+
+  n = InItem->childCount();
+
+  for (i = 0; i < n; i++) {
+    item = (FileTreeWidgetItem*)InItem->child(i);
+    if ( item->GetIsDirectory() ) {
+      CreateComparisonSummaryItems(InFile, item);
+      continue;
+    }
+    if ( item->GetFilesDiffer() ) {
+      QString                           outputLine;
+      QList<int>                        diffCounts;
+
+      diffCounts = item->GetChangeLinesCount();
+      outputLine = QString("%1,%2,%3,%4,%5\n").
+        arg(item->GetAbsoluteFileName1()).
+        arg(item->GetAbsoluteFileName2()).
+        arg(diffCounts[0]).
+        arg(diffCounts[1]).
+        arg(diffCounts[2]);
+      InFile->write(outputLine.toLatin1());
+    }            
   }
 }
