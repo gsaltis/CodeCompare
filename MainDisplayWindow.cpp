@@ -100,6 +100,12 @@ MainDisplayWindow::CreateActions()
   ActionAnalyzeDifferences = new QAction(QIcon(QPixmap(":/images/Pinion.png")),
                                          "Analyze Differences", this);
   connect(ActionAnalyzeDifferences, SIGNAL(triggered()), this, SLOT(SlotAnalyzeDifferences()));
+
+  //!
+  ActionSaveSummaryFile = new QAction(QIcon(QPixmap(":/images/Pencil.png")),
+                                      "Save Summary File", this);
+  connect(ActionSaveSummaryFile, SIGNAL(triggered()), this, SLOT(SlotSaveSummaryFile()));
+  ActionSaveSummaryFile->setEnabled(false);
 }
 
 /*****************************************************************************!
@@ -129,6 +135,7 @@ MainDisplayWindow::CreateSubWindows()
   sourceFileCompareToolBar->addAction(ActionOnlyDifferences);
   sourceFileCompareToolBar->addAction(ActionFilesDifferInformation);
   sourceFileCompareToolBar->addAction(ActionAnalyzeDifferences);
+  sourceFileCompareToolBar->addAction(ActionSaveSummaryFile);
 
 
   codeWindowContainer1 = new TitledWindow(codeWindow1, QString("Track 2"));
@@ -734,7 +741,7 @@ MainDisplayWindow::SlotAnalyzeDifferences(void)
 
   AnalyzeDifferences(treeItem);
   compareContainer->SetFileTreeItem(NULL);
-  CreateComparisonSummary();
+  ActionSaveSummaryFile->setEnabled(true);
 }
 
 /*****************************************************************************!
@@ -764,7 +771,7 @@ MainDisplayWindow::AnalyzeDifferences
 /*****************************************************************************!
  * Function : CreateComparisonSummary
  *****************************************************************************/
-void
+bool
 MainDisplayWindow::CreateComparisonSummary(void)
 {
   FileTreeWidgetItem*                   treeItem;
@@ -775,12 +782,13 @@ MainDisplayWindow::CreateComparisonSummary(void)
   if ( !file.open(QIODeviceBase::ReadWrite | QIODeviceBase::Truncate) ) {
     QString message = QString("Could not open ") + filename;
     QMessageBox::critical(this, filename, message);
-    return;
+    return false;
   }
 
   treeItem = (FileTreeWidgetItem*)sourceFileCompareTree->topLevelItem(0);
   CreateComparisonSummaryItems(&file, treeItem);
   file.close();
+  return true;
 }
 
 /*****************************************************************************!
@@ -814,5 +822,16 @@ MainDisplayWindow::CreateComparisonSummaryItems
         arg(diffCounts[2]);
       InFile->write(outputLine.toLatin1());
     }            
+  }
+}
+
+/*****************************************************************************!
+ * Function : SlotSaveSummaryFile
+ *****************************************************************************/
+void
+MainDisplayWindow::SlotSaveSummaryFile(void)
+{
+  if ( CreateComparisonSummary() ) {
+    emit SignalSendDisplayMessage(QString("Comparison Summary Created"));
   }
 }

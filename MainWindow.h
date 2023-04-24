@@ -76,13 +76,15 @@ class MainWindow : public QMainWindow
   QMenu*                        fileMenu;
   QStatusBar*                   statusbar;
   QMenu*                        actionMenu;
-
+  QLabel*                       messageWindow;
+  
  //! Public Slots
  public slots :
   void                          SlotExit                (void);
   void                          SlotOpen                (void);
   void                          SlotCreateDependencyTree (void);
   void                          SlotDependencyTreeWindowClose (void);
+  void                          SlotSetMessage          (QString InMessage);
   
  //! Public Signals
  signals :

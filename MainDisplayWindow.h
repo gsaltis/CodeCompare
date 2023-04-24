@@ -81,7 +81,7 @@ class MainDisplayWindow : public QWidget
   void                          PopulateCodeDisplay             (QString InFilename, CodeEditor* InCodeWindow);
   void                          DiffFiles                       (FileTreeWidgetItem* InItem, QString InFilename1, QString InFilename2);
   void                          AnalyzeDifferences              (FileTreeWidgetItem* InItem);
-  void                          CreateComparisonSummary         (void);
+  bool                          CreateComparisonSummary         (void);
   void                          CreateComparisonSummaryItems    (QFile* InFile, FileTreeWidgetItem* InItem);
 
  //! Private Data
@@ -115,11 +115,13 @@ class MainDisplayWindow : public QWidget
   void                          SlotTreeWidgetItemSelected (QTreeWidgetItem* InItem, int InIndex);
   void                          SlotFileDifferInformation (void);
   void                          SlotAnalyzeDifferences  (void);
+  void                          SlotSaveSummaryFile     (void);
 
  //! Public Signals
  signals :
   void                          SignalDependencyWindowClose     (void);
   void                          SignalBuildSystemSelected (BuildSystem* InSystem);
+  void                          SignalSendDisplayMessage (QString InMessage);
 
  //! Public Actions
  public :
@@ -127,6 +129,7 @@ class MainDisplayWindow : public QWidget
   QAction*                      ActionCollapseSourceCompareTree;
   QAction*                      ActionFilesDifferInformation;
   QAction*                      ActionAnalyzeDifferences;
+  QAction*                      ActionSaveSummaryFile;
 
 };
 

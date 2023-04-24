@@ -69,6 +69,10 @@ MainWindow::CreateSubWindows()
   displayWindow = new MainDisplayWindow();  
   displayWindow->setParent(this);
   statusbar = statusBar();
+  messageWindow = new QLabel(statusbar);
+  messageWindow->setText("Hi Mom");
+  messageWindow->move(5, 0);
+  messageWindow->setFont(QFont("", 10, QFont::Bold));
 }
 
 /*****************************************************************************!
@@ -103,6 +107,8 @@ MainWindow::resizeEvent
     displayWindow->move(0, menu_size.height());
     displayWindow->resize(width, height);
   }
+  
+  messageWindow->resize(statusbar_size.width() - 10, statusbar_size.height());
 }
 
 /*****************************************************************************!
@@ -183,6 +189,10 @@ MainWindow::CreateConnections(void)
           SIGNAL(SignalDependencyWindowClose()),
           this,
           SLOT(SlotDependencyTreeWindowClose()));
+  connect(displayWindow,
+          SIGNAL(SignalSendDisplayMessage(QString)),
+          this,
+          SLOT(SlotSetMessage(QString)));
 }
 
 /*****************************************************************************!
@@ -212,4 +222,14 @@ MainWindow::SetTracksDirectoryNames
 (QString InTrack1DirectoryName, QString InTrack2DirectoryName)
 {
   displayWindow->SetTracksDirectoryNames(InTrack1DirectoryName, InTrack2DirectoryName);
+}
+
+/*****************************************************************************!
+ * Function : SlotSetMessage
+ *****************************************************************************/
+void
+MainWindow::SlotSetMessage
+(QString InMessage)
+{
+  messageWindow->setText(InMessage);
 }
