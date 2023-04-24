@@ -6,5 +6,5 @@ doskey mc=make cleanall
 doskey mq=qmake
 doskey co=release\CodeCompare $*
 doskey co2=release\CodeCompare -1 D:\Source\NCUCodeMerge\Track2_NCU_Code\src -2 D:\Source\NCUCodeMerge\Track3_NCU_Code\G3\src $*
-doskey cod=debug\CodeCompare $*
+doskey cod=gdb debug\CodeCompare $*
 title CodeCompare

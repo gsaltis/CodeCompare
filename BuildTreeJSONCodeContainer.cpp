@@ -152,7 +152,6 @@ BuildTreeJSONCodeContainer::SlotTreeItemSelected
   args << InFilename;
 
   st = args.join(" ");
-  TRACE_FUNCTION_QSTRING(st);
   process.start(clangExe, args);
   process.waitForFinished();
   

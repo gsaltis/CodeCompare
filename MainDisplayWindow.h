@@ -28,6 +28,7 @@
 #include "TitledWindow.h"
 #include "FileTreeWidgetItem.h"
 #include "CodeEditor.h"
+#include "SourceFileCompareTreeContainer.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -75,10 +76,12 @@ class MainDisplayWindow : public QWidget
   bool                          PopulateTreeFiles               (QStringList InEntryList1, QStringList InEntryList2, FileTreeWidgetItem* InHead);
   void                          PopulateDirectoriesAndFiles     (FileTreeWidgetItem* InHead, QString InTrack1DirectoryName, QString InTrack2DirectoryName);
   bool                          FilesAreDifferent               (QString InFilename1, QString InFilename2);
-  void                          CreateActions           ();
-  void                          SourceTreeCollapseItem  (QTreeWidgetItem* InItem);
-  void                          PopulateCodeDisplay     (QString InFilename, CodeEditor* InCodeWindow);
-  
+  void                          CreateActions                   ();
+  void                          SourceTreeCollapseItem          (QTreeWidgetItem* InItem);
+  void                          PopulateCodeDisplay             (QString InFilename, CodeEditor* InCodeWindow);
+  void                          DiffFiles                       (FileTreeWidgetItem* InItem, QString InFilename1, QString InFilename2);
+  void                          AnalyzeDifferences              (FileTreeWidgetItem* InItem);
+
  //! Private Data
  private :
   QString                       Track1DirectoryName;
@@ -94,6 +97,8 @@ class MainDisplayWindow : public QWidget
   DependencyTreeWindow*         dependencyTreeWindow;
   BuildTreeWindow*              buildTreeWindow;
   BuildTreeWindowContainer*     buildTreeContainer;
+  bool                          displayDiffsAtStart;
+  SourceFileCompareTreeContainer* compareContainer;
   
  //! Public Slots
  public slots :
@@ -105,6 +110,8 @@ class MainDisplayWindow : public QWidget
   void                          SlotOnlyDifferences     (void);
   void                          SlotCollapseSourceCompareTree (void);
   void                          SlotTreeWidgetItemSelected (QTreeWidgetItem* InItem, int InIndex);
+  void                          SlotFileDifferInformation (void);
+  void                          SlotAnalyzeDifferences  (void);
 
  //! Public Signals
  signals :
@@ -115,6 +122,8 @@ class MainDisplayWindow : public QWidget
  public :
   QAction*                      ActionOnlyDifferences;
   QAction*                      ActionCollapseSourceCompareTree;
+  QAction*                      ActionFilesDifferInformation;
+  QAction*                      ActionAnalyzeDifferences;
 
 };
 

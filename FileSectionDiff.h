@@ -1,80 +1,77 @@
 /*****************************************************************************
- * FILE NAME    : CodeEditor.h
- * DATE         : April 21 2023
+ * FILE NAME    : FileSectionDiff.h
+ * DATE         : April 22 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _codeeditor_h_
-#define _codeeditor_h_
+#ifndef _filesectiondiff_h_
+#define _filesectiondiff_h_
 
 /*****************************************************************************!
  * Global Headers
  *****************************************************************************/
 #include <QtCore>
 #include <QtGui>
-#include <QPlainTextEdit>
 #include <QWidget>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "CodeHighlighter.h"
-#include "LineNumberArea.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define CODE_EDITOR_X                   200
-#define CODE_EDITOR_Y                   200
-#define CODE_EDITOR_WIDTH               200
-#define CODE_EDITOR_HEIGHT              200
 
 /*****************************************************************************!
- * Exported Class : CodeEditor
+ * Exported Class : FileSectionDiff
  *****************************************************************************/
-class CodeEditor : public QPlainTextEdit
+class FileSectionDiff
 {
-  Q_OBJECT;
-
  //! Constructors
  public :
-  CodeEditor                    ();
-  CodeEditor                    (QWidget* InParent);
+  FileSectionDiff               (QStringList InLines, int &InCurrentLine);
 
  //! Destructor
  public :
-  ~CodeEditor                   ();
+  ~FileSectionDiff              ();
 
+ //! Public Types
+  enum Type
+  {
+    None,
+    Change,
+    Delete,
+    Add
+  };
+  
  //! Public Methods
  public :
-  int                           lineNumberAreaWidth             ();
-  void                          lineNumberAreaPaintEvent        (QPaintEvent *event);
-
+  void                                  ParseLine               (QStringList InLines, int &InIndex);
+  Type                                  GetType                 ();
+  QString                               GetTypeString           ();
+  int                                   GetLinesChangedCount    ();
+  
  //! Public Data
  public :
-
+  
  //! Protected Methods
  protected :
-
+  
  //! Protected Data
  protected :
 
  //! Private Methods
  private :
-  void                          SetFileDisplayTabWidth  (int InTabWidth);
-  void                          initialize              (void);
-  void                          resizeEvent             (QResizeEvent *e);
-  void                          highlightCurrentLine            ();
-  void                          updateLineNumberAreaWidth(int newBlockCounte);
-  
+
  //! Private Data
  private :
-  CodeHighlighter*              codeHighlighter;
-  QWidget *                     lineNumberArea;
+  Type                                  type;
+  QStringList                           changeLines;
+  int                                   startLine;
+  int                                   endLine;
   
  //! Public Slots
  public slots :
-  void                          updateLineNumberArea    (const QRect &rect, int dy);
 
  //! Public Signals
  signals :
@@ -84,4 +81,4 @@ class CodeEditor : public QPlainTextEdit
 
 };
 
-#endif /* _codeeditor_h_*/
+#endif /* _filesectiondiff_h_*/

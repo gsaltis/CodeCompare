@@ -13,5 +13,8 @@
     <file>images/NotEqual.png</file>
     <file>images/OpenFile.png</file>
     <file>images/Right.png</file>
-</qresource>
+    <file>images/Splash.png</file>
+    <file>images/Info.png</file>
+    <file>images/Pinion.png</file>
+  </qresource>
 </RCC>

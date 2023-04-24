@@ -1,55 +1,46 @@
 /*****************************************************************************
- * FILE NAME    : CodeEditor.h
- * DATE         : April 21 2023
+ * FILE NAME    : FileContentsDiff.h
+ * DATE         : April 22 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _codeeditor_h_
-#define _codeeditor_h_
+#ifndef _filecontentsdiff_h_
+#define _filecontentsdiff_h_
 
 /*****************************************************************************!
  * Global Headers
  *****************************************************************************/
 #include <QtCore>
 #include <QtGui>
-#include <QPlainTextEdit>
 #include <QWidget>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "CodeHighlighter.h"
-#include "LineNumberArea.h"
+#include "FileSectionDiff.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define CODE_EDITOR_X                   200
-#define CODE_EDITOR_Y                   200
-#define CODE_EDITOR_WIDTH               200
-#define CODE_EDITOR_HEIGHT              200
 
 /*****************************************************************************!
- * Exported Class : CodeEditor
+ * Exported Class : FileContentsDiff
  *****************************************************************************/
-class CodeEditor : public QPlainTextEdit
+class FileContentsDiff : public QList<FileSectionDiff>
 {
-  Q_OBJECT;
-
  //! Constructors
  public :
-  CodeEditor                    ();
-  CodeEditor                    (QWidget* InParent);
+  FileContentsDiff              ();              
 
  //! Destructor
  public :
-  ~CodeEditor                   ();
+  ~FileContentsDiff             ();
 
  //! Public Methods
  public :
-  int                           lineNumberAreaWidth             ();
-  void                          lineNumberAreaPaintEvent        (QPaintEvent *event);
-
+  void                          ParseLines              (QString InLines);
+  QList<int>                    GetCounts               (void);
+  
  //! Public Data
  public :
 
@@ -61,20 +52,12 @@ class CodeEditor : public QPlainTextEdit
 
  //! Private Methods
  private :
-  void                          SetFileDisplayTabWidth  (int InTabWidth);
-  void                          initialize              (void);
-  void                          resizeEvent             (QResizeEvent *e);
-  void                          highlightCurrentLine            ();
-  void                          updateLineNumberAreaWidth(int newBlockCounte);
-  
+
  //! Private Data
  private :
-  CodeHighlighter*              codeHighlighter;
-  QWidget *                     lineNumberArea;
-  
+
  //! Public Slots
  public slots :
-  void                          updateLineNumberArea    (const QRect &rect, int dy);
 
  //! Public Signals
  signals :
@@ -84,4 +67,4 @@ class CodeEditor : public QPlainTextEdit
 
 };
 
-#endif /* _codeeditor_h_*/
+#endif /* _filecontentsdiff_h_*/

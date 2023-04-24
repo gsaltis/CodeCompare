@@ -15,6 +15,7 @@
 #include <string.h>
 #include <QtGui>
 #include <QCommandLineParser>
+#include <QSplashScreen>
 
 /*****************************************************************************!
  * Local Headers
@@ -40,6 +41,9 @@ mainSystemConfig;
 QString
 mainCodeBase = QString("");
 
+QApplication*
+application;
+
 /*****************************************************************************!
  * Local Functions
  *****************************************************************************/
@@ -56,15 +60,20 @@ main
 {
   QString                               mainTrack1Directory;
   QString                               mainTrack2Directory;
-  QApplication                          application(argc, argv);
   MainWindow*                           w;
   QCommandLineParser                    commandLineParser;
 
-  application.setApplicationName("CodeCompare");
-  application.setApplicationVersion("0.0.0");
-  application.setOrganizationName("Greg Saltis");
-  application.setOrganizationDomain("www.gsaltis.com");
+  application = new QApplication(argc, argv);
+  QPixmap                               splashPixmap(":/images/Splash.png");
 
+  application->setApplicationName("CodeCompare");
+  application->setApplicationVersion("0.0.0");
+  application->setOrganizationName("Greg Saltis");
+  application->setOrganizationDomain("www.gsaltis.com");
+
+  QSplashScreen splashScreen(splashPixmap);
+  splashScreen.show();
+  application->processEvents();
   commandLineParser.setApplicationDescription("CodeCompare");
   commandLineParser.addHelpOption();
   commandLineParser.addVersionOption();
@@ -80,7 +89,7 @@ main
   commandLineParser.addOption(codeBaseNameOption);
   commandLineParser.addOption(codeBase1NameOption);
   commandLineParser.addOption(codeBase2NameOption);
-  commandLineParser.process(application);
+  commandLineParser.process(*application);
   mainCodeBase = commandLineParser.value(codeBaseNameOption);
   mainTrack1Directory = commandLineParser.value(codeBase1NameOption);
   mainTrack2Directory = commandLineParser.value(codeBase2NameOption);
@@ -98,7 +107,8 @@ main
   } else {
     exit(EXIT_FAILURE);
   }    
-  return application.exec();
+  splashScreen.finish(w);
+  return application->exec();
 }
 
 /*****************************************************************************!

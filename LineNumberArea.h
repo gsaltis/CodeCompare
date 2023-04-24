@@ -1,80 +1,77 @@
 /*****************************************************************************
- * FILE NAME    : CodeEditor.h
+ * FILE NAME    : LineNumberArea.h
  * DATE         : April 21 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _codeeditor_h_
-#define _codeeditor_h_
+#ifndef _linenumberarea_h_
+#define _linenumberarea_h_
 
 /*****************************************************************************!
  * Global Headers
  *****************************************************************************/
 #include <QtCore>
 #include <QtGui>
-#include <QPlainTextEdit>
 #include <QWidget>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "CodeHighlighter.h"
-#include "LineNumberArea.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define CODE_EDITOR_X                   200
-#define CODE_EDITOR_Y                   200
-#define CODE_EDITOR_WIDTH               200
-#define CODE_EDITOR_HEIGHT              200
+#define LINE_NUMBER_AREA_X              200
+#define LINE_NUMBER_AREA_Y              200
+#define LINE_NUMBER_AREA_WIDTH          200
+#define LINE_NUMBER_AREA_HEIGHT         200
 
 /*****************************************************************************!
- * Exported Class : CodeEditor
+ * Imported Class
  *****************************************************************************/
-class CodeEditor : public QPlainTextEdit
+class CodeEditor;
+
+/*****************************************************************************!
+ * Exported Class : LineNumberArea
+ *****************************************************************************/
+class LineNumberArea : public QWidget
 {
   Q_OBJECT;
 
  //! Constructors
  public :
-  CodeEditor                    ();
-  CodeEditor                    (QWidget* InParent);
+  LineNumberArea(CodeEditor *editor)
+  {
+    codeEditor = editor;
+  }
 
  //! Destructor
  public :
-  ~CodeEditor                   ();
+  ~LineNumberArea               ();
 
  //! Public Methods
  public :
-  int                           lineNumberAreaWidth             ();
-  void                          lineNumberAreaPaintEvent        (QPaintEvent *event);
+  QSize sizeHint();
 
  //! Public Data
  public :
 
  //! Protected Methods
  protected :
+  void paintEvent(QPaintEvent *event) override;
 
  //! Protected Data
  protected :
 
  //! Private Methods
  private :
-  void                          SetFileDisplayTabWidth  (int InTabWidth);
-  void                          initialize              (void);
-  void                          resizeEvent             (QResizeEvent *e);
-  void                          highlightCurrentLine            ();
-  void                          updateLineNumberAreaWidth(int newBlockCounte);
-  
+
  //! Private Data
  private :
-  CodeHighlighter*              codeHighlighter;
-  QWidget *                     lineNumberArea;
-  
+    CodeEditor *codeEditor;
+
  //! Public Slots
  public slots :
-  void                          updateLineNumberArea    (const QRect &rect, int dy);
 
  //! Public Signals
  signals :
@@ -84,4 +81,4 @@ class CodeEditor : public QPlainTextEdit
 
 };
 
-#endif /* _codeeditor_h_*/
+#endif /* _linenumberarea_h_*/

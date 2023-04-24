@@ -209,14 +209,6 @@ TitledWindow::SetSize
   }
 
   if ( toolbar ) {
-    TRACE_FUNCTION_INT(width);
-    TRACE_FUNCTION_INT(height);
-    TRACE_FUNCTION_INT(toolbarX);
-    TRACE_FUNCTION_INT(toolbarY);
-    TRACE_FUNCTION_INT(toolbarW);
-    TRACE_FUNCTION_INT(toolbarH);
-    TRACE_FUNCTION_INT(containerH);
-    TRACE_FUNCTION_INT(containerY);
     toolbar->move(toolbarX, toolbarY);
     toolbar->resize(toolbarW, toolbarH);
   }

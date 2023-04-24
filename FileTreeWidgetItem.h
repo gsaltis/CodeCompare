@@ -19,6 +19,7 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
+#include "FileContentsDiff.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -52,6 +53,15 @@ class FileTreeWidgetItem : public QTreeWidgetItem
   QString                       GetAbsoluteFileName2    (void);
   void                          SetAbsoluteFileName2    (QString InAbsoluteFileName2);
   void                          SetAbsoluteFileNames    (QString InAbsoluteFileName1, QString InAbsoluteFileName2);
+  void                          ParseDiffLines          (QString InDiffLines);
+  bool                          GetFilesDiffer          (void);
+  void                          SetFilesDiffer          (bool InFilesDiffer);
+  bool                          GetIsDirectory          (void);
+  void                          SetIsDirectory          (bool InIsDirectory);
+  QString                       GetFileName1            ();
+  QString                       GetFileName2            ();
+  bool                          IsSourceFile            (void);
+  QList<int>                    GetChangeLinesCount     ();
   
  //! Public Data
  public :
@@ -68,11 +78,15 @@ class FileTreeWidgetItem : public QTreeWidgetItem
   void                          CreateSubWindows        ();
   void                          InitializeSubWindows    ();
   void                          resizeEvent             (QResizeEvent* InEvent);
-
+  
  //! Private Data
  private :
   QString                       absoluteFileName1;
   QString                       absoluteFileName2;
+  FileContentsDiff              diffs;
+  
+  bool                          FilesDiffer;
+  bool                          isDirectory;
 
  //! Public Slots
  public slots :

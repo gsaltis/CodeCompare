@@ -31,4 +31,6 @@ mainSystemConfig;
 extern QString
 mainCodeBase;
 
+extern QApplication*
+application;
 #endif /* _main_h_*/

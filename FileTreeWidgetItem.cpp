@@ -16,6 +16,7 @@
  * Local Headers
  *****************************************************************************/
 #include "FileTreeWidgetItem.h"
+#include "trace.h"
 
 /*****************************************************************************!
  * Function : FileTreeWidgetItem
@@ -23,6 +24,7 @@
 FileTreeWidgetItem::FileTreeWidgetItem
 (QString InAbsoluteFileName, int InColumn) : QTreeWidgetItem()
 {
+  initialize();
   if ( InColumn == 0 ) {
     SetAbsoluteFileName1(InAbsoluteFileName);
     return;
@@ -36,7 +38,9 @@ FileTreeWidgetItem::FileTreeWidgetItem
 FileTreeWidgetItem::FileTreeWidgetItem
 (QString InAbsoluteFileName, QTreeWidget* InTree) : QTreeWidgetItem()
 {
+  initialize();
   SetAbsoluteFileName1(InAbsoluteFileName);
+  this->isDirectory = true;
   InTree->addTopLevelItem(this);
 }
 
@@ -46,6 +50,7 @@ FileTreeWidgetItem::FileTreeWidgetItem
 FileTreeWidgetItem::FileTreeWidgetItem
 (QString InAbsoluteFileName, QTreeWidgetItem* InParent, int InColumn) : QTreeWidgetItem()
 {
+  initialize();
   if ( InColumn == 0 ) {
     SetAbsoluteFileName1(InAbsoluteFileName);
     InParent->addChild(this);
@@ -61,6 +66,7 @@ FileTreeWidgetItem::FileTreeWidgetItem
 FileTreeWidgetItem::FileTreeWidgetItem
 (QString InAbsoluteFileName1, QString InAbsoluteFileName2) : QTreeWidgetItem()
 {
+  initialize();
   SetAbsoluteFileNames(InAbsoluteFileName1, InAbsoluteFileName2);
 }
 
@@ -70,8 +76,20 @@ FileTreeWidgetItem::FileTreeWidgetItem
 FileTreeWidgetItem::FileTreeWidgetItem
 (QString InAbsoluteFileName1, QString InAbsoluteFileName2, QTreeWidgetItem* InParent) : QTreeWidgetItem()
 {
+  initialize();
   SetAbsoluteFileNames(InAbsoluteFileName1, InAbsoluteFileName2);
   InParent->addChild(this);
+}
+
+/*****************************************************************************!
+ * Function : initialize
+ *****************************************************************************/
+void
+FileTreeWidgetItem::initialize
+()
+{
+  isDirectory = false;
+  FilesDiffer = false;
 }
 
 /*****************************************************************************!
@@ -79,14 +97,6 @@ FileTreeWidgetItem::FileTreeWidgetItem
  *****************************************************************************/
 FileTreeWidgetItem::~FileTreeWidgetItem
 ()
-{
-}
-
-/*****************************************************************************!
- * Function : initialize
- *****************************************************************************/
-void
-FileTreeWidgetItem::initialize()
 {
 }
 
@@ -151,4 +161,103 @@ FileTreeWidgetItem::SetAbsoluteFileNames
 
   QFileInfo                             fileInfo2(absoluteFileName2);
   setText(1, fileInfo2.fileName());
+}
+
+/*****************************************************************************!
+ * Function : ParseDiffLines
+ *****************************************************************************/
+void
+FileTreeWidgetItem::ParseDiffLines
+(QString InDiffLines)
+{
+  diffs.ParseLines(InDiffLines);
+}
+
+/*****************************************************************************!
+ * Function : GetFilesDiffer
+ *****************************************************************************/
+bool
+FileTreeWidgetItem::GetFilesDiffer(void)
+{
+  return FilesDiffer;  
+}
+
+/*****************************************************************************!
+ * Function : SetFilesDiffer
+ *****************************************************************************/
+void
+FileTreeWidgetItem::SetFilesDiffer
+(bool InFilesDiffer)
+{
+  FilesDiffer = InFilesDiffer;
+}
+
+/*****************************************************************************!
+ * Function : GetIsDirectory
+ *****************************************************************************/
+bool
+FileTreeWidgetItem::GetIsDirectory(void)
+{
+  return isDirectory;  
+}
+
+/*****************************************************************************!
+ * Function : SetIsDirectory
+ *****************************************************************************/
+void
+FileTreeWidgetItem::SetIsDirectory
+(bool InIsDirectory)
+{
+  isDirectory = InIsDirectory;  
+}
+
+/*****************************************************************************!
+ * Function : GetFileName1
+ *****************************************************************************/
+QString
+FileTreeWidgetItem::GetFileName1
+()
+{
+  return absoluteFileName1;
+}
+
+/*****************************************************************************!
+ * Function : GetFileName2
+ *****************************************************************************/
+QString
+FileTreeWidgetItem::GetFileName2
+()
+{
+  return absoluteFileName2;
+}
+
+/*****************************************************************************!
+ * Function : IsSourceFile
+ *****************************************************************************/
+bool
+FileTreeWidgetItem::IsSourceFile(void)
+{
+  QString                               suffix;
+  QFileInfo                             fileInfo;
+
+  if ( ! absoluteFileName1.isEmpty() ) {
+    fileInfo.setFile(absoluteFileName1);
+  } else {
+    fileInfo.setFile(absoluteFileName2);
+  }
+  suffix = fileInfo.suffix();
+
+  return suffix == "h" ||
+    suffix == "c" ||
+    suffix == ".cpp";
+}
+
+/*****************************************************************************!
+ * Function : GetChangeLinesCount
+ *****************************************************************************/
+QList<int>
+FileTreeWidgetItem::GetChangeLinesCount
+()
+{
+  return diffs.GetCounts();
 }

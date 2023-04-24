@@ -66,7 +66,7 @@ SOURCES                         += \
 				   CodeBaseForm.cpp                             \
 				   CodeBaseOpenDialog.cpp                       \
 				   CodeCompareDir.cpp                           \
-                                   CodeEditor.cpp                               \
+				   CodeEditor.cpp                               \
 				   CodeHighlighter.cpp                          \
 				   CodeNameWindow.cpp                           \
 				   CodeWindow.cpp                               \
@@ -74,9 +74,15 @@ SOURCES                         += \
 				   DependencyTreeWindow.cpp                     \
 				   DirectoryReadEntry.cpp                       \
 				   DirectoryTreeElement.cpp                     \
+				   FileContentsDiff.cpp                         \
+				   FileSectionDiff.cpp                          \
 				   FileTreeWidgetItem.cpp                       \
+				   LineNumberArea.cpp                           \
 				   MainDisplayWindow.cpp                        \
 				   MainWindow.cpp                               \
+				   SourceFileCompareAnalyzeStatsWindow.cpp      \
+				   SourceFileCompareStatsWindow.cpp             \
+				   SourceFileCompareTreeContainer.cpp           \
 				   SystemConfig.cpp                             \
 				   TitledWindow.cpp                             \
 				   WindowHeader.cpp                             \
@@ -116,7 +122,7 @@ HEADERS                         += \
 				   CodeBaseForm.h                               \
 				   CodeBaseOpenDialog.h                         \
 				   CodeCompareDir.h                             \
-                                   CodeEditor.h                                 \
+				   CodeEditor.h                                 \
 				   CodeHighlighter.h                            \
 				   CodeNameWindow.h                             \
 				   CodeWindow.h                                 \
@@ -124,9 +130,15 @@ HEADERS                         += \
 				   DependencyTreeWindow.h                       \
 				   DirectoryReadEntry.h                         \
 				   DirectoryTreeElement.h                       \
+				   FileContentsDiff.h                           \
+				   FileSectionDiff.h                            \
 				   FileTreeWidgetItem.h                         \
+				   LineNumberArea.h                             \
 				   MainDisplayWindow.h                          \
 				   MainWindow.h                                 \
+				   SourceFileCompareAnalyzeStatsWindow.h        \
+				   SourceFileCompareStatsWindow.h               \
+				   SourceFileCompareTreeContainer.h             \
 				   SystemConfig.h                               \
 				   TitledWindow.h                               \
 				   WindowHeader.h                               \

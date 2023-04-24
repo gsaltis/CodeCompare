@@ -1,54 +1,51 @@
 /*****************************************************************************
- * FILE NAME    : CodeEditor.h
- * DATE         : April 21 2023
+ * FILE NAME    : SourceFileCompareAnalyzeStatsWindow.h
+ * DATE         : April 24 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _codeeditor_h_
-#define _codeeditor_h_
+#ifndef _sourcefilecompareanalyzestatswindow_h_
+#define _sourcefilecompareanalyzestatswindow_h_
 
 /*****************************************************************************!
  * Global Headers
  *****************************************************************************/
 #include <QtCore>
 #include <QtGui>
-#include <QPlainTextEdit>
 #include <QWidget>
+#include <QLabel>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "CodeHighlighter.h"
-#include "LineNumberArea.h"
+#include "SourceFileCompareStatsWindow.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define CODE_EDITOR_X                   200
-#define CODE_EDITOR_Y                   200
-#define CODE_EDITOR_WIDTH               200
-#define CODE_EDITOR_HEIGHT              200
+#define SOURCE_FILE_COMPARE_ANALYZE_STATS_WINDOW_X 200
+#define SOURCE_FILE_COMPARE_ANALYZE_STATS_WINDOW_Y 200
+#define SOURCE_FILE_COMPARE_ANALYZE_STATS_WINDOW_WIDTH 200
+#define SOURCE_FILE_COMPARE_ANALYZE_STATS_WINDOW_HEIGHT 200
 
 /*****************************************************************************!
- * Exported Class : CodeEditor
+ * Exported Class : SourceFileCompareAnalyzeStatsWindow
  *****************************************************************************/
-class CodeEditor : public QPlainTextEdit
+class SourceFileCompareAnalyzeStatsWindow : public SourceFileCompareStatsWindow
 {
   Q_OBJECT;
 
  //! Constructors
  public :
-  CodeEditor                    ();
-  CodeEditor                    (QWidget* InParent);
+  SourceFileCompareAnalyzeStatsWindow ();
 
  //! Destructor
  public :
-  ~CodeEditor                   ();
+  ~SourceFileCompareAnalyzeStatsWindow ();
 
  //! Public Methods
  public :
-  int                           lineNumberAreaWidth             ();
-  void                          lineNumberAreaPaintEvent        (QPaintEvent *event);
+  virtual void                  SetFileItem             (FileTreeWidgetItem* InFileItem);
 
  //! Public Data
  public :
@@ -61,20 +58,17 @@ class CodeEditor : public QPlainTextEdit
 
  //! Private Methods
  private :
-  void                          SetFileDisplayTabWidth  (int InTabWidth);
-  void                          initialize              (void);
-  void                          resizeEvent             (QResizeEvent *e);
-  void                          highlightCurrentLine            ();
-  void                          updateLineNumberAreaWidth(int newBlockCounte);
-  
+  void                          initialize              ();
+  void                          CreateSubWindows        ();
+  void                          InitializeSubWindows    ();
+  void                          resizeEvent             (QResizeEvent* InEvent);
+
  //! Private Data
  private :
-  CodeHighlighter*              codeHighlighter;
-  QWidget *                     lineNumberArea;
-  
+  QLabel*                       LabelFileName1;
+
  //! Public Slots
  public slots :
-  void                          updateLineNumberArea    (const QRect &rect, int dy);
 
  //! Public Signals
  signals :
@@ -84,4 +78,4 @@ class CodeEditor : public QPlainTextEdit
 
 };
 
-#endif /* _codeeditor_h_*/
+#endif /* _sourcefilecompareanalyzestatswindow_h_*/
