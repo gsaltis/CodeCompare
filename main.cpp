@@ -96,14 +96,17 @@ main
   w->resize(mainSystemConfig->GetMainWindowSize());
   w->move(mainSystemConfig->GetMainWindowLocation());
   w->show();
-  if ( false ) {
+  if ( !mainTrack1Directory.isEmpty() && !mainTrack2Directory.isEmpty() ) {
     if ( VerifyCodeTracks(mainTrack1Directory, mainTrack2Directory) ) {
       w->SetTracksDirectoryNames(mainTrack1Directory, mainTrack2Directory);
-    } if ( ! mainCodeBase.isEmpty() ) {
-      w->SetCodeBaseDirectoryName(mainCodeBase);
     } else {
       exit(EXIT_FAILURE);
     }
+  }
+  if ( ! mainCodeBase.isEmpty() ) {
+    w->SetCodeBaseDirectoryName(mainCodeBase);
+  } else {
+    exit(EXIT_FAILURE);
   }
   splashScreen.finish(w);
   return application->exec();

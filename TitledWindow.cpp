@@ -26,6 +26,8 @@ TitledWindow::TitledWindow
 {
   QPalette pal;
   pal = palette();
+  setObjectName("TitledWindow");
+  setStyleSheet("#TitledWindow { border : solid 1px white; background : white }");
   pal.setBrush(QPalette::Window, QBrush(QColor(255, 255, 255)));
   setPalette(pal);
   setAutoFillBackground(true);

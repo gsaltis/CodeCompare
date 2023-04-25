@@ -132,8 +132,12 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event)
   }
 }
 
+/*****************************************************************************!
+ * 
+ *****************************************************************************/
 void CodeEditor::updateLineNumberAreaWidth(int newBlockCount)
 {
+  (void)newBlockCount;
   setViewportMargins(lineNumberAreaWidth(), 0, 0, 0);
 }
 
