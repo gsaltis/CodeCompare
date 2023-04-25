@@ -62,7 +62,7 @@ main
   QString                               mainTrack2Directory;
   MainWindow*                           w;
   QCommandLineParser                    commandLineParser;
-
+  
   application = new QApplication(argc, argv);
   QPixmap                               splashPixmap(":/images/Splash.png");
 
@@ -103,7 +103,7 @@ main
       exit(EXIT_FAILURE);
     }
   }
-  if ( ! mainCodeBase.isEmpty() ) {
+  else if ( ! mainCodeBase.isEmpty() ) {
     w->SetCodeBaseDirectoryName(mainCodeBase);
   } else {
     exit(EXIT_FAILURE);

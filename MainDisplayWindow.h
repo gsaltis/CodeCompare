@@ -29,6 +29,7 @@
 #include "FileTreeWidgetItem.h"
 #include "CodeEditor.h"
 #include "SourceFileCompareTreeContainer.h"
+#include "SourceDifferencesWindow.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -103,6 +104,9 @@ class MainDisplayWindow : public QWidget
   SourceFileCompareTreeContainer* compareContainer;
   int                           filesDifferCount;
   int                           currentSourceFileCount;
+  QSplitter*                    sourceFilesSplitter;
+  QSplitter*                    sourceFilesChangesSplitter;
+  SourceDifferencesWindow*      sourceDiffWindow;
   
  //! Public Slots
  public slots :

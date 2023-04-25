@@ -115,9 +115,14 @@ void
 MainDisplayWindow::CreateSubWindows()
 {
   QTreeWidgetItem*                      headerItem;
-
-  splitter = new QSplitter(this);
-
+  int                                   windowW;
+  int                                   windowH;
+  QSize                                 windowSize;
+  
+  windowSize = mainSystemConfig->GetMainWindowSize();
+  windowW = windowSize.width();
+  windowH = windowSize.height();
+  
   codeWindow1 = new CodeEditor();
   codeWindow2 = new CodeEditor();
 
@@ -125,6 +130,9 @@ MainDisplayWindow::CreateSubWindows()
   headerItem = new QTreeWidgetItem();
   headerItem->setText(0, "Track 1");
   headerItem->setText(1, "Track 2");
+  sourceFileCompareTree->resize(300, windowH);
+  
+  sourceDiffWindow = new SourceDifferencesWindow();
 
   sourceFileCompareTree->setColumnCount(2);
   sourceFileCompareTree->setHeaderItem(headerItem);
@@ -140,15 +148,33 @@ MainDisplayWindow::CreateSubWindows()
 
   codeWindowContainer1 = new TitledWindow(codeWindow1, QString("Track 2"));
   codeWindowContainer2 = new TitledWindow(codeWindow2, QString("Track 3"));
+  codeWindowContainer1->resize(QSize(600, 200));
+  codeWindowContainer2->resize(QSize(600, 200));
+                                
   sourceFileCompareContainer = new TitledWindow(sourceFileCompareTree,
                                                 sourceFileCompareToolBar,
                                                 QString("File Comparison"));
   compareContainer = new SourceFileCompareTreeContainer(sourceFileCompareContainer, sourceFileCompareTree);
-  sourceFileCompareTree->resize(300, 100);
+  // sourceFileCompareTree->resize(300, 100);
+
+  TRACE_FUNCTION_QSIZE(size());
+  splitter = new QSplitter(this);
+  sourceFilesSplitter = new QSplitter();
+  sourceFilesSplitter->resize(windowW - 300, windowH);
+  
+  sourceFilesChangesSplitter = new QSplitter();
+  sourceFilesChangesSplitter->resize(windowW - 300, windowH - 300);
+  
+  sourceFilesChangesSplitter->setOrientation(Qt::Vertical);
+
+  sourceFilesSplitter->addWidget(codeWindowContainer1);
+  sourceFilesSplitter->addWidget(codeWindowContainer2);
+
+  sourceFilesChangesSplitter->addWidget(sourceFilesSplitter);
+  sourceFilesChangesSplitter->addWidget(sourceDiffWindow);
   
   splitter->addWidget(compareContainer);
-  splitter->addWidget(codeWindowContainer1);
-  splitter->addWidget(codeWindowContainer2);
+  splitter->addWidget(sourceFilesChangesSplitter);
 
   dependencyTreeWindow = new DependencyTreeWindow();
   dependencyTreeWindow->setParent(this);
