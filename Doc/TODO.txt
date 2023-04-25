@@ -1,0 +1,4 @@
+1. Display difference in floating window
+2. Add line counts to file display info
+3. Remove base path name from file names in File Information
+4. -1 command line options doubles as base for both views

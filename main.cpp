@@ -77,20 +77,16 @@ main
   commandLineParser.setApplicationDescription("CodeCompare");
   commandLineParser.addHelpOption();
   commandLineParser.addVersionOption();
-  QCommandLineOption codeBaseNameOption(QStringList() << "b" << "codebase",
-                                       QCoreApplication::translate("main", "Specifiy a codebase <basepath>."),
-                                       QCoreApplication::translate("main", "basepath"));
   QCommandLineOption codeBase1NameOption(QStringList() << "1" << "track1",
                                          QCoreApplication::translate("main", "Specifiy a codebase for first track <basepath>."),
                                          QCoreApplication::translate("main", "codepath"));
   QCommandLineOption codeBase2NameOption(QStringList() << "2" << "track2",
                                          QCoreApplication::translate("main", "Specifiy a codebase for seconde track <basepath>."),
                                          QCoreApplication::translate("main", "codepath"));
-  commandLineParser.addOption(codeBaseNameOption);
   commandLineParser.addOption(codeBase1NameOption);
   commandLineParser.addOption(codeBase2NameOption);
   commandLineParser.process(*application);
-  mainCodeBase = commandLineParser.value(codeBaseNameOption);
+  mainCodeBase = commandLineParser.value(codeBase1NameOption);
   mainTrack1Directory = commandLineParser.value(codeBase1NameOption);
   mainTrack2Directory = commandLineParser.value(codeBase2NameOption);
   
@@ -100,13 +96,15 @@ main
   w->resize(mainSystemConfig->GetMainWindowSize());
   w->move(mainSystemConfig->GetMainWindowLocation());
   w->show();
-  if ( ! mainCodeBase.isEmpty() ) {
-    w->SetCodeBaseDirectoryName(mainCodeBase);
-  } else if ( VerifyCodeTracks(mainTrack1Directory, mainTrack2Directory) ) {
-    w->SetTracksDirectoryNames(mainTrack1Directory, mainTrack2Directory);
-  } else {
-    exit(EXIT_FAILURE);
-  }    
+  if ( false ) {
+    if ( VerifyCodeTracks(mainTrack1Directory, mainTrack2Directory) ) {
+      w->SetTracksDirectoryNames(mainTrack1Directory, mainTrack2Directory);
+    } if ( ! mainCodeBase.isEmpty() ) {
+      w->SetCodeBaseDirectoryName(mainCodeBase);
+    } else {
+      exit(EXIT_FAILURE);
+    }
+  }
   splashScreen.finish(w);
   return application->exec();
 }

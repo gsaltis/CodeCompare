@@ -22,7 +22,7 @@
  * Function : TitledWindow
  *****************************************************************************/
 TitledWindow::TitledWindow
-(QWidget* InContainer, QString InText) : QWidget()
+(QWidget* InContainer, QString InText) : QFrame()
 {
   QPalette pal;
   pal = palette();
@@ -40,7 +40,7 @@ TitledWindow::TitledWindow
  * Function : TitledWindow
  *****************************************************************************/
 TitledWindow::TitledWindow
-(QWidget* InContainer, QToolBar* InToolBar, QString InText) : QWidget()
+(QWidget* InContainer, QToolBar* InToolBar, QString InText) : QFrame()
 {
   QPalette pal;
   pal = palette();
@@ -69,6 +69,9 @@ TitledWindow::~TitledWindow
 void
 TitledWindow::initialize()
 {
+  setFrameShadow(QFrame::Sunken);
+  setFrameStyle(QFrame::Panel);
+  setLineWidth(1);
   headerHeight = 20;
   headerAlignment = Qt::AlignTop;
   InitializeSubWindows();  

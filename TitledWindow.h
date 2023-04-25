@@ -15,6 +15,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <QToolBar>
+#include <QFrame>
 
 /*****************************************************************************!
  * Local Headers
@@ -32,7 +33,7 @@
 /*****************************************************************************!
  * Exported Class : TitledWindow
  *****************************************************************************/
-class TitledWindow : public QWidget
+class TitledWindow : public QFrame
 {
   Q_OBJECT;
 
