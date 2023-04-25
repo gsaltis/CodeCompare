@@ -1,5 +1,5 @@
 /*****************************************************************************
- * FILE NAME    : SourceFileCompareTreeContainer.cpp
+ * FILE NAME    : SourceFileCompareTgrepreeContainer.cpp
  * DATE         : April 24 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
@@ -62,13 +62,13 @@ SourceFileCompareTreeContainer::initialize()
 void
 SourceFileCompareTreeContainer::CreateSubWindows()
 {
-  statsWindow = new SourceFileCompareStatsWindow();
-  statsWindow->setParent(this);
+  statsFileWindow = new SourceFileCompareFileWindow();
+  statsFileWindow->setParent(this);
   statsAnalyzeWindow = new SourceFileCompareAnalyzeStatsWindow();
   statsAnalyzeWindow->setParent(this);
   statsAnalyzeWindow->hide();
   if ( ! displayStatsWindow ) {
-    statsWindow->hide();
+    statsFileWindow->hide();
   }
 }
 
@@ -78,7 +78,7 @@ SourceFileCompareTreeContainer::CreateSubWindows()
 void
 SourceFileCompareTreeContainer::InitializeSubWindows()
 {
-  statsWindow = NULL;
+  statsFileWindow = NULL;
 }
 
 /*****************************************************************************!
@@ -105,8 +105,8 @@ SourceFileCompareTreeContainer::SetSize
   int                                   height;
   int                                   sourceFileCompareTreeX, sourceFileCompareTreeY;
   int                                   sourceFileCompareTreeW, sourceFileCompareTreeH;
-  int                                   statsWindowX, statsWindowY;
-  int                                   statsWindowW, statsWindowH;
+  int                                   statsFileWindowX, statsFileWindowY;
+  int                                   statsFileWindowW, statsFileWindowH;
   int                                   statsAnalyzeWindowX, statsAnalyzeWindowY;
   int                                   statsAnalyzeWindowW, statsAnalyzeWindowH;
   
@@ -114,14 +114,14 @@ SourceFileCompareTreeContainer::SetSize
   height = InSize.height();
 
   sourceFileCompareTreeH = height;
-  statsWindowX = 0;
-  statsWindowW = width;
-  statsWindowH = 0;
+  statsFileWindowX = 0;
+  statsFileWindowW = width;
+  statsFileWindowH = 0;
   if ( displayStatsWindow ) {
-    statsWindowH = SOURCE_FILE_COMPARE_STATS_WINDOW_HEIGHT;
-    sourceFileCompareTreeH = height - statsWindowH;
+    statsFileWindowH = SOURCE_FILE_COMPARE_STATS_WINDOW_HEIGHT;
+    sourceFileCompareTreeH = height - statsFileWindowH;
   }
-  statsWindowY = height - statsWindowH;
+  statsFileWindowY = height - statsFileWindowH;
 
   statsAnalyzeWindowX = 0;
   statsAnalyzeWindowW = width;
@@ -141,8 +141,8 @@ SourceFileCompareTreeContainer::SetSize
     sourceFileCompareTree->resize(sourceFileCompareTreeW, sourceFileCompareTreeH);
   }
   if ( displayStatsWindow ) {
-    statsWindow->move(statsWindowX, statsWindowY);
-    statsWindow->resize(statsWindowW, statsWindowH);
+    statsFileWindow->move(statsFileWindowX, statsFileWindowY);
+    statsFileWindow->resize(statsFileWindowW, statsFileWindowH);
   } else if ( displayAnalyzeStatsWindow ) {
     statsAnalyzeWindow->move(statsAnalyzeWindowX, statsAnalyzeWindowY);
     statsAnalyzeWindow->resize(statsAnalyzeWindowW, statsAnalyzeWindowH);
@@ -164,9 +164,6 @@ SourceFileCompareTreeContainer::GetDisplayStatsWindow(void)
 bool
 SourceFileCompareTreeContainer::GetDisplayAnalyzeStatsWindow(void)
 {
-  TRACE_FUNCTION_START();
-  TRACE_FUNCTION_BOOL(displayAnalyzeStatsWindow);
-  TRACE_FUNCTION_END();
   return displayAnalyzeStatsWindow;
 }
 
@@ -181,12 +178,9 @@ SourceFileCompareTreeContainer::SetDisplayStatsWindow
   displayAnalyzeStatsWindow = false;
   statsAnalyzeWindow->hide();
   if ( displayStatsWindow ) {
-    statsWindow->show();
-    statsWindow->SetFileCount(GetFileCount());
-    statsWindow->SetFileDifferCount(GetFileDifferCount());
-    statsWindow->SetFileSourceCount(GetSourceFileCount());
+    statsFileWindow->show();
     } else {
-    statsWindow->hide();
+    statsFileWindow->hide();
   }
   SetSize(size());
 }
@@ -198,14 +192,11 @@ void
 SourceFileCompareTreeContainer::SetDisplayAnalyzeStatsWindow
 (bool InDisplayAnalyzeStatsWindow)
 {
-  TRACE_FUNCTION_START();
-  TRACE_FUNCTION_BOOL(InDisplayAnalyzeStatsWindow);
   displayAnalyzeStatsWindow = InDisplayAnalyzeStatsWindow;
   displayStatsWindow = false;
-  statsWindow->hide();
+  statsFileWindow->hide();
   statsAnalyzeWindow->show();
   if ( displayAnalyzeStatsWindow ) {
-    TRACE_FUNCTION_LOCATION();
     statsAnalyzeWindow->show();
     statsAnalyzeWindow->SetFileCount(GetFileCount());
     statsAnalyzeWindow->SetFileDifferCount(GetFileDifferCount());
@@ -214,7 +205,6 @@ SourceFileCompareTreeContainer::SetDisplayAnalyzeStatsWindow
     statsAnalyzeWindow->hide();
   }
   SetSize(size());
-  TRACE_FUNCTION_END();
 }
 
 /*****************************************************************************!
@@ -245,7 +235,6 @@ SourceFileCompareTreeContainer::GetItemFileCount //
   QFileInfo                             fileInfo;
   
   if ( !InItem->GetIsDirectory() ) {
-    TRACE_FUNCTION_LOCATION();
     InCount++;
     return;
   }
@@ -320,7 +309,7 @@ void
 SourceFileCompareTreeContainer::SetFileTreeItem
 (FileTreeWidgetItem* InItem)
 {
-  statsWindow->SetFileItem(InItem);
+  statsFileWindow->SetFileTreeItemNames(InItem);
   statsAnalyzeWindow->SetFileItem(InItem);
 }
 
@@ -377,6 +366,15 @@ void
 SourceFileCompareTreeContainer::SetFilesDifferCount
 (int InFilesDiffCount)
 {
-  statsWindow->SetFileDifferCount(InFilesDiffCount);
   statsAnalyzeWindow->SetFileDifferCount(InFilesDiffCount);  
+}
+
+/*****************************************************************************!
+ * Function : SetFileCurrentSourceCount
+ *****************************************************************************/
+void
+SourceFileCompareTreeContainer::SetFileCurrentSourceCount
+(int InCount)
+{
+  statsAnalyzeWindow->SetFileCurrentSourceCount(InCount);
 }

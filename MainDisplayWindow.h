@@ -102,7 +102,8 @@ class MainDisplayWindow : public QWidget
   bool                          displayDiffsAtStart;
   SourceFileCompareTreeContainer* compareContainer;
   int                           filesDifferCount;
-
+  int                           currentSourceFileCount;
+  
  //! Public Slots
  public slots :
   void                          SlotCreateDependencyTree (void);

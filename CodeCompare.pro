@@ -81,6 +81,7 @@ SOURCES                         += \
 				   MainDisplayWindow.cpp                        \
 				   MainWindow.cpp                               \
 				   SourceFileCompareAnalyzeStatsWindow.cpp      \
+				   SourceFileCompareFileWindow.cpp              \
 				   SourceFileCompareStatsWindow.cpp             \
 				   SourceFileCompareTreeContainer.cpp           \
 				   SystemConfig.cpp                             \
@@ -137,6 +138,7 @@ HEADERS                         += \
 				   MainDisplayWindow.h                          \
 				   MainWindow.h                                 \
 				   SourceFileCompareAnalyzeStatsWindow.h        \
+				   SourceFileCompareFileWindow.h                \
 				   SourceFileCompareStatsWindow.h               \
 				   SourceFileCompareTreeContainer.h             \
 				   SystemConfig.h                               \

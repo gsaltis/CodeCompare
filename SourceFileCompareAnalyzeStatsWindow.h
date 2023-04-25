@@ -46,7 +46,10 @@ class SourceFileCompareAnalyzeStatsWindow : public SourceFileCompareStatsWindow
  //! Public Methods
  public :
   virtual void                  SetFileItem             (FileTreeWidgetItem* InFileItem);
-
+  void                          SetFileCount            (int InFileCount);
+  void                          SetFileDifferCount      (int InFileDifferCount);
+  void                          SetFileSourceCount      (int InFileSourceCount);
+  void                          SetFileCurrentSourceCount(int InCount);
  //! Public Data
  public :
 
@@ -55,6 +58,12 @@ class SourceFileCompareAnalyzeStatsWindow : public SourceFileCompareStatsWindow
 
  //! Protected Data
  protected :
+  QLabel*                       fileCountLabel;
+  QLabel*                       fileDifferCountLabel;
+  QLabel*                       fileSourceCountLabel;
+  QLabel*                       fileCurrentSourceCountLabel;
+  int                           currentSourceCount;
+  int                           differSourceCount;
 
  //! Private Methods
  private :

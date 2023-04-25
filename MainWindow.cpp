@@ -70,7 +70,7 @@ MainWindow::CreateSubWindows()
   displayWindow->setParent(this);
   statusbar = statusBar();
   messageWindow = new QLabel(statusbar);
-  messageWindow->setText("Hi Mom");
+  messageWindow->setText("");
   messageWindow->move(5, 0);
   messageWindow->setFont(QFont("", 10, QFont::Bold));
 }

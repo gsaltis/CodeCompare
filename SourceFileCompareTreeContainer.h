@@ -19,7 +19,7 @@
  * Local Headers
  *****************************************************************************/
 #include "TitledWindow.h"
-#include "SourceFileCompareStatsWindow.h"
+#include "SourceFileCompareFileWindow.h"
 #include "SourceFileCompareAnalyzeStatsWindow.h"
 #include "FileTreeWidgetItem.h"
 
@@ -55,6 +55,7 @@ class SourceFileCompareTreeContainer : public QWidget
   void                          SetDisplayAnalyzeStatsWindow    (bool InDisplayAnalyzeStatsWindow);
   void                          SetFileTreeItem                 (FileTreeWidgetItem* InItem);
   void                          SetFilesDifferCount             (int InCount);
+  void                          SetFileCurrentSourceCount       (int InCount);
   
  //! Public Data
  public :
@@ -64,6 +65,7 @@ class SourceFileCompareTreeContainer : public QWidget
 
  //! Protected Data
  protected :
+  FileTreeWidgetItem*           fileItem;
 
  //! Private Methods
  private :
@@ -82,7 +84,7 @@ class SourceFileCompareTreeContainer : public QWidget
  //! Private Data
  private :
   TitledWindow*                         sourceFileCompareTree;
-  SourceFileCompareStatsWindow*         statsWindow;
+  SourceFileCompareFileWindow*          statsFileWindow;
   SourceFileCompareAnalyzeStatsWindow*  statsAnalyzeWindow;
   bool                                  displayStatsWindow;
   bool                                  displayAnalyzeStatsWindow;
@@ -100,3 +102,4 @@ class SourceFileCompareTreeContainer : public QWidget
 };
 
 #endif /* _sourcefilecomparetreecontainer_h_*/
+

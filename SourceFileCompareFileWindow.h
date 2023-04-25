@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : SourceFileCompareStatsWindow.h
+ * FILE NAME    : SourceFileCompareFileWindow.h
  * DATE         : April 24 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _sourcefilecomparestatswindow_h_
-#define _sourcefilecomparestatswindow_h_
+#ifndef _sourcefilecomparefilewindow_h_
+#define _sourcefilecomparefilewindow_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -13,41 +13,40 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
-#include <QFrame>
 #include <QLabel>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "FileTreeWidgetItem.h"
+#include "SourceFileCompareStatsWindow.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define SOURCE_FILE_COMPARE_STATS_WINDOW_X 200
-#define SOURCE_FILE_COMPARE_STATS_WINDOW_Y 200
-#define SOURCE_FILE_COMPARE_STATS_WINDOW_WIDTH 200
-#define SOURCE_FILE_COMPARE_STATS_WINDOW_HEIGHT 200
+#define SOURCE_FILE_COMPARE_FILE_WINDOW_X 200
+#define SOURCE_FILE_COMPARE_FILE_WINDOW_Y 200
+#define SOURCE_FILE_COMPARE_FILE_WINDOW_WIDTH 200
+#define SOURCE_FILE_COMPARE_FILE_WINDOW_HEIGHT 200
 
 /*****************************************************************************!
- * Exported Class : SourceFileCompareStatsWindow
+ * Exported Class : SourceFileCompareFileWindow
  *****************************************************************************/
-class SourceFileCompareStatsWindow : public QFrame
+class SourceFileCompareFileWindow : public SourceFileCompareStatsWindow
 {
   Q_OBJECT;
 
  //! Constructors
  public :
-  SourceFileCompareStatsWindow  ();
+  SourceFileCompareFileWindow   ();
 
  //! Destructor
  public :
-  ~SourceFileCompareStatsWindow ();
+  ~SourceFileCompareFileWindow  ();
 
  //! Public Methods
  public :
-  FileTreeWidgetItem*           GetFileItem             (void);
-  virtual void                  SetFileItem             (FileTreeWidgetItem* InFileItem);
+  void                          SetFileTreeItemNames           (FileTreeWidgetItem* InItem);
+  void                          SetCounts               (QList<int> InValues);
 
  //! Public Data
  public :
@@ -57,7 +56,6 @@ class SourceFileCompareStatsWindow : public QFrame
 
  //! Protected Data
  protected :
-  FileTreeWidgetItem*           fileItem;
 
  //! Private Methods
  private :
@@ -68,6 +66,11 @@ class SourceFileCompareStatsWindow : public QFrame
 
  //! Private Data
  private :
+  QLabel*                       fileLabel1;
+  QLabel*                       fileLabel2;
+  QLabel*                       addCountLabel;
+  QLabel*                       changeCountLabel;
+  QLabel*                       deleteCountLabel;
 
  //! Public Slots
  public slots :
@@ -80,4 +83,4 @@ class SourceFileCompareStatsWindow : public QFrame
 
 };
 
-#endif /* _sourcefilecomparestatswindow_h_*/
+#endif /* _sourcefilecomparefilewindow_h_*/

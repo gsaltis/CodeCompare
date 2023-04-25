@@ -661,9 +661,8 @@ MainDisplayWindow::SlotTreeWidgetItemSelected
   PopulateCodeDisplay(fileName2, codeWindow2);
 
   changeLinesCount = item->GetChangeLinesCount();
-
-  printf("%s : %d %d %d\n", fileName1.toStdString().c_str(),
-         changeLinesCount[0], changeLinesCount[1], changeLinesCount[2]);
+  SlotFileDifferInformation();
+  compareContainer->SetFileTreeItem((FileTreeWidgetItem*)InItem);
 }
 
 /*****************************************************************************!
@@ -706,13 +705,17 @@ MainDisplayWindow::DiffFiles
   diffProcess.start(program, args);
   diffProcess.waitForFinished();
   stdOutput = QString(diffProcess.readAllStandardOutput().trimmed());
+  currentSourceFileCount++;
+  compareContainer->SetFileCurrentSourceCount(currentSourceFileCount);
   if ( !stdOutput.isEmpty() ) {
     InItem->ParseDiffLines(stdOutput);
     InItem->SetFilesDiffer(true);
+    InItem->setIcon(0, QIcon(QPixmap(":/images/FileDifferent.png")));
     filesDifferCount++;
   } else {
     InItem->SetFilesDiffer(false);
     compareContainer->SetFilesDifferCount(filesDifferCount);
+    InItem->setIcon(0, QIcon(QPixmap(":/images/FileSame.png")));
   }
   errorOutput = QString(diffProcess.readAllStandardError().trimmed());
 }
@@ -723,7 +726,7 @@ MainDisplayWindow::DiffFiles
 void
 MainDisplayWindow::SlotFileDifferInformation(void)
 {
-  compareContainer->SetDisplayStatsWindow(!compareContainer->GetDisplayStatsWindow());
+  compareContainer->SetDisplayStatsWindow(true);
 }
 
 /*****************************************************************************!
@@ -735,6 +738,7 @@ MainDisplayWindow::SlotAnalyzeDifferences(void)
   FileTreeWidgetItem*                   treeItem;
 
   filesDifferCount = 0;
+  currentSourceFileCount = 0;
   compareContainer->SetDisplayAnalyzeStatsWindow(!compareContainer->GetDisplayAnalyzeStatsWindow());
   
   treeItem = (FileTreeWidgetItem*)sourceFileCompareTree->topLevelItem(0);
