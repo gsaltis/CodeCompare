@@ -266,3 +266,13 @@ FileTreeWidgetItem::GetChangeLinesCount
   }
   return diffs.GetCounts();
 }
+
+/*****************************************************************************!
+ * Function : GetDifferences
+ *****************************************************************************/
+FileContentsDiff
+FileTreeWidgetItem::GetDifferences
+()
+{
+  return diffs;
+}

@@ -33,6 +33,11 @@
 #define TRACE_FUNCTION_STRINGN(n, m)
 #define TRACE_FUNCTION_CALLS(n)
 #define TRACE_FUNCTION_HEX(n)
+#define TRACE_FUNCTION_QSTRING(n)
+#define TRACE_FUNCTION_BOOL(n)
+#define TRACE_FUNCTION_QSIZE(n)
+#define TRACE_FUNCTION_QPOINT(n)
+#define TRACE_FUNCTION_LOCATION()
 
 /*****************************************************************************!
  * Exported Data

@@ -127,6 +127,7 @@ class MainDisplayWindow : public QWidget
   void                          SignalDependencyWindowClose     (void);
   void                          SignalBuildSystemSelected (BuildSystem* InSystem);
   void                          SignalSendDisplayMessage (QString InMessage);
+  void                          SignalTreeItemSelected  (FileTreeWidgetItem* InItem);
 
  //! Public Actions
  public :

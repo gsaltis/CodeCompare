@@ -157,7 +157,6 @@ MainDisplayWindow::CreateSubWindows()
   compareContainer = new SourceFileCompareTreeContainer(sourceFileCompareContainer, sourceFileCompareTree);
   // sourceFileCompareTree->resize(300, 100);
 
-  TRACE_FUNCTION_QSIZE(size());
   splitter = new QSplitter(this);
   sourceFilesSplitter = new QSplitter();
   sourceFilesSplitter->resize(windowW - 300, windowH);
@@ -302,6 +301,10 @@ MainDisplayWindow::CreateConnections(void)
           SIGNAL(itemClicked(QTreeWidgetItem*, int)),
           this,
           SLOT(SlotTreeWidgetItemSelected(QTreeWidgetItem*, int)));
+  connect(this,
+          SIGNAL(SignalTreeItemSelected(FileTreeWidgetItem*)),
+          sourceDiffWindow,
+          SLOT(SlotSetTreeItem(FileTreeWidgetItem*)));
 }
 
 /*****************************************************************************!
@@ -688,7 +691,8 @@ MainDisplayWindow::SlotTreeWidgetItemSelected
 
   changeLinesCount = item->GetChangeLinesCount();
   SlotFileDifferInformation();
-  compareContainer->SetFileTreeItem((FileTreeWidgetItem*)InItem);
+  compareContainer->SetFileTreeItem(item);
+  emit SignalTreeItemSelected(item);
 }
 
 /*****************************************************************************!
@@ -727,7 +731,7 @@ MainDisplayWindow::DiffFiles
   QStringList                           args;
   QString                               program = mainSystemConfig->GetDiff();
 
-  args << QString("-e") << InFileName1 << InFileName2;
+  args << InFileName1 << InFileName2;
   diffProcess.start(program, args);
   diffProcess.waitForFinished();
   stdOutput = QString(diffProcess.readAllStandardOutput().trimmed());
@@ -791,6 +795,7 @@ MainDisplayWindow::AnalyzeDifferences
     if ( item->GetIsDirectory() ) {
       AnalyzeDifferences(item);
     } else if ( item->IsSourceFile() ) {
+      TRACE_FUNCTION_QSTRING(item->GetAbsoluteFileName1());
       DiffFiles(item, item->GetAbsoluteFileName1(), item->GetAbsoluteFileName2());
     }
     compareContainer->SetFileTreeItem(item);

@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : SourceDifferencesWindow.h
+ * FILE NAME    : SourceDifferencesItem.h
  * DATE         : April 25 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _sourcedifferenceswindow_h_
-#define _sourcedifferenceswindow_h_
+#ifndef _sourcedifferencesitem_h_
+#define _sourcedifferencesitem_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -13,36 +13,35 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
-#include <QScrollArea>
+#include <QLabel>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "FileTreeWidgetItem.h"
-#include "SourceDifferencesItem.h"
+#include "FileSectionDiff.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define SOURCE_DIFFERENCES_WINDOW_X     200
-#define SOURCE_DIFFERENCES_WINDOW_Y     200
-#define SOURCE_DIFFERENCES_WINDOW_WIDTH 200
-#define SOURCE_DIFFERENCES_WINDOW_HEIGHT 200
+#define SOURCE_DIFFERENCES_ITEM_X       0
+#define SOURCE_DIFFERENCES_ITEM_Y       0
+#define SOURCE_DIFFERENCES_ITEM_WIDTH   200
+#define SOURCE_DIFFERENCES_ITEM_HEIGHT  20
 
 /*****************************************************************************!
- * Exported Class : SourceDifferencesWindow
+ * Exported Class : SourceDifferencesItem
  *****************************************************************************/
-class SourceDifferencesWindow : public QWidget
+class SourceDifferencesItem : public QWidget
 {
   Q_OBJECT;
 
  //! Constructors
  public :
-  SourceDifferencesWindow       ();
+  SourceDifferencesItem         (QWidget* InParent, int InY, int InWidth, FileSectionDiff* InDiff);
 
  //! Destructor
  public :
-  ~SourceDifferencesWindow      ();
+  ~SourceDifferencesItem        ();
 
  //! Public Methods
  public :
@@ -62,20 +61,16 @@ class SourceDifferencesWindow : public QWidget
   void                          CreateSubWindows        ();
   void                          InitializeSubWindows    ();
   void                          resizeEvent             (QResizeEvent* InEvent);
-  void                          ClearDisplay            (void);
-  void                          DisplayChanges          (void);
 
  //! Private Data
  private :
-  FileTreeWidgetItem*           treeItem;
-  QList<SourceDifferencesItem*> diffItems;
-  QWidget*                      container;
-  QScrollArea*                  scrollArea;
-  QList<SourceDifferencesItem*> differenceItems;
+  QLabel*                       TypeNameLabel;
+  QLabel*                       LineNumbersLabel;
+  QLabel*                       DifferenceLineLabel;
+  FileSectionDiff*              diff;
   
  //! Public Slots
  public slots :
-  void                          SlotSetTreeItem         (FileTreeWidgetItem* InTreeItem);
 
  //! Public Signals
  signals :
@@ -85,4 +80,4 @@ class SourceDifferencesWindow : public QWidget
 
 };
 
-#endif /* _sourcedifferenceswindow_h_*/
+#endif /* _sourcedifferencesitem_h_*/

@@ -50,6 +50,8 @@ class FileSectionDiff
   Type                                  GetType                 ();
   QString                               GetTypeString           ();
   int                                   GetLinesChangedCount    ();
+  int                                   GetStartLine            ();
+  int                                   GetEndLine              ();
   
  //! Public Data
  public :
@@ -66,10 +68,15 @@ class FileSectionDiff
  //! Private Data
  private :
   Type                                  type;
-  QStringList                           changeLines;
-  int                                   startLine;
-  int                                   endLine;
-  
+  QStringList                           sourceChangeLines;
+  QStringList                           targetChangeLines;
+  int                                   sourceStartLine;
+  int                                   sourceEndLine;
+  int                                   sourceLineCount;
+  int                                   targetStartLine;
+  int                                   targetEndLine;
+  int                                   targetLineCount;
+
  //! Public Slots
  public slots :
 

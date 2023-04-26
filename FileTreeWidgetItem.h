@@ -62,6 +62,7 @@ class FileTreeWidgetItem : public QTreeWidgetItem
   QString                       GetFileName2            ();
   bool                          IsSourceFile            (void);
   QList<int>                    GetChangeLinesCount     ();
+  FileContentsDiff              GetDifferences          ();
   
  //! Public Data
  public :
