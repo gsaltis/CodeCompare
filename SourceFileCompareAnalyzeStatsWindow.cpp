@@ -62,6 +62,10 @@ SourceFileCompareAnalyzeStatsWindow::CreateSubWindows()
   QFont                                 font = QFont("", 10, QFont::Bold);
   int                                   y = 15;
   int                                   labelWidth = 140;
+  int                                   width, height;
+
+  width = size().width();
+  height = size().height();
   
   //! Create label  
   label = new QLabel();
@@ -131,12 +135,28 @@ SourceFileCompareAnalyzeStatsWindow::CreateSubWindows()
   y += 25;
 
   //! Create label  
+  //! Create label  
+  label = new QLabel();
+  label->setParent(this);
+  label->move(10, y);
+  label->resize(labelWidth, 20);
+  label->setText("Source File Name :");
+  label->setAlignment(Qt::AlignRight);
+  label->setFont(font);
+
   LabelFileName1 = new QLabel();
   LabelFileName1->setParent(this);
-  LabelFileName1->move(10, y);
+  LabelFileName1->move(labelWidth + 15, y);
   LabelFileName1->resize(100, 20);
   LabelFileName1->setText("sdf");
   LabelFileName1->setAlignment(Qt::AlignLeft);
+
+  //
+  y += 25;
+  progressBar = new QProgressBar(this);
+  progressBar->move(2, height - 25);
+  progressBar->resize(width, 25);
+  
 }
 
 /*****************************************************************************!
@@ -155,19 +175,25 @@ void
 SourceFileCompareAnalyzeStatsWindow::resizeEvent
 (QResizeEvent* InEvent)
 {
+  int                                   height;
   QSize                                 size;  
   int                                   width;
   int                                   fileCountLabelX, fileCountLabelY;
   int                                   fileCountLabelW, fileCountLabelH;
+  int                                   LabelFileName1X, LabelFileName1Y;
+  int                                   LabelFileName1W, LabelFileName1H;
   int                                   fileDifferCountLabelX, fileDifferCountLabelY;
   int                                   fileDifferCountLabelW, fileDifferCountLabelH;
   int                                   fileSourceCountLabelX, fileSourceCountLabelY;
   int                                   fileSourceCountLabelW, fileSourceCountLabelH;
   int                                   fileCurrentSourceCountLabelX, fileCurrentSourceCountLabelY;
   int                                   fileCurrentSourceCountLabelW, fileCurrentSourceCountLabelH;
+  int                                   progressBarX, progressBarY;
+  int                                   progressBarW, progressBarH;
 
   size = InEvent->size();
   width = size.width();
+  height = size.height();
 
   fileCountLabelX = fileCountLabel->pos().x();
   fileCountLabelY = fileCountLabel->pos().y();
@@ -190,14 +216,28 @@ SourceFileCompareAnalyzeStatsWindow::resizeEvent
   fileSourceCountLabel->move(fileSourceCountLabelX, fileSourceCountLabelY);
   fileSourceCountLabel->resize(fileSourceCountLabelW, fileSourceCountLabelH);
 
-  LabelFileName1->resize(width - 20, 20);
-
   fileCurrentSourceCountLabelX = (width - (fileSourceCountLabelX + 10) / 2);
   fileCurrentSourceCountLabelY = fileCurrentSourceCountLabel->pos().y();
   fileCurrentSourceCountLabelH = fileCurrentSourceCountLabel->size().height();
   fileCurrentSourceCountLabelW = (width - (fileCurrentSourceCountLabelX + 10) / 2);
   fileCurrentSourceCountLabel->move(fileCurrentSourceCountLabelX, fileCurrentSourceCountLabelY);
   fileCurrentSourceCountLabel->resize(fileCurrentSourceCountLabelW, fileCurrentSourceCountLabelH);
+
+  LabelFileName1->resize(width - 20, 20);
+  LabelFileName1X = LabelFileName1->pos().x();
+  LabelFileName1Y = LabelFileName1->pos().y();
+  LabelFileName1H = LabelFileName1->size().height();
+  LabelFileName1W = width - (LabelFileName1X + 10);
+  LabelFileName1->move(LabelFileName1X, LabelFileName1Y);
+  LabelFileName1->resize(LabelFileName1W, LabelFileName1H);
+
+  progressBar->resize(width - 20, 20);
+  progressBarX = progressBar->pos().x();
+  progressBarY = height - progressBar->size().height();
+  progressBarH = progressBar->size().height();
+  progressBarW = width - (progressBarX * 2);
+  progressBar->move(progressBarX, progressBarY);
+  progressBar->resize(progressBarW, progressBarH);
 }
 
 /*****************************************************************************!
@@ -205,12 +245,12 @@ SourceFileCompareAnalyzeStatsWindow::resizeEvent
  *****************************************************************************/
 void
 SourceFileCompareAnalyzeStatsWindow::SetFileItem
-(FileTreeWidgetItem* InFileItem)
+(FileTreeElement* InFileItem)
 {
   QString                               fileName1;
   fileItem = InFileItem;
   if ( fileItem ) {
-    fileName1 = fileItem->GetAbsoluteFileName1();
+    fileName1 = fileItem->GetCodeTrack1()->RemoveLeadingBasePath(fileItem->GetAbsoluteFileName1());
     LabelFileName1->setText(fileName1);
     return;
   }
@@ -238,6 +278,7 @@ SourceFileCompareAnalyzeStatsWindow::SetFileDifferCount
   fileDifferCountLabel->setText(QString("%1 of %2")
                                 .arg(differSourceCount)
                                 .arg(currentSourceCount));
+  progressBar->setValue(currentSourceCount);
 }
 
 /*****************************************************************************!
@@ -248,6 +289,7 @@ SourceFileCompareAnalyzeStatsWindow::SetFileSourceCount
 (int InFileSourceCount)
 {
   fileSourceCountLabel->setText(QString("%1").arg(InFileSourceCount));
+  progressBar->setMaximum(InFileSourceCount);
 }
 
 /*****************************************************************************!
@@ -261,6 +303,7 @@ SourceFileCompareAnalyzeStatsWindow::SetFileCurrentSourceCount
   fileDifferCountLabel->setText(QString("%1 of %2")
                                 .arg(differSourceCount)
                                 .arg(currentSourceCount));
+  progressBar->setValue(currentSourceCount);
 }
 
 /*****************************************************************************!
@@ -271,4 +314,13 @@ SourceFileCompareAnalyzeStatsWindow::SlotDifferLabelValueChanged
 (QString InString)
 {
   (void)InString;
+}
+
+/*****************************************************************************!
+ * Function : SlotAnalysisDone
+ *****************************************************************************/
+void
+SourceFileCompareAnalyzeStatsWindow::SlotAnalysisDone(void)
+{
+  progressBar->hide();
 }

@@ -31,7 +31,8 @@ class FileTreeDirectory : public FileTreeElement , QList<FileTreeFile>
 {
  //! Constructors
  public :
-  FileTreeDirectory             (QString InAbsoluteFileName1, QString InAbsoluteFilename2);
+  FileTreeDirectory             (QString InAbsoluteFileName1, QString InAbsoluteFileName2,
+                                 CodeTrack* InTrack1, CodeTrack* InTrack2);
 
  //! Destructor
  public :
@@ -41,6 +42,7 @@ class FileTreeDirectory : public FileTreeElement , QList<FileTreeFile>
  public :
   void                 Read                             () override;
   int                  GetFileCount                     () override;
+  QList<int>           GetChangeLinesCount              () override;
 
  //! Public Data
  public :

@@ -69,6 +69,7 @@ SOURCES                         += \
 				   CodeEditor.cpp                               \
 				   CodeHighlighter.cpp                          \
 				   CodeNameWindow.cpp                           \
+				   CodeTrack.cpp                                \
 				   CodeWindow.cpp                               \
 				   DependencyTreeWidgetItem.cpp                 \
 				   DependencyTreeWindow.cpp                     \
@@ -83,7 +84,7 @@ SOURCES                         += \
 				   LineNumberArea.cpp                           \
 				   MainDisplayWindow.cpp                        \
 				   MainWindow.cpp                               \
-                                   MonitoredLabel.cpp                           \
+				   MonitoredLabel.cpp                           \
 				   SourceDifferencesItem.cpp                    \
 				   SourceDifferencesWindow.cpp                  \
 				   SourceFileCompareAnalyzeStatsWindow.cpp      \
@@ -132,6 +133,7 @@ HEADERS                         += \
 				   CodeEditor.h                                 \
 				   CodeHighlighter.h                            \
 				   CodeNameWindow.h                             \
+				   CodeTrack.h                                  \
 				   CodeWindow.h                                 \
 				   DependencyTreeWidgetItem.h                   \
 				   DependencyTreeWindow.h                       \
@@ -146,7 +148,7 @@ HEADERS                         += \
 				   LineNumberArea.h                             \
 				   MainDisplayWindow.h                          \
 				   MainWindow.h                                 \
-                                   MonitoredLabel.h                             \                                   
+				   MonitoredLabel.h                             \                                    \
 				   SourceDifferencesItem.h                      \
 				   SourceDifferencesWindow.h                    \
 				   SourceFileCompareAnalyzeStatsWindow.h        \

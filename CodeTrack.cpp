@@ -1,6 +1,6 @@
 /*****************************************************************************
- * FILE NAME    : SourceFileCompareStatsWindow.cpp
- * DATE         : April 24 2023
+ * FILE NAME    : CodeTrack.cpp
+ * DATE         : May 01 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
@@ -11,93 +11,90 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
-#include <QLabel>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "SourceFileCompareStatsWindow.h"
+#include "CodeTrack.h"
+#include "trace.h"
 
 /*****************************************************************************!
- * Function : SourceFileCompareStatsWindow
+ * Function : CodeTrack
  *****************************************************************************/
-SourceFileCompareStatsWindow::SourceFileCompareStatsWindow
-() : QFrame()
+CodeTrack::CodeTrack
+(QString InBasePath) : QWidget()
 {
-  QPalette pal;
-  pal = palette();
-  pal.setBrush(QPalette::Window, QBrush(QColor(240, 240, 240)));
-  setPalette(pal);
-  setAutoFillBackground(true);
-  initialize();
-  setFrameShadow(QFrame::Sunken);
-  setFrameShape(QFrame::Box);
+  basePath = QDir::toNativeSeparators(InBasePath);
+  basePathLen = InBasePath.length();
 }
 
 /*****************************************************************************!
- * Function : ~SourceFileCompareStatsWindow
+ * Function : ~CodeTrack
  *****************************************************************************/
-SourceFileCompareStatsWindow::~SourceFileCompareStatsWindow
+CodeTrack::~CodeTrack
 ()
 {
 }
 
 /*****************************************************************************!
- * Function : initialize
+ * Function : GetBasePath
  *****************************************************************************/
-void
-SourceFileCompareStatsWindow::initialize()
+QString
+CodeTrack::GetBasePath(void)
 {
-  InitializeSubWindows();  
-  CreateSubWindows();
+  return basePath;  
 }
 
 /*****************************************************************************!
- * Function : CreateSubWindows
+ * Function : SetBasePath
  *****************************************************************************/
 void
-SourceFileCompareStatsWindow::CreateSubWindows()
+CodeTrack::SetBasePath
+(QString InBasePath)
 {
+  basePath = InBasePath;  
 }
 
 /*****************************************************************************!
- * Function : InitializeSubWindows
+ * Function : GetBasePathLen
  *****************************************************************************/
-void
-SourceFileCompareStatsWindow::InitializeSubWindows()
+int
+CodeTrack::GetBasePathLen(void)
 {
   
+  return basePathLen;
 }
 
 /*****************************************************************************!
- * Function : resizeEvent
+ * Function : PathBeginsWithBasePath
  *****************************************************************************/
-void
-SourceFileCompareStatsWindow::resizeEvent
-(QResizeEvent* InEvent)
+bool
+CodeTrack::PathBeginsWithBasePath
+(QString InPath)
 {
-  QSize                                 size;
-  int                                   width;
-  size = InEvent->size();
-  width = size.width();
-  (void)width;
+  QString                               s;
+  
+  s = QDir::toNativeSeparators(InPath.sliced(0, basePathLen));
+  return s == basePath;
 }
 
 /*****************************************************************************!
- * Function : GetFileItem
+ * Function : RemoveLeadingBasePath
  *****************************************************************************/
-FileTreeElement*
-SourceFileCompareStatsWindow::GetFileItem(void)
+QString
+CodeTrack::RemoveLeadingBasePath
+(QString InPath)
 {
-  return fileItem;  
-}
+  QString                               st1;
+  QString                               st2;
 
-/*****************************************************************************!
- * Function : SetFileItem
- *****************************************************************************/
-void
-SourceFileCompareStatsWindow::SetFileItem
-(FileTreeElement* InFileItem)
-{
-  fileItem = InFileItem;  
+  st1 = QDir::toNativeSeparators(InPath);
+  if ( !PathBeginsWithBasePath(st1) ) {
+    return InPath;
+  }
+  st2 = InPath.sliced(basePathLen);
+  if ( st2[0] == '/' || st2[0] == '\\' ) {
+    st2 = st2.sliced(1);
+  }
+  return st2;
 }

@@ -23,6 +23,7 @@
 #include "FileTreeElement.h"
 #include "FileTreeFile.h"
 #include "FileTreeDirectory.h"
+#include "CodeTrack.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -39,9 +40,9 @@ class FileTreeWidgetItem : public QTreeWidgetItem
 {
  //! Constructors
  public :
-  FileTreeWidgetItem            (QString InAbsoluteFileName, QTreeWidget* InParent, bool InIsDirectory);
-  FileTreeWidgetItem            (QString InAbsoluteFileName1,  QString InAbsoluteFileName2, bool InIsDirectory);
-  FileTreeWidgetItem            (QString InAbsoluteFileName1,  QString InAbsoluteFileName2, QTreeWidgetItem* InParent, bool InIsDirectory);
+  FileTreeWidgetItem            (QString InAbsoluteFileName, QTreeWidget* InParent, bool InIsDirectory, CodeTrack* InTrack1, CodeTrack* InTrack2);
+  FileTreeWidgetItem            (QString InAbsoluteFileName1,  QString InAbsoluteFileName2, bool InIsDirectory, CodeTrack* InTrack1, CodeTrack* InTrack2);
+  FileTreeWidgetItem            (QString InAbsoluteFileName1,  QString InAbsoluteFileName2, QTreeWidgetItem* InParent, bool InIsDirectory, CodeTrack* InTrack1, CodeTrack* InTrack2);
 
  //! Destructor
  public :
@@ -62,8 +63,7 @@ class FileTreeWidgetItem : public QTreeWidgetItem
   QString                       GetFileName1            ();
   QString                       GetFileName2            ();
   bool                          IsSourceFile            (void);
-  QList<int>                    GetChangeLinesCount     ();
-  FileContentsDiff              GetDifferences          ();
+    FileContentsDiff              GetDifferences          ();
   bool                          ReadFileContents        (QString InFilename, QStringList& InFileLines);
   void                          ReadFiles               (void);
   QStringList                   GetFile1Lines           ();

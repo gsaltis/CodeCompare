@@ -108,13 +108,13 @@ SourceDifferencesWindow::resizeEvent
 }
 
 /*****************************************************************************!
- * Function : SlotSetTreeItem
+ * Function : SlotSetFileItem
  *****************************************************************************/
 void
-SourceDifferencesWindow::SlotSetTreeItem
-(FileTreeWidgetItem* InTreeItem)
+SourceDifferencesWindow::SlotSetFileItem
+(FileTreeFile* InFileItem)
 {
-  treeItem = InTreeItem;
+  fileItem = InFileItem;
   ClearDisplay();
   DisplayChanges();
 }
@@ -137,6 +137,7 @@ SourceDifferencesWindow::ClearDisplay(void)
 void
 SourceDifferencesWindow::DisplayChanges(void)
 {
+  int                                   h;
   int                                   height;
   int                                   width;
   FileContentsDiff                      diffs;
@@ -144,14 +145,16 @@ SourceDifferencesWindow::DisplayChanges(void)
   int                                   i, n, y;
 
   width = s.width();
-  diffs = treeItem->GetDifferences();
+  diffs = fileItem->GetDiffs();
   n = diffs.count();
   y = 0;
-  height = n * SOURCE_DIFFERENCES_ITEM_HEIGHT;
-  container->resize(width, height);
+  height = 0;
   for (i = 0; i < n; i++) {
-    auto s = new SourceDifferencesItem(container, y, width, &diffs[i]);
+    auto s = new SourceDifferencesItem(fileItem, container, y, width, &diffs[i]);
     differenceItems << s;
-    y += s->size().height();
+    h = s->size().height();
+    y += h;
+    height += h;
   }
+  container->resize(width, height);
 }

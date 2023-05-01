@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : SourceDifferencesWindow.h
- * DATE         : April 25 2023
+ * FILE NAME    : CodeTrack.h
+ * DATE         : May 01 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _sourcedifferenceswindow_h_
-#define _sourcedifferenceswindow_h_
+#ifndef _codetrack_h_
+#define _codetrack_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -13,39 +13,37 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
-#include <QScrollArea>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "FileTreeFile.h"
-#include "SourceDifferencesItem.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define SOURCE_DIFFERENCES_WINDOW_X     200
-#define SOURCE_DIFFERENCES_WINDOW_Y     200
-#define SOURCE_DIFFERENCES_WINDOW_WIDTH 200
-#define SOURCE_DIFFERENCES_WINDOW_HEIGHT 200
 
 /*****************************************************************************!
- * Exported Class : SourceDifferencesWindow
+ * Exported Class : CodeTrack
  *****************************************************************************/
-class SourceDifferencesWindow : public QWidget
+class CodeTrack : public QWidget
 {
   Q_OBJECT;
 
  //! Constructors
  public :
-  SourceDifferencesWindow       ();
+  CodeTrack                     (QString InBasePath);
 
  //! Destructor
  public :
-  ~SourceDifferencesWindow      ();
+  ~CodeTrack                    ();
 
  //! Public Methods
  public :
+  QString                       GetBasePath             (void);
+  void                          SetBasePath             (QString InBasePath);
+  int                           GetBasePathLen          (void);
+  bool                          PathBeginsWithBasePath  (QString InPath);
+  QString                       RemoveLeadingBasePath   (QString InPath);
 
  //! Public Data
  public :
@@ -58,24 +56,14 @@ class SourceDifferencesWindow : public QWidget
 
  //! Private Methods
  private :
-  void                          initialize              ();
-  void                          CreateSubWindows        ();
-  void                          InitializeSubWindows    ();
-  void                          resizeEvent             (QResizeEvent* InEvent);
-  void                          ClearDisplay            (void);
-  void                          DisplayChanges          (void);
 
  //! Private Data
  private :
-  FileTreeFile*                 fileItem;
-  QList<SourceDifferencesItem*> diffItems;
-  QWidget*                      container;
-  QScrollArea*                  scrollArea;
-  QList<SourceDifferencesItem*> differenceItems;
-  
+  QString                       basePath;
+  int                           basePathLen;
+
  //! Public Slots
  public slots :
-  void                          SlotSetFileItem         (FileTreeFile* InFileItem);
 
  //! Public Signals
  signals :
@@ -85,4 +73,4 @@ class SourceDifferencesWindow : public QWidget
 
 };
 
-#endif /* _sourcedifferenceswindow_h_*/
+#endif /* _codetrack_h_*/

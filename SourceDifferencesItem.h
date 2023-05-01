@@ -19,6 +19,7 @@
  * Local Headers
  *****************************************************************************/
 #include "FileSectionDiff.h"
+#include "FileTreeFile.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -37,7 +38,7 @@ class SourceDifferencesItem : public QWidget
 
  //! Constructors
  public :
-  SourceDifferencesItem         (QWidget* InParent, int InY, int InWidth, FileSectionDiff* InDiff);
+  SourceDifferencesItem         (FileTreeFile* InFileItem, QWidget* InParent, int InY, int InWidth, FileSectionDiff* InDiff);
 
  //! Destructor
  public :
@@ -62,6 +63,7 @@ class SourceDifferencesItem : public QWidget
   void                          CreateSubWindows        ();
   void                          InitializeSubWindows    ();
   void                          resizeEvent             (QResizeEvent* InEvent);
+  void                          CreateSourceLines       (QStringList InLines, int &InY, QColor InColor);
 
  //! Private Data
  private :
@@ -70,6 +72,7 @@ class SourceDifferencesItem : public QWidget
   QLabel*                       LineNumbers2Label;
   QList<QLabel*>                DifferenceLineLabels;
   FileSectionDiff*              diff;
+  FileTreeFile*                 fileItem;
   
  //! Public Slots
  public slots :

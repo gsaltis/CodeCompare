@@ -54,6 +54,7 @@ SourceFileCompareTreeContainer::initialize()
 {
   InitializeSubWindows();  
   CreateSubWindows();
+  CreateConnections();
 }
 
 /*****************************************************************************!
@@ -305,7 +306,7 @@ SourceFileCompareTreeContainer::GetItemFileDifferCount
  *****************************************************************************/
 void
 SourceFileCompareTreeContainer::SetFileTreeItem
-(FileTreeWidgetItem* InItem)
+(FileTreeElement* InItem)
 {
   statsFileWindow->SetFileTreeItemNames(InItem);
   statsAnalyzeWindow->SetFileItem(InItem);
@@ -376,3 +377,25 @@ SourceFileCompareTreeContainer::SetFileCurrentSourceCount
 {
   statsAnalyzeWindow->SetFileCurrentSourceCount(InCount);
 }
+
+/*****************************************************************************!
+ * Function : SlotAnalysisDone
+ *****************************************************************************/
+void
+SourceFileCompareTreeContainer::SlotAnalysisDone(void)
+{
+  emit SignalAnalysisDone();
+}
+
+/*****************************************************************************!
+ * Function : CreateConnections
+ *****************************************************************************/
+void
+SourceFileCompareTreeContainer::CreateConnections(void)
+{
+  connect(this,
+          SIGNAL(SignalAnalysisDone()),
+          statsAnalyzeWindow,
+          SLOT(SlotAnalysisDone()));
+}
+

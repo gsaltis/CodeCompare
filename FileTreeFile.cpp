@@ -23,7 +23,11 @@
  * Function : FileTreeFile
  *****************************************************************************/
 FileTreeFile::FileTreeFile
-(QString InAbsoluteFileName1, QString InAbsoluteFileName2) : FileTreeElement(InAbsoluteFileName1, InAbsoluteFileName2)
+(QString InAbsoluteFileName1, QString InAbsoluteFileName2,
+ CodeTrack* InTrack1, CodeTrack* InTrack2) : FileTreeElement(InAbsoluteFileName1,
+                                                             InAbsoluteFileName2,
+                                                             InTrack1,
+                                                             InTrack2)
 {
   Initialize();
 }
@@ -87,6 +91,7 @@ bool
 FileTreeFile::ReadFileContents
 (QString InFilename, QStringList& InFileLines)
 {
+  int                                   n;
   QFile                                 file(InFilename);
   QByteArray                            ba;
   QString                               fileContents;
@@ -103,6 +108,20 @@ FileTreeFile::ReadFileContents
 
   fileContents = QString(ba);
   InFileLines = fileContents.split("\n");
+  for ( int i = 0; i < InFileLines.count() ; i++ ) {
+    QString                             st;
+    st = InFileLines[i];
+    n = st.length();
+    if ( n == 0 ) {
+      continue;
+    }
+    n--;
+    if ( st[n] != '\r' ) {
+      continue;
+    }
+    st = st.sliced(0, n);
+    InFileLines[i] = st;
+  }
   return true;
 }
 
@@ -200,5 +219,56 @@ FileTreeFile::GetFileCount
 ()
 {
   return 1;
+}
+
+/*****************************************************************************!
+ * Function GetFileLines1Section
+ *****************************************************************************/
+QStringList
+FileTreeFile::GetFileLines1Section
+(int InStartLine, int InEndLine)
+{
+  return GetFileLinesSection(FileLines1, InStartLine, InEndLine);
+}
+
+/*****************************************************************************!
+ * Function : GetFileLines2Section
+ *****************************************************************************/
+QStringList
+FileTreeFile::GetFileLines2Section
+(int InStartLine, int InEndLine)
+{
+  return GetFileLinesSection(FileLines2, InStartLine, InEndLine);
+}
+
+/*****************************************************************************!
+ * Function : GetFileLinesSection
+ *****************************************************************************/
+QStringList
+FileTreeFile::GetFileLinesSection
+(QStringList InLines, int InStartLine, int InEndLine)
+{
+  int                                   n;
+  QStringList                           lines;
+  if ( InEndLine >= InLines.count() ) {
+    return lines;
+  }
+  if ( InStartLine > InEndLine ) {
+    return lines;
+  }
+
+  n = InEndLine - InStartLine + 1;
+  lines = InLines.sliced(InStartLine, n);
+  return lines;
+}
+
+/*****************************************************************************!
+ * Function : GetChangeLinesCount
+ *****************************************************************************/
+QList<int>
+FileTreeFile::GetChangeLinesCount
+()
+{
+  return Diffs.GetCounts();
 }
 

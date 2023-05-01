@@ -29,7 +29,8 @@ CodeEditor::CodeEditor
   connect(this, &CodeEditor::blockCountChanged, this, &CodeEditor::updateLineNumberAreaWidth);
   connect(this, &CodeEditor::updateRequest, this, &CodeEditor::updateLineNumberArea);
   connect(this, &CodeEditor::cursorPositionChanged, this, &CodeEditor::highlightCurrentLine);
-  
+
+  setLineWrapMode(QPlainTextEdit::NoWrap);
   updateLineNumberAreaWidth(0);
   highlightCurrentLine();  
   initialize();

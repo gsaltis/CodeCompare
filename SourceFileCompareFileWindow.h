@@ -19,6 +19,7 @@
  * Local Headers
  *****************************************************************************/
 #include "SourceFileCompareStatsWindow.h"
+#include "FileTreeElement.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -45,7 +46,7 @@ class SourceFileCompareFileWindow : public SourceFileCompareStatsWindow
 
  //! Public Methods
  public :
-  void                          SetFileTreeItemNames           (FileTreeWidgetItem* InItem);
+  void                          SetFileTreeItemNames    (FileTreeElement* InItem);
   void                          SetCounts               (QList<int> InValues);
 
  //! Public Data

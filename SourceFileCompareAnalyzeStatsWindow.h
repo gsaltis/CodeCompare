@@ -14,6 +14,7 @@
 #include <QtGui>
 #include <QWidget>
 #include <QLabel>
+#include <QProgressBar>
 
 /*****************************************************************************!
  * Local Headers
@@ -46,7 +47,7 @@ class SourceFileCompareAnalyzeStatsWindow : public SourceFileCompareStatsWindow
 
  //! Public Methods
  public :
-  virtual void                  SetFileItem             (FileTreeWidgetItem* InFileItem);
+  virtual void                  SetFileItem             (FileTreeElement* InFileItem);
   void                          SetFileCount            (int InFileCount);
   void                          SetFileDifferCount      (int InFileDifferCount);
   void                          SetFileSourceCount      (int InFileSourceCount);
@@ -65,7 +66,8 @@ class SourceFileCompareAnalyzeStatsWindow : public SourceFileCompareStatsWindow
   QLabel*                       fileCurrentSourceCountLabel;
   int                           currentSourceCount;
   int                           differSourceCount;
-
+  QProgressBar*                 progressBar;
+  
  //! Private Methods
  private :
   void                          initialize              ();
@@ -80,6 +82,7 @@ class SourceFileCompareAnalyzeStatsWindow : public SourceFileCompareStatsWindow
  //! Public Slots
  public slots :
   void                          SlotDifferLabelValueChanged (QString InString);
+  void                          SlotAnalysisDone        (void);
 
  //! Public Signals
  signals :

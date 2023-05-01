@@ -181,15 +181,15 @@ SourceFileCompareFileWindow::resizeEvent
  *****************************************************************************/
 void
 SourceFileCompareFileWindow::SetFileTreeItemNames
-(FileTreeWidgetItem* InItem)
+(FileTreeElement* InItem)
 {
   fileItem = InItem;
 
   if ( NULL == fileItem ) {
     return;
   }
-  fileLabel1->setText(fileItem->GetAbsoluteFileName1());
-  fileLabel2->setText(fileItem->GetAbsoluteFileName2());
+  fileLabel1->setText(InItem->GetCodeTrack1()->RemoveLeadingBasePath(fileItem->GetAbsoluteFileName1()));
+  fileLabel2->setText(InItem->GetCodeTrack2()->RemoveLeadingBasePath(fileItem->GetAbsoluteFileName2()));
   SetCounts(fileItem->GetChangeLinesCount());
 }
 

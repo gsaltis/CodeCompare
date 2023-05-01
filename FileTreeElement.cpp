@@ -22,8 +22,11 @@
  * Function : FileTreeElement
  *****************************************************************************/
 FileTreeElement::FileTreeElement
-(QString InAbsoluteFileName1, QString InAbsoluteFileName2) : AbsoluteFileName1(InAbsoluteFileName1),
-                                                             AbsoluteFileName2(InAbsoluteFileName2)
+(QString InAbsoluteFileName1, QString InAbsoluteFileName2,
+ CodeTrack* InTrack1, CodeTrack* InTrack2) : AbsoluteFileName1(InAbsoluteFileName1),
+                                             AbsoluteFileName2(InAbsoluteFileName2),
+                                             codeTrack1(InTrack1),
+                                             codeTrack2(InTrack2)
                                                              
 {
 }
@@ -94,5 +97,38 @@ FileTreeElement::GetFileCount
 ()
 {
   return 0;
+}
+
+/*****************************************************************************!
+ * Function : GetChangeLinesCount
+ *****************************************************************************/
+QList<int>
+FileTreeElement::GetChangeLinesCount
+()
+{
+  QList<int>                            n;
+
+  n << 0 << 0  << 0;
+  return n;
+}
+
+/*****************************************************************************!
+ * Function : GetCodeTrack1
+ *****************************************************************************/
+CodeTrack*
+FileTreeElement::GetCodeTrack1
+()
+{
+  return codeTrack1;
+}
+
+/*****************************************************************************!
+ * Function : GetCodeTrack2
+ *****************************************************************************/
+CodeTrack*
+FileTreeElement::GetCodeTrack2
+()
+{
+  return codeTrack2;
 }
 

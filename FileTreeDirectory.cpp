@@ -22,8 +22,11 @@
  * Function : FileTreeDirectory
  *****************************************************************************/
 FileTreeDirectory::FileTreeDirectory
-(QString InAbsoluteFilename1, QString InAbsoluteFilename2) : FileTreeElement(InAbsoluteFilename1,
-                                                                             InAbsoluteFilename2)
+(QString InAbsoluteFileName1, QString InAbsoluteFileName2,
+ CodeTrack* InTrack1, CodeTrack* InTrack2) : FileTreeElement(InAbsoluteFileName1,
+                                                             InAbsoluteFileName2,
+                                                             InTrack1,
+                                                             InTrack2)
 {
   FilesHaveBeenRead = false;
   IsDirectory = true;
@@ -64,5 +67,18 @@ FileTreeDirectory::GetFileCount
     m += f.GetFileCount();
   }
   return m;
+}
+
+/*****************************************************************************!
+ * Function : GetChangeLinesCount
+ *****************************************************************************/
+QList<int>
+FileTreeDirectory::GetChangeLinesCount
+()
+{
+  QList<int>                            n;
+
+  n << 0 << 0  << 0;
+  return n;
 }
 

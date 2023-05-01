@@ -30,6 +30,7 @@
 #include "CodeEditor.h"
 #include "SourceFileCompareTreeContainer.h"
 #include "SourceDifferencesWindow.h"
+#include "CodeTrack.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -107,6 +108,8 @@ class MainDisplayWindow : public QWidget
   QSplitter*                    sourceFilesSplitter;
   QSplitter*                    sourceFilesChangesSplitter;
   SourceDifferencesWindow*      sourceDiffWindow;
+  CodeTrack*                    codeTrack1;
+  CodeTrack*                    codeTrack2;
   
  //! Public Slots
  public slots :
@@ -125,10 +128,12 @@ class MainDisplayWindow : public QWidget
  //! Public Signals
  signals :
   void                          SignalDependencyWindowClose     (void);
-  void                          SignalBuildSystemSelected (BuildSystem* InSystem);
-  void                          SignalSendDisplayMessage (QString InMessage);
-  void                          SignalTreeItemSelected  (FileTreeWidgetItem* InItem);
-
+  void                          SignalBuildSystemSelected       (BuildSystem* InSystem);
+  void                          SignalSendDisplayMessage        (QString InMessage);
+  void                          SignalTreeItemSelected          (FileTreeWidgetItem* InItem);
+  void                          SignalFileItemSelected          (FileTreeFile* InFileItem);
+  void                          SignalAnalysisDone              (void);
+  
  //! Public Actions
  public :
   QAction*                      ActionOnlyDifferences;

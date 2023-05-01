@@ -23,13 +23,13 @@
  * Function : FileTreeWidgetItem
  *****************************************************************************/
 FileTreeWidgetItem::FileTreeWidgetItem
-(QString InAbsoluteFileName, QTreeWidget* InTree, bool InIsDirectory) : QTreeWidgetItem()
+(QString InAbsoluteFileName, QTreeWidget* InTree, bool InIsDirectory, CodeTrack* InTrack1, CodeTrack* InTrack2) : QTreeWidgetItem()
 {
   initialize();
   if ( InIsDirectory ) {
-    TreeElement = new FileTreeDirectory(InAbsoluteFileName, QString(""));
+    TreeElement = new FileTreeDirectory(InAbsoluteFileName, QString(""), InTrack1, InTrack2);
   } else {
-    TreeElement = new FileTreeFile(InAbsoluteFileName, QString(""));
+    TreeElement = new FileTreeFile(InAbsoluteFileName, QString(""), InTrack1, InTrack2);
   } 
   SetAbsoluteFileName1();
   InTree->addTopLevelItem(this);
@@ -39,15 +39,15 @@ FileTreeWidgetItem::FileTreeWidgetItem
  * Function : FileTreeWidgetItem
  *****************************************************************************/
 FileTreeWidgetItem::FileTreeWidgetItem
-(QString InAbsoluteFileName1, QString InAbsoluteFileName2, bool InIsDirectory) : QTreeWidgetItem()
+(QString InAbsoluteFileName1, QString InAbsoluteFileName2, bool InIsDirectory, CodeTrack* InTrack1, CodeTrack* InTrack2) : QTreeWidgetItem()
 {
   initialize();
 
   if ( InIsDirectory )  {
-    TreeElement = new FileTreeDirectory(InAbsoluteFileName1, InAbsoluteFileName2);
+    TreeElement = new FileTreeDirectory(InAbsoluteFileName1, InAbsoluteFileName2, InTrack1, InTrack2);
   } else {
-    TreeElement = new FileTreeFile(InAbsoluteFileName1, InAbsoluteFileName2);
-  }    
+    TreeElement = new FileTreeFile(InAbsoluteFileName1, InAbsoluteFileName2, InTrack1, InTrack2);
+  }  
   SetAbsoluteFileNames();
 }
 
@@ -55,13 +55,13 @@ FileTreeWidgetItem::FileTreeWidgetItem
  * Function : FileTreeWidgetItem
  *****************************************************************************/
 FileTreeWidgetItem::FileTreeWidgetItem
-(QString InAbsoluteFileName1, QString InAbsoluteFileName2, QTreeWidgetItem* InParent, bool InIsDirectory) : QTreeWidgetItem()
+(QString InAbsoluteFileName1, QString InAbsoluteFileName2, QTreeWidgetItem* InParent, bool InIsDirectory, CodeTrack* InTrack1, CodeTrack* InTrack2) : QTreeWidgetItem()
 {
   initialize();
   if ( InIsDirectory )  {
-    TreeElement = new FileTreeDirectory(InAbsoluteFileName1, InAbsoluteFileName2);
+    TreeElement = new FileTreeDirectory(InAbsoluteFileName1, InAbsoluteFileName2, InTrack1, InTrack2);
   } else {
-    TreeElement = new FileTreeFile(InAbsoluteFileName1, InAbsoluteFileName2);
+    TreeElement = new FileTreeFile(InAbsoluteFileName1, InAbsoluteFileName2, InTrack1, InTrack2);
   }  
   SetAbsoluteFileNames();
   InParent->addChild(this);
@@ -227,24 +227,7 @@ FileTreeWidgetItem::IsSourceFile(void)
 }
 
 /*****************************************************************************!
- * Function : GetChangeLinesCount
- *****************************************************************************/
-QList<int>
-FileTreeWidgetItem::GetChangeLinesCount
-()
-{
-  FileTreeFile*                         e;
-  e = (FileTreeFile*)TreeElement;
-  if ( ! e->GetFilesDiffer() ) {
-    QList<int>                  n;
-    n << 0 << 0 << 0;
-    return n;
-  }
-  return e->GetDiffs().GetCounts();
-}
-
-/*****************************************************************************!
- * Function : ReadFilesx
+ * Function : ReadFiles
  *****************************************************************************/
 void
 FileTreeWidgetItem::ReadFiles(void)

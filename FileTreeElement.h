@@ -18,6 +18,7 @@
  * Local Headers
  *****************************************************************************/
 #include "FileContentsDiff.h"
+#include "CodeTrack.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -30,7 +31,7 @@ class FileTreeElement
 {
  //! Constructors
  public :
-  FileTreeElement               (QString InAbsoluteFileName1, QString InAbsoluteFileName2);
+  FileTreeElement               (QString InAbsoluteFileName1, QString InAbsoluteFileName2, CodeTrack* InTrack1, CodeTrack* InTrack2);
 
  //! Destructor
  public :
@@ -44,6 +45,9 @@ class FileTreeElement
   virtual void                  Read                    ();
   bool                          GetIsDirectory          ();
   virtual int                   GetFileCount            ();
+  virtual QList<int>            GetChangeLinesCount     ();
+  CodeTrack*                    GetCodeTrack1           ();
+  CodeTrack*                    GetCodeTrack2           ();
   
  //! Public Data
  public :
@@ -63,6 +67,8 @@ class FileTreeElement
 
  //! Private Data
  private :
+  CodeTrack*                    codeTrack1;
+  CodeTrack*                    codeTrack2;
 
  //! Public Slots
  public slots :

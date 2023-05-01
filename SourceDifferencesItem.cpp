@@ -22,7 +22,8 @@
  * Function : SourceDifferencesItem
  *****************************************************************************/
 SourceDifferencesItem::SourceDifferencesItem
-(QWidget* InParent, int InY, int InWidth, FileSectionDiff* InDiff) : QWidget(InParent), diff(InDiff)
+(FileTreeFile* InFileItem, QWidget* InParent, int InY, int InWidth, FileSectionDiff* InDiff) :
+  QWidget(InParent), diff(InDiff), fileItem(InFileItem)
 {
   int                                   n;
   int                                   height;
@@ -66,13 +67,13 @@ SourceDifferencesItem::initialize()
 void
 SourceDifferencesItem::CreateSubWindows()
 {
+  int                                   y;
   QStringList                           sourceLines;
   QStringList                           targetLines;
   QString                               line2String;
   QString                               line1String;
   int                                   endLine;
   int                                   startLine;
-  int                                   n;
   
   //! Create label
   TypeNameLabel = new QLabel();
@@ -85,13 +86,16 @@ SourceDifferencesItem::CreateSubWindows()
 
   startLine = diff->GetStartLine();
   endLine = diff->GetEndLine();
+  sourceLines = fileItem->GetFileLines1Section(startLine-1, endLine-1);
   line1String = QString("%1").arg(startLine);
+  
   if ( startLine != endLine ) {
     line1String += QString(" - %1").arg(endLine);
   }
     
   startLine = diff->GetTargetStartLine();
   endLine = diff->GetTargetEndLine();
+  targetLines = fileItem->GetFileLines2Section(startLine-1, endLine-1);
   line2String = QString("%1").arg(startLine);
   if ( startLine != endLine ) {
     line2String += QString(" - %1").arg(endLine);
@@ -116,32 +120,36 @@ SourceDifferencesItem::CreateSubWindows()
   LineNumbers2Label->setFont(QFont("Segoe UI", 10, QFont::Bold));
 
   //! Create label
-  sourceLines = diff->GetSourceChangeLines();
-  n = sourceLines.count();
-  for ( int i = 0 ; i < n; i++ ) {
-    QLabel*                     label;
-    label = new QLabel();
-    label->setParent(this);
-    label->move(10, 10);
-    label->resize(100, 20);
-    label->setText(sourceLines[i]);
-    label->setAlignment(Qt::AlignLeft);
-    label->setFont(QFont("Segoe UI", 10, QFont::Normal));
-    DifferenceLineLabels << label;
-  }
+  y = 0;
+  CreateSourceLines(sourceLines, y, QColor(238, 153, 153));
+  CreateSourceLines(targetLines, y, QColor(153, 238, 153));
+}
 
-  targetLines = diff->GetTargetChangeLines();
-  n = targetLines.count();
+/*****************************************************************************!
+ * Function : CreateSourceLines
+ *****************************************************************************/
+void
+SourceDifferencesItem::CreateSourceLines
+(QStringList InLines, int &InY, QColor InColor)
+{
+  int                                   n;
+  QPalette                              pal;
+  QLabel*                               label;
+
+  n = InLines.count();
   for ( int i = 0 ; i < n; i++ ) {
-    QLabel*                     label;
-    label = new QLabel();
-    label->setParent(this);
-    label->move(10, 10);
-    label->resize(100, 20);
-    label->setText(targetLines[i]);
+    label = new QLabel(this);
+    label->move(10, InY);
+    label->resize(100, SOURCE_DIFFERENCES_ITEM_HEIGHT);
+    label->setText(InLines[i]);
     label->setAlignment(Qt::AlignLeft);
     label->setFont(QFont("Segoe UI", 10, QFont::Normal));
     DifferenceLineLabels << label;
+    pal = label->palette();
+    pal.setBrush(QPalette::WindowText, QBrush(InColor));
+    label->setPalette(pal);
+    label->setAutoFillBackground(true);
+    InY += 20;
   }
 }
 
@@ -184,6 +192,7 @@ SourceDifferencesItem::resizeEvent
 
   typeLabelY = lineNumber1LabelY = lineNumber2LabelY = diffLabelY = 0;
   typeLabelH = lineNumber1LabelH = lineNumber2LabelH = diffLabelH = height;
+  
   typeLabelX = 0;
   lineNumber1LabelX = typeLabelW + skipX;
   lineNumber2LabelX = typeLabelW + lineNumber1LabelX + skipX * 2;
@@ -200,7 +209,7 @@ SourceDifferencesItem::resizeEvent
 
   for ( int i = 0 ; i < DifferenceLineLabels.count(); i++ ) {
     DifferenceLineLabels[i]->move(diffLabelX, diffLabelY);
-    DifferenceLineLabels[i]->resize(diffLabelW, diffLabelH);
+    DifferenceLineLabels[i]->resize(diffLabelW, SOURCE_DIFFERENCES_ITEM_HEIGHT);
     diffLabelY += SOURCE_DIFFERENCES_ITEM_HEIGHT;
   }
 }

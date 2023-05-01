@@ -53,7 +53,7 @@ class SourceFileCompareTreeContainer : public QWidget
   bool                          GetDisplayAnalyzeStatsWindow    (void);
   void                          SetDisplayStatsWindow           (bool InDisplayStatsWindow);
   void                          SetDisplayAnalyzeStatsWindow    (bool InDisplayAnalyzeStatsWindow);
-  void                          SetFileTreeItem                 (FileTreeWidgetItem* InItem);
+  void                          SetFileTreeItem                 (FileTreeElement* InItem);
   void                          SetFilesDifferCount             (int InCount);
   void                          SetFileCurrentSourceCount       (int InCount);
   
@@ -80,6 +80,7 @@ class SourceFileCompareTreeContainer : public QWidget
   void                          GetItemSourceFileCount  (FileTreeWidgetItem* InItem, int &InCount);
   int                           GetFileDifferCount      (void);
   void                          GetItemFileDifferCount  (FileTreeWidgetItem* InItem, int &InCount);
+  void                          CreateConnections       (void);
   
  //! Private Data
  private :
@@ -92,9 +93,11 @@ class SourceFileCompareTreeContainer : public QWidget
   
  //! Public Slots
  public slots :
+  void                          SlotAnalysisDone        (void);
 
  //! Public Signals
  signals :
+  void                          SignalAnalysisDone      (void);
 
  //! Public Actions
  public :

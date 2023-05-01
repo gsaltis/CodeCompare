@@ -19,7 +19,7 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "FileTreeWidgetItem.h"
+#include "FileTreeElement.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -46,8 +46,8 @@ class SourceFileCompareStatsWindow : public QFrame
 
  //! Public Methods
  public :
-  FileTreeWidgetItem*           GetFileItem             (void);
-  virtual void                  SetFileItem             (FileTreeWidgetItem* InFileItem);
+  FileTreeElement*              GetFileItem             (void);
+  virtual void                  SetFileItem             (FileTreeElement* InFileItem);
 
  //! Public Data
  public :
@@ -57,7 +57,7 @@ class SourceFileCompareStatsWindow : public QFrame
 
  //! Protected Data
  protected :
-  FileTreeWidgetItem*           fileItem;
+  FileTreeElement*              fileItem;
 
  //! Private Methods
  private :

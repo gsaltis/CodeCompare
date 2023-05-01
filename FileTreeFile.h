@@ -30,7 +30,8 @@ class FileTreeFile : public FileTreeElement
 {
  //! Constructors
  public :
-  FileTreeFile                  (QString InAbsoluteFileName1, QString InAbsoluteFileName2);
+  FileTreeFile                  (QString InAbsoluteFileName1, QString InAbsoluteFileName2,
+                                 CodeTrack* InTrack1, CodeTrack* InTrack2);
 
  //! Destructor
  public :
@@ -40,6 +41,7 @@ class FileTreeFile : public FileTreeElement
  public :
   void                          Read                    () override;
   int                           GetFileCount            () override;
+  QList<int>                    GetChangeLinesCount     () override;
   bool                          GetIsSourceFile         ();
   FileContentsDiff              GetDiffs                ();
   QStringList                   GetFileLines1           ();
@@ -49,6 +51,9 @@ class FileTreeFile : public FileTreeElement
   void                          SetFilesDiffer          (bool InFilesDiffer);
   void                          DiffFiles               ();
   void                          Initialize              ();
+  QStringList                   GetFileLines1Section    (int InStartLine, int InEndLine);
+  QStringList                   GetFileLines2Section    (int InStartLine, int InEndLine);
+  QStringList                   GetFileLinesSection    (QStringList InLines, int InStartLine, int InEndLine);
   
  //! Public Data
  public :
