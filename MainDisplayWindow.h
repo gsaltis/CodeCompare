@@ -79,7 +79,7 @@ class MainDisplayWindow : public QWidget
   bool                          FilesAreDifferent               (QString InFilename1, QString InFilename2);
   void                          CreateActions                   ();
   void                          SourceTreeCollapseItem          (QTreeWidgetItem* InItem);
-  void                          PopulateCodeDisplay             (QString InFilename, CodeEditor* InCodeWindow);
+  void                          PopulateCodeDisplay             (FileTreeWidgetItem* InItem, CodeEditor* InCodeWindow1, CodeEditor* InCodeWindow2);
   void                          DiffFiles                       (FileTreeWidgetItem* InItem, QString InFilename1, QString InFilename2);
   void                          AnalyzeDifferences              (FileTreeWidgetItem* InItem);
   bool                          CreateComparisonSummary         (void);

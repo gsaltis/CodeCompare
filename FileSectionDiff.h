@@ -52,6 +52,11 @@ class FileSectionDiff
   int                                   GetLinesChangedCount    ();
   int                                   GetStartLine            ();
   int                                   GetEndLine              ();
+  int                                   GetTargetStartLine      ();
+  int                                   GetTargetEndLine        ();
+  int                                   GetTargetLinesChangedCount  ();
+  QStringList                           GetSourceChangeLines    ();
+  QStringList                           GetTargetChangeLines    ();
   
  //! Public Data
  public :

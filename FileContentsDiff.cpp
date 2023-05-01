@@ -11,7 +11,7 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
-#undef TRACE_USE
+
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
@@ -41,7 +41,7 @@ void
 FileContentsDiff::ParseLines
 (QString InDiffString)
 {
-  int                                   n;
+  QString                               line;
   QStringList                           strings;
   int                                   i;
 
@@ -49,13 +49,9 @@ FileContentsDiff::ParseLines
     return;
   }
 
-  strings = InDiffString.split("\n");
+  strings = InDiffString.split("\r\n");
+  strings.removeAll("\\ No newline at end of file");
   i = 0;
-  n = strings.count() - 1;
-  if ( strings[n] == "\\ No newline at end of file" ) {
-    strings = strings.sliced(0, n);
-  }
-  
   while ( i < strings.count() ) {
     FileSectionDiff                     s(strings, i);
     append(s);

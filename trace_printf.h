@@ -201,16 +201,55 @@
   }                                                                                             \
 
 //!
-#define TRACE_FUNCTION_INT(n)                                                                   \
+#define TRACE_FUNCTION_QSTRING(n)                                                               \
   {                                                                                             \
+    struct timeval tv;                                                                          \
+    struct tm* t2;                                                                              \
     int i;                                                                                      \
+    time_t                              t;                                                      \
+    QString                             f;                                                      \
     for ( i = 0 ; i < TraceIndent-2 ; i += 2 ) {                                                \
       printf("| ");                                                                             \
     }                                                                                           \
     printf("|_");                                                                               \
-    printf("VALUE : %*s : %04d   %35s : %d\n",                                                  \
-           TRACE_FUNCTION_NAME_LENGTH - TraceIndent, __FUNCTION__, __LINE__,                    \
+    gettimeofday(&tv, NULL);                                                                    \
+    t2 = localtime((time_t*)&(tv.tv_sec));                                                      \
+    t = (time_t)tv.tv_sec;                                                                      \
+    t2 = localtime(&t);                                                                         \
+    f = QString(__FILE__) + QString(":") + QString(__FUNCTION__);                               \
+    printf("QSIZE : %*s : %04d %02d:%02d:%02d.%06d : %35s : %s\n",                              \
+           (TRACE_FUNCTION_NAME_LENGTH - 2) - TraceIndent,                                      \
+           f.toStdString().c_str(),                                                             \
+           __LINE__,                                                                            \
+           (int)t2->tm_hour, (int)t2->tm_min, (int)t2->tm_sec, (int)tv.tv_usec,                 \
+           #n, n.toStdString().c_str());                                                        \
+    fflush(stdout);                                                                             \
+  }                                                                                             \
+
+//!
+#define TRACE_FUNCTION_INT(n)                                                                   \
+  {                                                                                             \
+    struct timeval tv;                                                                          \
+    struct tm* t2;                                                                              \
+    int i;                                                                                      \
+    time_t                              t;                                                      \
+    QString                             f;                                                      \
+    for ( i = 0 ; i < TraceIndent-2 ; i += 2 ) {                                                \
+      printf("| ");                                                                             \
+    }                                                                                           \
+    printf("|_");                                                                               \
+    gettimeofday(&tv, NULL);                                                                    \
+    t2 = localtime((time_t*)&(tv.tv_sec));                                                      \
+    t = (time_t)tv.tv_sec;                                                                      \
+    t2 = localtime(&t);                                                                         \
+    f = QString(__FILE__) + QString(":") + QString(__FUNCTION__);                               \
+    printf("INt   : %*s : %04d %02d:%02d:%02d.%06d : %35s : %d\n",                              \
+           (TRACE_FUNCTION_NAME_LENGTH - 2) - TraceIndent,                                      \
+           f.toStdString().c_str(),                                                             \
+           __LINE__,                                                                            \
+           (int)t2->tm_hour, (int)t2->tm_min, (int)t2->tm_sec, (int)tv.tv_usec,                 \
            #n, (int)n);                                                                         \
+    fflush(stdout);                                                                             \
   }                                                                                             \
 
 //!
@@ -253,7 +292,7 @@
   }                                                                                             \
 
 //!
-#define TRACE_FUNCTION_QSTRING(n)                                                               \
+#define TRACE_FUNCTION_QSTRING1(n)                                                              \
   {                                                                                             \
     int i;                                                                                      \
     for ( i = 0 ; i < TraceIndent-2 ; i += 2 ) {                                                \

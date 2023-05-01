@@ -20,6 +20,9 @@
  * Local Headers
  *****************************************************************************/
 #include "FileContentsDiff.h"
+#include "FileTreeElement.h"
+#include "FileTreeFile.h"
+#include "FileTreeDirectory.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -36,11 +39,9 @@ class FileTreeWidgetItem : public QTreeWidgetItem
 {
  //! Constructors
  public :
-  FileTreeWidgetItem            (QString InAbsoluteFileName, int InColumn = 0);
-  FileTreeWidgetItem            (QString InAbsoluteFileName, QTreeWidgetItem* InParent, int InColumn = 0);
-  FileTreeWidgetItem            (QString InAbsoluteFileName, QTreeWidget* InParent);
-  FileTreeWidgetItem            (QString InAbsoluteFileName1,  QString InAbsoluteFileName2);
-  FileTreeWidgetItem            (QString InAbsoluteFileName1,  QString InAbsoluteFileName2, QTreeWidgetItem* InParent);
+  FileTreeWidgetItem            (QString InAbsoluteFileName, QTreeWidget* InParent, bool InIsDirectory);
+  FileTreeWidgetItem            (QString InAbsoluteFileName1,  QString InAbsoluteFileName2, bool InIsDirectory);
+  FileTreeWidgetItem            (QString InAbsoluteFileName1,  QString InAbsoluteFileName2, QTreeWidgetItem* InParent, bool InIsDirectory);
 
  //! Destructor
  public :
@@ -49,10 +50,10 @@ class FileTreeWidgetItem : public QTreeWidgetItem
  //! Public Methods
  public :
   QString                       GetAbsoluteFileName1    (void);
-  void                          SetAbsoluteFileName1    (QString InAbsoluteFileName1);
+  void                          SetAbsoluteFileName1    (void);
   QString                       GetAbsoluteFileName2    (void);
-  void                          SetAbsoluteFileName2    (QString InAbsoluteFileName2);
-  void                          SetAbsoluteFileNames    (QString InAbsoluteFileName1, QString InAbsoluteFileName2);
+  void                          SetAbsoluteFileName2    (void);
+  void                          SetAbsoluteFileNames    (void);
   void                          ParseDiffLines          (QString InDiffLines);
   bool                          GetFilesDiffer          (void);
   void                          SetFilesDiffer          (bool InFilesDiffer);
@@ -63,7 +64,15 @@ class FileTreeWidgetItem : public QTreeWidgetItem
   bool                          IsSourceFile            (void);
   QList<int>                    GetChangeLinesCount     ();
   FileContentsDiff              GetDifferences          ();
-  
+  bool                          ReadFileContents        (QString InFilename, QStringList& InFileLines);
+  void                          ReadFiles               (void);
+  QStringList                   GetFile1Lines           ();
+  QStringList                   GetFile2Lines           ();
+  QStringList                   GetFile1LinesSelection  (int InStartLine, int InEndLine);
+  QStringList                   GetFile2LinesSelection  (int InStartLine, int InEndLine);
+  FileTreeElement*              GetTreeElement          ();
+  void                          DiffFiles               (int &InLinesDifferCount);
+
  //! Public Data
  public :
 
@@ -79,16 +88,12 @@ class FileTreeWidgetItem : public QTreeWidgetItem
   void                          CreateSubWindows        ();
   void                          InitializeSubWindows    ();
   void                          resizeEvent             (QResizeEvent* InEvent);
+  QStringList                   GetFileLinesSelection   (QStringList InFileLines, int InStartLine, int InEndLine);
   
  //! Private Data
  private :
-  QString                       absoluteFileName1;
-  QString                       absoluteFileName2;
-  FileContentsDiff              diffs;
+  FileTreeElement*              TreeElement;
   
-  bool                          FilesDiffer;
-  bool                          isDirectory;
-
  //! Public Slots
  public slots :
 

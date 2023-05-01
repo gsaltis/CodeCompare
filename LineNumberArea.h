@@ -40,10 +40,7 @@ class LineNumberArea : public QWidget
 
  //! Constructors
  public :
-  LineNumberArea(CodeEditor *editor)
-  {
-    codeEditor = editor;
-  }
+  LineNumberArea(CodeEditor *editor);
 
  //! Destructor
  public :
@@ -51,7 +48,7 @@ class LineNumberArea : public QWidget
 
  //! Public Methods
  public :
-  QSize sizeHint();
+  QSize sizeHint() ;
 
  //! Public Data
  public :

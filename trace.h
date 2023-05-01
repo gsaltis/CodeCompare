@@ -25,7 +25,7 @@
  * Exported Macros
  *****************************************************************************/
 #define TRACE_OUTPUT_BUFFER_SIZE                2048
-#define TRACE_FUNCTION_NAME_LENGTH              70
+#define TRACE_FUNCTION_NAME_LENGTH              50
 
 #ifdef TRACE_USE
 #include "trace_printf.h"

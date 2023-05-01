@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : SourceDifferencesItem.h
- * DATE         : April 25 2023
+ * FILE NAME    : FileTreeDirectory.h
+ * DATE         : April 28 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _sourcedifferencesitem_h_
-#define _sourcedifferencesitem_h_
+#ifndef _filetreedirectory_h_
+#define _filetreedirectory_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -13,74 +13,58 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
-#include <QLabel>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "FileSectionDiff.h"
+#include "FileTreeElement.h"
+#include "FileTreeFile.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define SOURCE_DIFFERENCES_ITEM_X       0
-#define SOURCE_DIFFERENCES_ITEM_Y       0
-#define SOURCE_DIFFERENCES_ITEM_WIDTH   200
-#define SOURCE_DIFFERENCES_ITEM_HEIGHT  20
 
 /*****************************************************************************!
- * Exported Class : SourceDifferencesItem
+ * Exported Class : FileTreeDirectory
  *****************************************************************************/
-class SourceDifferencesItem : public QWidget
+class FileTreeDirectory : public FileTreeElement , QList<FileTreeFile>
 {
-  Q_OBJECT;
-
  //! Constructors
  public :
-  SourceDifferencesItem         (QWidget* InParent, int InY, int InWidth, FileSectionDiff* InDiff);
+  FileTreeDirectory             (QString InAbsoluteFileName1, QString InAbsoluteFilename2);
 
  //! Destructor
  public :
-  ~SourceDifferencesItem        ();
+  ~FileTreeDirectory            ();
 
  //! Public Methods
  public :
+  void                 Read                             () override;
 
  //! Public Data
  public :
 
  //! Protected Methods
  protected :
-  void                          mousePressEvent         (QMouseEvent* InEvent);
-  
+
  //! Protected Data
  protected :
 
  //! Private Methods
  private :
-  void                          initialize              ();
-  void                          CreateSubWindows        ();
-  void                          InitializeSubWindows    ();
-  void                          resizeEvent             (QResizeEvent* InEvent);
 
  //! Private Data
  private :
-  QLabel*                       TypeNameLabel;
-  QLabel*                       LineNumbers1Label;
-  QLabel*                       LineNumbers2Label;
-  QList<QLabel*>                DifferenceLineLabels;
-  FileSectionDiff*              diff;
-  
+
  //! Public Slots
  public slots :
 
  //! Public Signals
  signals :
-  void                          SignalDifferenceSelected (FileSectionDiff* InDiff);
 
  //! Public Actions
  public :
 
 };
 
-#endif /* _sourcedifferencesitem_h_*/
+#endif /* _filetreedirectory_h_*/

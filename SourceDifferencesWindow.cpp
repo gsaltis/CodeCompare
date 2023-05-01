@@ -150,7 +150,8 @@ SourceDifferencesWindow::DisplayChanges(void)
   height = n * SOURCE_DIFFERENCES_ITEM_HEIGHT;
   container->resize(width, height);
   for (i = 0; i < n; i++) {
-    differenceItems << new SourceDifferencesItem(container, y, width, &diffs[i]);
-    y += SOURCE_DIFFERENCES_ITEM_HEIGHT;
+    auto s = new SourceDifferencesItem(container, y, width, &diffs[i]);
+    differenceItems << s;
+    y += s->size().height();
   }
 }

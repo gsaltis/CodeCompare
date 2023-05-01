@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : SourceDifferencesItem.h
- * DATE         : April 25 2023
+ * FILE NAME    : FileTreeFile.h
+ * DATE         : April 28 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _sourcedifferencesitem_h_
-#define _sourcedifferencesitem_h_
+#ifndef _filetreefile_h_
+#define _filetreefile_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -13,74 +13,73 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
-#include <QLabel>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "FileSectionDiff.h"
+#include "FileTreeElement.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define SOURCE_DIFFERENCES_ITEM_X       0
-#define SOURCE_DIFFERENCES_ITEM_Y       0
-#define SOURCE_DIFFERENCES_ITEM_WIDTH   200
-#define SOURCE_DIFFERENCES_ITEM_HEIGHT  20
 
 /*****************************************************************************!
- * Exported Class : SourceDifferencesItem
+ * Exported Class : FileTreeFile
  *****************************************************************************/
-class SourceDifferencesItem : public QWidget
+class FileTreeFile : public FileTreeElement
 {
-  Q_OBJECT;
-
  //! Constructors
  public :
-  SourceDifferencesItem         (QWidget* InParent, int InY, int InWidth, FileSectionDiff* InDiff);
+  FileTreeFile                  (QString InAbsoluteFileName1, QString InAbsoluteFileName2);
 
  //! Destructor
  public :
-  ~SourceDifferencesItem        ();
+  ~FileTreeFile                 ();
 
  //! Public Methods
  public :
+  void                          Read                    () override;
+  bool                          GetIsSourceFile         ();
+  FileContentsDiff              GetDiffs                ();
+  QStringList                   GetFileLines1           ();
+  QStringList                   GetFileLines2           ();
+  bool                          GetFilesDiffer          ();
+  bool                          GetFilesHaveBeenRead    ();
+  void                          SetFilesDiffer          (bool InFilesDiffer);
+  void                          DiffFiles               ();
 
  //! Public Data
  public :
 
  //! Protected Methods
  protected :
-  void                          mousePressEvent         (QMouseEvent* InEvent);
-  
+
  //! Protected Data
  protected :
 
  //! Private Methods
  private :
-  void                          initialize              ();
-  void                          CreateSubWindows        ();
-  void                          InitializeSubWindows    ();
-  void                          resizeEvent             (QResizeEvent* InEvent);
+  bool
+  ReadFileContents
+  (QString InFilename, QStringList& InFileLines);
 
  //! Private Data
  private :
-  QLabel*                       TypeNameLabel;
-  QLabel*                       LineNumbers1Label;
-  QLabel*                       LineNumbers2Label;
-  QList<QLabel*>                DifferenceLineLabels;
-  FileSectionDiff*              diff;
+  bool                          IsSourceFile;
+  FileContentsDiff              Diffs;
+  QStringList                   FileLines1;
+  QStringList                   FileLines2;
+  bool                          FilesDiffer;
   
  //! Public Slots
  public slots :
 
  //! Public Signals
  signals :
-  void                          SignalDifferenceSelected (FileSectionDiff* InDiff);
 
  //! Public Actions
  public :
 
 };
 
-#endif /* _sourcedifferencesitem_h_*/
+#endif /* _filetreefile_h_*/

@@ -367,7 +367,7 @@ MainDisplayWindow::SetTracksDirectoryNames
     codeWindowContainer2->SetHeaderText(Track2DirectoryName);
   }
 
-  sourceItems = new FileTreeWidgetItem("", sourceFileCompareTree);
+  sourceItems = new FileTreeWidgetItem("", sourceFileCompareTree, true);
   sourceItems->setText(0, "Source");
 
   PopulateDirectoriesAndFiles(sourceItems, Track1DirectoryName, Track2DirectoryName);
@@ -445,6 +445,8 @@ MainDisplayWindow::PopulateTreeDirectory
   FileTreeWidgetItem*                   treeItem;
 
   //! Walk the directories
+  InEntryList1.sort();
+  InEntryList2.sort();
   n1 = InEntryList1.size();
   n2 = InEntryList2.size();
 
@@ -471,8 +473,7 @@ MainDisplayWindow::PopulateTreeDirectory
     
     //! Directory name are equal
     if ( fileName1 == fileName2 ) {
-      treeItem = new FileTreeWidgetItem(filePath1, filePath2, InHead);
-      treeItem->SetIsDirectory(true);
+      treeItem = new FileTreeWidgetItem(filePath1, filePath2, InHead, true);
       treeItem->SetFilesDiffer(false);
       QPixmap                   pixmap(":/images/Folder.png");
       treeItem->setIcon(0, QIcon(pixmap));
@@ -482,8 +483,7 @@ MainDisplayWindow::PopulateTreeDirectory
     }
     //! Extra filename in track 1
     else if ( fileName1 < fileName2 || i2 == n2 ) {
-      treeItem = new FileTreeWidgetItem(entryFile1.absoluteFilePath(), QString(""), InHead);
-      treeItem->SetIsDirectory(true);
+      treeItem = new FileTreeWidgetItem(entryFile1.absoluteFilePath(), QString(""), InHead, true);
       treeItem->SetFilesDiffer(false);
       QPixmap                   pixmap(":/images/Folder.png");
       treeItem->setIcon(0, QIcon(pixmap));
@@ -492,8 +492,7 @@ MainDisplayWindow::PopulateTreeDirectory
 
     //! Extra filename in track 2
     else {
-      treeItem = new FileTreeWidgetItem(QString(""), entryFile2.absoluteFilePath(), InHead);
-      treeItem->SetIsDirectory(true);
+      treeItem = new FileTreeWidgetItem(QString(""), entryFile2.absoluteFilePath(), InHead, true);
       treeItem->SetFilesDiffer(false);
       QPixmap                   pixmap(":/images/Folder.png");
       treeItem->setIcon(0, QIcon(pixmap));
@@ -519,7 +518,9 @@ MainDisplayWindow::PopulateTreeFiles
   FileTreeWidgetItem*                   treeItem;
   bool                                  dirsDiff;
   
-  //! Walk the directories
+  //! Walk the file List
+  InEntryList1.sort();
+  InEntryList2.sort();
   n1 = InEntryList1.size();
   n2 = InEntryList2.size();
 
@@ -547,7 +548,7 @@ MainDisplayWindow::PopulateTreeFiles
     //! Directory name are equal
     if ( fileName1 == fileName2 ) {
       QString                           pixmapName = ":/images/File.png";
-      treeItem = new FileTreeWidgetItem(filePath1, filePath2, InHead);
+      treeItem = new FileTreeWidgetItem(filePath1, filePath2, InHead, false);
       if ( displayDiffsAtStart ) {
         if ( FilesAreDifferent(filePath1, filePath2) ) {
           pixmapName = ":/images/FileDifferent.png";
@@ -567,7 +568,7 @@ MainDisplayWindow::PopulateTreeFiles
     //! Extra filename in track 1
     else if ( fileName1 < fileName2 || i2 == n2 ) {
       dirsDiff = true;
-      treeItem = new FileTreeWidgetItem(entryFile1.absoluteFilePath(), QString(""), InHead);
+      treeItem = new FileTreeWidgetItem(entryFile1.absoluteFilePath(), QString(""), InHead, false);
       if ( mainSystemConfig->GetDiffMissingIsDiff() ) {
         QPixmap                   pixmap(":/images/FileMissing.png");
         treeItem->SetFilesDiffer(true);
@@ -582,7 +583,7 @@ MainDisplayWindow::PopulateTreeFiles
     //! Extra filename in track 2
     else {
       dirsDiff = true;
-      treeItem = new FileTreeWidgetItem(QString(""), entryFile2.absoluteFilePath(), InHead);
+      treeItem = new FileTreeWidgetItem(QString(""), entryFile2.absoluteFilePath(), InHead, false);
       if ( mainSystemConfig->GetDiffMissingIsDiff() ) {
         QPixmap                   pixmap(":/images/FileMissing.png");
         treeItem->SetFilesDiffer(true);
@@ -685,9 +686,8 @@ MainDisplayWindow::SlotTreeWidgetItemSelected
 
   codeWindowContainer1->SetHeaderText(fileName1);
   codeWindowContainer2->SetHeaderText(fileName2);
-
-  PopulateCodeDisplay(fileName1, codeWindow1);
-  PopulateCodeDisplay(fileName2, codeWindow2);
+  item->ReadFiles();
+  PopulateCodeDisplay(item, codeWindow1, codeWindow2);
 
   changeLinesCount = item->GetChangeLinesCount();
   SlotFileDifferInformation();
@@ -700,54 +700,12 @@ MainDisplayWindow::SlotTreeWidgetItemSelected
  *****************************************************************************/
 void
 MainDisplayWindow::PopulateCodeDisplay
-(QString InFilename, CodeEditor* InCodeWindow)
+(FileTreeWidgetItem* InItem,
+ CodeEditor* InCodeWindow1,
+ CodeEditor* InCodeWindow2)
 {
-  QByteArray                            fileContents;
-  QString                               fileContentsString;
-  QFile                                 file(InFilename);
-  file.open(QIODeviceBase::ReadOnly);
-
-  fileContents = file.readAll();
-  file.close();
-  if ( fileContents.isNull() ) {
-    return;
-  }
-  fileContentsString = QString(fileContents);
-  InCodeWindow->setPlainText(fileContentsString);
-}
-
-/*****************************************************************************!
- * Function : DiffFiles
- *****************************************************************************/
-void
-MainDisplayWindow::DiffFiles
-(FileTreeWidgetItem* InItem, QString InFileName1, QString InFileName2)
-{
-  QFileInfo                             fileInfo1(InFileName1);
-  QFileInfo                             fileInfo2(InFileName2);
-  QProcess                              diffProcess;
-  QString                               stdOutput;
-  QString                               errorOutput;
-  QStringList                           args;
-  QString                               program = mainSystemConfig->GetDiff();
-
-  args << InFileName1 << InFileName2;
-  diffProcess.start(program, args);
-  diffProcess.waitForFinished();
-  stdOutput = QString(diffProcess.readAllStandardOutput().trimmed());
-  currentSourceFileCount++;
-  compareContainer->SetFileCurrentSourceCount(currentSourceFileCount);
-  if ( !stdOutput.isEmpty() ) {
-    InItem->ParseDiffLines(stdOutput);
-    InItem->SetFilesDiffer(true);
-    InItem->setIcon(0, QIcon(QPixmap(":/images/FileDifferent.png")));
-    filesDifferCount++;
-  } else {
-    InItem->SetFilesDiffer(false);
-    compareContainer->SetFilesDifferCount(filesDifferCount);
-    InItem->setIcon(0, QIcon(QPixmap(":/images/FileSame.png")));
-  }
-  errorOutput = QString(diffProcess.readAllStandardError().trimmed());
+  InCodeWindow1->setPlainText(InItem->GetFile1Lines().join("\n"));
+  InCodeWindow2->setPlainText(InItem->GetFile2Lines().join("\n"));
 }
 
 /*****************************************************************************!
@@ -786,6 +744,7 @@ MainDisplayWindow::AnalyzeDifferences
 (FileTreeWidgetItem* InItem)
 {
   int                                   i, n;
+  int                                   linesDiffer = 0;
   
   n = InItem->childCount();
   for ( i = 0 ; i < n ; i++ ) {
@@ -795,8 +754,9 @@ MainDisplayWindow::AnalyzeDifferences
     if ( item->GetIsDirectory() ) {
       AnalyzeDifferences(item);
     } else if ( item->IsSourceFile() ) {
-      TRACE_FUNCTION_QSTRING(item->GetAbsoluteFileName1());
-      DiffFiles(item, item->GetAbsoluteFileName1(), item->GetAbsoluteFileName2());
+      item->DiffFiles(linesDiffer);
+      currentSourceFileCount++;
+      compareContainer->SetFileCurrentSourceCount(currentSourceFileCount);
     }
     compareContainer->SetFileTreeItem(item);
     application->processEvents();

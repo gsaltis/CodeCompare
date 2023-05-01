@@ -1,4 +1,4 @@
-/*****************************************************************************
+ /*****************************************************************************
  * FILE NAME    : FileSectionDiff.cpp
  * DATE         : April 22 2023
  * PROJECT      : 
@@ -328,3 +328,54 @@ FileSectionDiff::GetEndLine
 {
   return sourceEndLine;
 }
+
+/*****************************************************************************!
+ * Function : GetTargetLinesChangedCount
+ *****************************************************************************/
+int
+FileSectionDiff::GetTargetLinesChangedCount
+()
+{
+  return targetEndLine - targetStartLine + 1;
+}
+
+/*****************************************************************************!
+ * Function : GetTargetStartLine 
+ *****************************************************************************/
+int
+FileSectionDiff::GetTargetStartLine
+()
+{
+  return targetStartLine;
+}
+
+/*****************************************************************************!
+ * Function : GetTargetEndLine 
+ *****************************************************************************/
+int
+FileSectionDiff::GetTargetEndLine
+()
+{
+  return targetEndLine;
+}
+
+/*****************************************************************************!
+ * Function : GetSourceChangeLines
+ *****************************************************************************/
+QStringList
+FileSectionDiff::GetSourceChangeLines
+()
+{
+  return sourceChangeLines;
+}
+
+/*****************************************************************************!
+ * Function : GetTargetChangeLines
+ *****************************************************************************/
+QStringList
+FileSectionDiff::GetTargetChangeLines
+()
+{
+  return targetChangeLines;
+}
+

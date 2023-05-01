@@ -1,6 +1,6 @@
 /*****************************************************************************
- * FILE NAME    : LineNumberArea.cpp
- * DATE         : April 21 2023
+ * FILE NAME    : FileTreeDirectory.cpp
+ * DATE         : April 28 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
@@ -15,48 +15,33 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "LineNumberArea.h"
-#include "CodeEditor.h"
-#include "trace.h"
+#include "FileTreeDirectory.h"
 
 /*****************************************************************************!
- * Function : LineNumberArea
+ * Function : FileTreeDirectory
  *****************************************************************************/
-LineNumberArea::LineNumberArea(CodeEditor *editor) : QWidget(editor)
+FileTreeDirectory::FileTreeDirectory
+(QString InAbsoluteFilename1, QString InAbsoluteFilename2) : FileTreeElement(InAbsoluteFilename1,
+                                                                             InAbsoluteFilename2)
 {
-  codeEditor = editor;
 }
 
 /*****************************************************************************!
- * Function : ~LineNumberArea
+ * Function : ~FileTreeDirectory
  *****************************************************************************/
-LineNumberArea::~LineNumberArea
+FileTreeDirectory::~FileTreeDirectory
 ()
 {
-  QPalette                              pal;
-
-  pal = palette();
-  pal.setBrush(QPalette::Window, QBrush(QColor(224, 224, 224)));
-  setPalette(pal);
-  setAutoFillBackground(true);
 }
 
 /*****************************************************************************!
- * Function : sizeHint
+ * Function : Read
  *****************************************************************************/
-QSize
-LineNumberArea::sizeHint
+void
+FileTreeDirectory::Read
 ()
 {
-  QSize                         s;
-  s = QSize(codeEditor->lineNumberAreaWidth(), 0);
-  return s;
+
+
 }
-  
-/*****************************************************************************!
- * Function : paintEvent
- *****************************************************************************/
-void LineNumberArea::paintEvent(QPaintEvent *event)
-{
-  codeEditor->lineNumberAreaPaintEvent(event);
-}
+

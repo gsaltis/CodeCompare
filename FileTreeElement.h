@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : SourceDifferencesItem.h
- * DATE         : April 25 2023
+ * FILE NAME    : FileTreeElement.h
+ * DATE         : April 28 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _sourcedifferencesitem_h_
-#define _sourcedifferencesitem_h_
+#ifndef _filetreeelement_h_
+#define _filetreeelement_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -13,74 +13,65 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
-#include <QLabel>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "FileSectionDiff.h"
+#include "FileContentsDiff.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define SOURCE_DIFFERENCES_ITEM_X       0
-#define SOURCE_DIFFERENCES_ITEM_Y       0
-#define SOURCE_DIFFERENCES_ITEM_WIDTH   200
-#define SOURCE_DIFFERENCES_ITEM_HEIGHT  20
 
 /*****************************************************************************!
- * Exported Class : SourceDifferencesItem
+ * Exported Class : FileTreeElement
  *****************************************************************************/
-class SourceDifferencesItem : public QWidget
+class FileTreeElement
 {
-  Q_OBJECT;
-
  //! Constructors
  public :
-  SourceDifferencesItem         (QWidget* InParent, int InY, int InWidth, FileSectionDiff* InDiff);
+  FileTreeElement               (QString InAbsoluteFileName1, QString InAbsoluteFileName2);
 
  //! Destructor
  public :
-  ~SourceDifferencesItem        ();
 
  //! Public Methods
  public :
+  QString                       GetAbsoluteFileName1    (void);
+  void                          SetAbsoluteFileName1    (QString InAbsoluteFileName1);
+  QString                       GetAbsoluteFileName2    (void);
+  void                          SetAbsoluteFileName2    (QString InAbsoluteFileName2);
+  virtual void                  Read                    ();
+  bool                          GetIsDirectory          ();
 
  //! Public Data
  public :
 
  //! Protected Methods
  protected :
-  void                          mousePressEvent         (QMouseEvent* InEvent);
-  
+
  //! Protected Data
  protected :
-
+  bool                          IsDirectory;
+  QString                       AbsoluteFileName1;
+  QString                       AbsoluteFileName2;
+  bool                          FilesHaveBeenRead;
+  
  //! Private Methods
  private :
-  void                          initialize              ();
-  void                          CreateSubWindows        ();
-  void                          InitializeSubWindows    ();
-  void                          resizeEvent             (QResizeEvent* InEvent);
 
  //! Private Data
  private :
-  QLabel*                       TypeNameLabel;
-  QLabel*                       LineNumbers1Label;
-  QLabel*                       LineNumbers2Label;
-  QList<QLabel*>                DifferenceLineLabels;
-  FileSectionDiff*              diff;
-  
+
  //! Public Slots
  public slots :
 
  //! Public Signals
  signals :
-  void                          SignalDifferenceSelected (FileSectionDiff* InDiff);
 
  //! Public Actions
  public :
 
 };
 
-#endif /* _sourcedifferencesitem_h_*/
+#endif /* _filetreeelement_h_*/

@@ -76,6 +76,9 @@ SOURCES                         += \
 				   DirectoryTreeElement.cpp                     \
 				   FileContentsDiff.cpp                         \
 				   FileSectionDiff.cpp                          \
+				   FileTreeDirectory.cpp                        \
+				   FileTreeElement.cpp                          \
+				   FileTreeFile.cpp                             \
 				   FileTreeWidgetItem.cpp                       \
 				   LineNumberArea.cpp                           \
 				   MainDisplayWindow.cpp                        \
@@ -135,6 +138,9 @@ HEADERS                         += \
 				   DirectoryTreeElement.h                       \
 				   FileContentsDiff.h                           \
 				   FileSectionDiff.h                            \
+				   FileTreeDirectory.h                          \
+				   FileTreeElement.h                            \
+				   FileTreeFile.h                               \
 				   FileTreeWidgetItem.h                         \
 				   LineNumberArea.h                             \
 				   MainDisplayWindow.h                          \
