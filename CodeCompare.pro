@@ -83,6 +83,7 @@ SOURCES                         += \
 				   LineNumberArea.cpp                           \
 				   MainDisplayWindow.cpp                        \
 				   MainWindow.cpp                               \
+                                   MonitoredLabel.cpp                           \
 				   SourceDifferencesItem.cpp                    \
 				   SourceDifferencesWindow.cpp                  \
 				   SourceFileCompareAnalyzeStatsWindow.cpp      \
@@ -145,6 +146,7 @@ HEADERS                         += \
 				   LineNumberArea.h                             \
 				   MainDisplayWindow.h                          \
 				   MainWindow.h                                 \
+                                   MonitoredLabel.h                             \                                   
 				   SourceDifferencesItem.h                      \
 				   SourceDifferencesWindow.h                    \
 				   SourceFileCompareAnalyzeStatsWindow.h        \

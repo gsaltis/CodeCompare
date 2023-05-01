@@ -72,6 +72,7 @@ class FileTreeWidgetItem : public QTreeWidgetItem
   QStringList                   GetFile2LinesSelection  (int InStartLine, int InEndLine);
   FileTreeElement*              GetTreeElement          ();
   void                          DiffFiles               (int &InLinesDifferCount);
+  int                           GetFileCount            ();
 
  //! Public Data
  public :

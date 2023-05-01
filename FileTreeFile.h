@@ -39,6 +39,7 @@ class FileTreeFile : public FileTreeElement
  //! Public Methods
  public :
   void                          Read                    () override;
+  int                           GetFileCount            () override;
   bool                          GetIsSourceFile         ();
   FileContentsDiff              GetDiffs                ();
   QStringList                   GetFileLines1           ();
@@ -47,7 +48,8 @@ class FileTreeFile : public FileTreeElement
   bool                          GetFilesHaveBeenRead    ();
   void                          SetFilesDiffer          (bool InFilesDiffer);
   void                          DiffFiles               ();
-
+  void                          Initialize              ();
+  
  //! Public Data
  public :
 

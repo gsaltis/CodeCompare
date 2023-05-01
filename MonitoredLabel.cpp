@@ -1,8 +1,8 @@
 /*****************************************************************************
- * FILE NAME    : FileTreeElement.cpp
- * DATE         : April 28 2023
+ * FILE NAME    : MonitoredLabel.cpp
+ * DATE         : May 01 2023
  * PROJECT      : 
- * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
+ * COPYRIGHT    : Copyright (C) 2023 by Vertiv Company
  *****************************************************************************/
 
 /*****************************************************************************!
@@ -15,84 +15,66 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "FileTreeElement.h"
+#include "MonitoredLabel.h"
 #include "trace.h"
 
 /*****************************************************************************!
- * Function : FileTreeElement
+ * Function : MonitoredLabel
  *****************************************************************************/
-FileTreeElement::FileTreeElement
-(QString InAbsoluteFileName1, QString InAbsoluteFileName2) : AbsoluteFileName1(InAbsoluteFileName1),
-                                                             AbsoluteFileName2(InAbsoluteFileName2)
-                                                             
+MonitoredLabel::MonitoredLabel
+() : QLabel()
 {
+  QPalette pal;
+  pal = palette();
+  pal.setBrush(QPalette::Window, QBrush(QColor(255, 255, 255)));
+  setPalette(pal);
+  setAutoFillBackground(true);
+  initialize();
 }
 
 /*****************************************************************************!
- * Function : GetAbsoluteFileName1
+ * Function : ~MonitoredLabel
  *****************************************************************************/
-QString
-FileTreeElement::GetAbsoluteFileName1(void)
-{
-  return AbsoluteFileName1;  
-}
-
-/*****************************************************************************!
- * Function : SetAbsoluteFileName1
- *****************************************************************************/
-void
-FileTreeElement::SetAbsoluteFileName1
-(QString InAbsoluteFileName1)
-{
-  AbsoluteFileName1 = InAbsoluteFileName1;  
-}
-
-/*****************************************************************************!
- * Function : GetAbsoluteFileName2
- *****************************************************************************/
-QString
-FileTreeElement::GetAbsoluteFileName2(void)
-{
-  return AbsoluteFileName2;  
-}
-
-/*****************************************************************************!
- * Function : SetAbsoluteFileName2
- *****************************************************************************/
-void
-FileTreeElement::SetAbsoluteFileName2
-(QString InAbsoluteFileName2)
-{
-  AbsoluteFileName2 = InAbsoluteFileName2;  
-}
-
-/*****************************************************************************!
- * Function : GetIsDirectory
- *****************************************************************************/
-bool
-FileTreeElement::GetIsDirectory
+MonitoredLabel::~MonitoredLabel
 ()
 {
-  return IsDirectory;
 }
 
 /*****************************************************************************!
- * Function : Read
+ * Function : initialize
  *****************************************************************************/
 void
-FileTreeElement::Read
-()
+MonitoredLabel::initialize()
 {
-
+  InitializeSubWindows();  
+  CreateSubWindows();
 }
 
 /*****************************************************************************!
- * Function : GetFileCount
+ * Function : CreateSubWindows
  *****************************************************************************/
-int
-FileTreeElement::GetFileCount
-()
+void
+MonitoredLabel::CreateSubWindows()
 {
-  return 0;
+  
 }
 
+/*****************************************************************************!
+ * Function : InitializeSubWindows
+ *****************************************************************************/
+void
+MonitoredLabel::InitializeSubWindows()
+{
+  
+}
+
+/*****************************************************************************!
+ * Function : setText
+ *****************************************************************************/
+void
+MonitoredLabel::setText
+(QString InText)
+{
+  QLabel::setText(InText);
+  emit SignalTextChanged(InText);
+}

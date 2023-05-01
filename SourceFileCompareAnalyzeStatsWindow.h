@@ -19,6 +19,7 @@
  * Local Headers
  *****************************************************************************/
 #include "SourceFileCompareStatsWindow.h"
+#include "MonitoredLabel.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -59,7 +60,7 @@ class SourceFileCompareAnalyzeStatsWindow : public SourceFileCompareStatsWindow
  //! Protected Data
  protected :
   QLabel*                       fileCountLabel;
-  QLabel*                       fileDifferCountLabel;
+  MonitoredLabel*               fileDifferCountLabel;
   QLabel*                       fileSourceCountLabel;
   QLabel*                       fileCurrentSourceCountLabel;
   int                           currentSourceCount;
@@ -78,6 +79,7 @@ class SourceFileCompareAnalyzeStatsWindow : public SourceFileCompareStatsWindow
 
  //! Public Slots
  public slots :
+  void                          SlotDifferLabelValueChanged (QString InString);
 
  //! Public Signals
  signals :

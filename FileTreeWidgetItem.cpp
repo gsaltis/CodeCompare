@@ -244,7 +244,7 @@ FileTreeWidgetItem::GetChangeLinesCount
 }
 
 /*****************************************************************************!
- * Function : ReadFiles
+ * Function : ReadFilesx
  *****************************************************************************/
 void
 FileTreeWidgetItem::ReadFiles(void)
@@ -394,5 +394,22 @@ FileTreeWidgetItem::GetDifferences
   return fileElement->GetDiffs();
 }
 
-  
-  
+/*****************************************************************************!
+ * Function : GetFileCount
+ *****************************************************************************/
+int
+FileTreeWidgetItem::GetFileCount
+()
+{
+  int                                   n;
+  if ( TreeElement == NULL ) {
+    return 0;
+  }
+
+  if ( TreeElement->GetIsDirectory() ) {
+    n = TreeElement->GetFileCount();
+    return n;
+  }
+  return 1;
+}
+

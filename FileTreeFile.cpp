@@ -17,6 +17,7 @@
  *****************************************************************************/
 #include "FileTreeFile.h"
 #include "main.h"
+#include "trace.h"
 
 /*****************************************************************************!
  * Function : FileTreeFile
@@ -24,6 +25,7 @@
 FileTreeFile::FileTreeFile
 (QString InAbsoluteFileName1, QString InAbsoluteFileName2) : FileTreeElement(InAbsoluteFileName1, InAbsoluteFileName2)
 {
+  Initialize();
 }
 
 /*****************************************************************************!
@@ -32,6 +34,17 @@ FileTreeFile::FileTreeFile
 FileTreeFile::~FileTreeFile
 ()
 {
+}
+
+/*****************************************************************************!
+ * Function : Initialize
+ *****************************************************************************/
+void
+FileTreeFile::Initialize
+()
+{
+  IsDirectory = false;
+  FilesHaveBeenRead = false;
 }
 
 /*****************************************************************************!
@@ -162,7 +175,7 @@ FileTreeFile::DiffFiles
   diffProcess.waitForFinished();
   stdOutput = QString(diffProcess.readAllStandardOutput().trimmed());
   if ( !stdOutput.isEmpty() ) {
-    // ParseDiffLines(stdOutput);
+    Diffs.ParseLines(stdOutput);
     FilesDiffer = true;
   } else {
     FilesDiffer = false;
@@ -177,5 +190,15 @@ FileTreeFile::SetFilesDiffer
 (bool InFilesDiffer)
 {
   FilesDiffer = InFilesDiffer;
+}
+
+/*****************************************************************************!
+ * Function : GetFileCount
+ *****************************************************************************/
+int
+FileTreeFile::GetFileCount
+()
+{
+  return 1;
 }
 

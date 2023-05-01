@@ -16,6 +16,7 @@
  * Local Headers
  *****************************************************************************/
 #include "FileTreeDirectory.h"
+#include "trace.h"
 
 /*****************************************************************************!
  * Function : FileTreeDirectory
@@ -24,6 +25,8 @@ FileTreeDirectory::FileTreeDirectory
 (QString InAbsoluteFilename1, QString InAbsoluteFilename2) : FileTreeElement(InAbsoluteFilename1,
                                                                              InAbsoluteFilename2)
 {
+  FilesHaveBeenRead = false;
+  IsDirectory = true;
 }
 
 /*****************************************************************************!
@@ -43,5 +46,23 @@ FileTreeDirectory::Read
 {
 
 
+}
+
+/*****************************************************************************!
+ * Function : GetFileCount
+ *****************************************************************************/
+int
+FileTreeDirectory::GetFileCount
+()
+{
+  int                                   m, n, i;
+
+  n = count();
+  m = 0;
+  for (i = 0; i < n; i++) {
+    auto f = at(i);
+    m += f.GetFileCount();
+  }
+  return m;
 }
 

@@ -1,46 +1,50 @@
 /*****************************************************************************
- * FILE NAME    : FileTreeDirectory.h
- * DATE         : April 28 2023
+ * FILE NAME    : MonitoredLabel.h
+ * DATE         : May 01 2023
  * PROJECT      : 
- * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
+ * COPYRIGHT    : Copyright (C) 2023 by Vertiv Company
  *****************************************************************************/
-#ifndef _filetreedirectory_h_
-#define _filetreedirectory_h_
+#ifndef _monitoredlabel_h_
+#define _monitoredlabel_h_
 
 /*****************************************************************************!
  * Global Headers
  *****************************************************************************/
 #include <QtCore>
 #include <QtGui>
+#include <QLabel>
 #include <QWidget>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "FileTreeElement.h"
-#include "FileTreeFile.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
+#define MONITORED_LABEL_X               200
+#define MONITORED_LABEL_Y               200
+#define MONITORED_LABEL_WIDTH           200
+#define MONITORED_LABEL_HEIGHT          200
 
 /*****************************************************************************!
- * Exported Class : FileTreeDirectory
+ * Exported Class : MonitoredLabel
  *****************************************************************************/
-class FileTreeDirectory : public FileTreeElement , QList<FileTreeFile>
+class MonitoredLabel : public QLabel
 {
+  Q_OBJECT;
+
  //! Constructors
  public :
-  FileTreeDirectory             (QString InAbsoluteFileName1, QString InAbsoluteFilename2);
+  MonitoredLabel                ();
 
  //! Destructor
  public :
-  ~FileTreeDirectory            ();
+  ~MonitoredLabel               ();
 
  //! Public Methods
  public :
-  void                 Read                             () override;
-  int                  GetFileCount                     () override;
+  void                          setText                 (QString InText);
 
  //! Public Data
  public :
@@ -53,6 +57,9 @@ class FileTreeDirectory : public FileTreeElement , QList<FileTreeFile>
 
  //! Private Methods
  private :
+  void                          initialize              ();
+  void                          CreateSubWindows        ();
+  void                          InitializeSubWindows    ();
 
  //! Private Data
  private :
@@ -62,10 +69,11 @@ class FileTreeDirectory : public FileTreeElement , QList<FileTreeFile>
 
  //! Public Signals
  signals :
+  void                          SignalTextChanged       (QString InString);
 
  //! Public Actions
  public :
 
 };
 
-#endif /* _filetreedirectory_h_*/
+#endif /* _monitoredlabel_h_*/

@@ -13,6 +13,7 @@
 #include <QWidget>
 #include <QApplication>
 #include <QMessageBox>
+#include <QHeaderView>
 
 /*****************************************************************************!
  * Local Headers
@@ -130,6 +131,7 @@ MainDisplayWindow::CreateSubWindows()
   headerItem = new QTreeWidgetItem();
   headerItem->setText(0, "Track 1");
   headerItem->setText(1, "Track 2");
+  sourceFileCompareTree->header()->resizeSection(0, 200);
   sourceFileCompareTree->resize(300, windowH);
   
   sourceDiffWindow = new SourceDifferencesWindow();
@@ -155,7 +157,6 @@ MainDisplayWindow::CreateSubWindows()
                                                 sourceFileCompareToolBar,
                                                 QString("File Comparison"));
   compareContainer = new SourceFileCompareTreeContainer(sourceFileCompareContainer, sourceFileCompareTree);
-  // sourceFileCompareTree->resize(300, 100);
 
   splitter = new QSplitter(this);
   sourceFilesSplitter = new QSplitter();
@@ -369,8 +370,9 @@ MainDisplayWindow::SetTracksDirectoryNames
 
   sourceItems = new FileTreeWidgetItem("", sourceFileCompareTree, true);
   sourceItems->setText(0, "Source");
-
+  
   PopulateDirectoriesAndFiles(sourceItems, Track1DirectoryName, Track2DirectoryName);
+  sourceFileCompareTree->expandItem(sourceItems);
 }
 
 /*****************************************************************************!
@@ -683,7 +685,6 @@ MainDisplayWindow::SlotTreeWidgetItemSelected
   item = (FileTreeWidgetItem*)InItem;
   fileName1 = item->GetAbsoluteFileName1();
   fileName2 = item->GetAbsoluteFileName2();
-
   codeWindowContainer1->SetHeaderText(fileName1);
   codeWindowContainer2->SetHeaderText(fileName2);
   item->ReadFiles();

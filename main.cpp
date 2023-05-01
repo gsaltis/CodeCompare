@@ -58,6 +58,7 @@ int
 main
 (int argc, char** argv)
 {
+  QString                               systemConfigFileName;
   QString                               mainTrack1Directory;
   QString                               mainTrack2Directory;
   MainWindow*                           w;
@@ -83,13 +84,21 @@ main
   QCommandLineOption codeBase2NameOption(QStringList() << "2" << "track2",
                                          QCoreApplication::translate("main", "Specifiy a codebase for seconde track <basepath>."),
                                          QCoreApplication::translate("main", "codepath"));
+  QCommandLineOption SystemConfigOption(QStringList() << "s" << "system",
+                                         QCoreApplication::translate("main", "Specifiy a System Configuration file>."),
+                                         QCoreApplication::translate("main", "system"));
   commandLineParser.addOption(codeBase1NameOption);
   commandLineParser.addOption(codeBase2NameOption);
+  commandLineParser.addOption(SystemConfigOption);
   commandLineParser.process(*application);
   mainCodeBase = commandLineParser.value(codeBase1NameOption);
   mainTrack1Directory = commandLineParser.value(codeBase1NameOption);
   mainTrack2Directory = commandLineParser.value(codeBase2NameOption);
-  
+  systemConfigFileName = commandLineParser.value(SystemConfigOption);
+
+  if ( ! systemConfigFileName.isEmpty() ) {
+    MainConfigFilename = systemConfigFileName;
+  }
   mainSystemConfig = new SystemConfig();
   mainSystemConfig->ReadJSON(MainConfigFilename);
   w = new MainWindow(NULL);

@@ -214,20 +214,18 @@ int
 SourceFileCompareTreeContainer::GetFileCount(void)
 {
   FileTreeWidgetItem*                   item;
-  int                                   count;
-  
+  int                                   n;
   item = (FileTreeWidgetItem*)sourceTree->topLevelItem(0);
-  count = 0;
 
-  GetItemFileCount(item, count);
-  return count;
+  n = item->GetFileCount();
+  return n;
 }
 
 /*****************************************************************************!
  * Function : GetItemFileCount
  *****************************************************************************/
 void
-SourceFileCompareTreeContainer::GetItemFileCount // 
+SourceFileCompareTreeContainer::GetItemFileCount 
 (FileTreeWidgetItem* InItem, int &InCount)
 {
   int                                   i;

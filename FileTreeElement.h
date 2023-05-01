@@ -43,7 +43,8 @@ class FileTreeElement
   void                          SetAbsoluteFileName2    (QString InAbsoluteFileName2);
   virtual void                  Read                    ();
   bool                          GetIsDirectory          ();
-
+  virtual int                   GetFileCount            ();
+  
  //! Public Data
  public :
 

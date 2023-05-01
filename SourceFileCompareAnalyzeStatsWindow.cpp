@@ -46,6 +46,8 @@ SourceFileCompareAnalyzeStatsWindow::~SourceFileCompareAnalyzeStatsWindow
 void
 SourceFileCompareAnalyzeStatsWindow::initialize()
 {
+  currentSourceCount = 0;
+  differSourceCount = 0;
   InitializeSubWindows();  
   CreateSubWindows();
 }
@@ -89,10 +91,14 @@ SourceFileCompareAnalyzeStatsWindow::CreateSubWindows()
   label->setFont(font);
 
   //! Create label
-  fileDifferCountLabel = new QLabel();
+  fileDifferCountLabel = new MonitoredLabel();
   fileDifferCountLabel->setParent(this);
   fileDifferCountLabel->move(labelWidth + 15, y);
   fileDifferCountLabel->resize(100, 20);
+  connect(fileDifferCountLabel,
+          SIGNAL(SignalTextChanged(QString)),
+          this,
+          SLOT(SlotDifferLabelValueChanged(QString)));
   fileDifferCountLabel->setText("lkj");
   fileDifferCountLabel->setAlignment(Qt::AlignLeft);
   y += 25;
@@ -257,3 +263,12 @@ SourceFileCompareAnalyzeStatsWindow::SetFileCurrentSourceCount
                                 .arg(currentSourceCount));
 }
 
+/*****************************************************************************!
+ * Function : SlotDifferLabelValueChanged
+ *****************************************************************************/
+void
+SourceFileCompareAnalyzeStatsWindow::SlotDifferLabelValueChanged
+(QString InString)
+{
+  (void)InString;
+}
