@@ -133,7 +133,7 @@ DependencyTreeWindow::CreateSubWindows()
   treeHeader = new QTreeWidgetItem(static_cast<QTreeWidget*>(nullptr), QStringList(QString("Name")));
   treeHeader->setData(0, Qt::ForegroundRole, fg);
   treeHeader->setBackground(0, bg); // setData(0, Qt::BackgroundRole, bg);
-  treeHeader->setFont(0, QFont("Segoe UI", 10, QFont::Bold));
+  treeHeader->setFont(0, QFont("", 10, QFont::Bold));
 
   directoryTreeWindow->setHeaderItem(treeHeader);
   connect(pathLineSelectButton, SIGNAL(pressed()), this, SLOT(SlotpathLineSelectPushed()));

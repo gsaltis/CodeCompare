@@ -257,7 +257,7 @@ BuildTreeJSONCodeContainer::ProcessInnerTranslationUnitArray
   headerItem->setTextAlignment(0, Qt::AlignCenter | Qt::AlignVCenter);
   headerItem->setTextAlignment(1, Qt::AlignLeft | Qt::AlignVCenter);
   font = headerItem->font(0);
-  font.setBold(true);
+  // font.setBold(true);
   headerItem->setFont(0, font);
   headerItem->setText(0, QString("Name"));
   headerItem->setBackground(0, QBrush(QColor(255, 192, 192)));
@@ -335,7 +335,9 @@ void
 BuildTreeJSONCodeContainer::FontifyTreeItem
 (QTreeWidgetItem* InTreeItem, QString InKind)
 {
-  QFont                                 font = QFont("", 9, QFont::Bold);
+  QFont                                 font = InTreeItem->font(0);
+
+  font.setBold(true);
   if ( InKind == "VarDecl" ) {
     InTreeItem->setForeground(0, QBrush(QColor(0, 0, 128)));
     InTreeItem->setFont(0, font);

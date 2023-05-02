@@ -150,11 +150,33 @@ SourceDifferencesWindow::DisplayChanges(void)
   y = 0;
   height = 0;
   for (i = 0; i < n; i++) {
-    auto s = new SourceDifferencesItem(fileItem, container, y, width, &diffs[i]);
+    auto s = new SourceDifferencesItem(fileItem, container, y, width, new FileSectionDiff(&diffs[i]));
+    connect(s,
+            SIGNAL(SignalDifferenceSelected(FileSectionDiff*)),
+            this,
+            SLOT(SlotDifferenceSelected(FileSectionDiff*)));
     differenceItems << s;
     h = s->size().height();
     y += h;
     height += h;
   }
   container->resize(width, height);
+}
+
+/*****************************************************************************!
+ * Function : SlotDifferenceSelected
+ *****************************************************************************/
+void
+SourceDifferencesWindow::SlotDifferenceSelected
+(FileSectionDiff* InItem)
+{
+  int                                   targetStartLine;
+  int                                   sourceStartLine;
+  QString                               typeString;
+
+  typeString = InItem->GetTypeString();
+  targetStartLine = InItem->GetTargetStartLine();
+  sourceStartLine = InItem->GetStartLine();
+  emit SignalTrack1CodeLineChanged(sourceStartLine);
+  emit SignalTrack2CodeLineChanged(targetStartLine);
 }

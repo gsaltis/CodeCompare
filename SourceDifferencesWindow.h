@@ -76,9 +76,12 @@ class SourceDifferencesWindow : public QWidget
  //! Public Slots
  public slots :
   void                          SlotSetFileItem         (FileTreeFile* InFileItem);
-
+  void                          SlotDifferenceSelected  (FileSectionDiff* InItem);
+  
  //! Public Signals
  signals :
+  void                          SignalTrack1CodeLineChanged (int InStartLine);
+  void                          SignalTrack2CodeLineChanged (int InStartLine);
 
  //! Public Actions
  public :

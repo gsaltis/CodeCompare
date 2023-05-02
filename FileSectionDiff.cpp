@@ -113,10 +113,8 @@ FileSectionDiff::ParseLine
 
   sourceStartLine = first1;
   sourceEndLine = last1;
-  sourceLineCount = lineCount1;
   targetStartLine = first2;
   targetEndLine = last2;
-  targetLineCount = lineCount2;
   
   InCurrentLine++;
   if ( command == "c" ) {
@@ -265,6 +263,21 @@ FileSectionDiff::ParseLine
 #endif  
 }
 
+/*****************************************************************************!
+ * Function : FileSectionDiff
+ *****************************************************************************/
+FileSectionDiff::FileSectionDiff
+(FileSectionDiff* InDiff)
+{
+  sourceStartLine       = InDiff->GetStartLine();
+  sourceEndLine         = InDiff->GetEndLine();
+  targetStartLine       = InDiff->GetTargetStartLine();
+  targetEndLine         = InDiff->GetTargetEndLine();
+  type                  = InDiff->GetType();
+  sourceChangeLines     = InDiff->GetSourceChangeLines();
+  targetChangeLines     = InDiff->GetTargetChangeLines();
+}
+  
 /*****************************************************************************!
  * Function : GetType
  *****************************************************************************/

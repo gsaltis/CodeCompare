@@ -75,6 +75,7 @@ class CodeEditor : public QPlainTextEdit
  //! Public Slots
  public slots :
   void                          updateLineNumberArea    (const QRect &rect, int dy);
+  void                          SlotSetCurrentLine      (int InLineNumber);
 
  //! Public Signals
  signals :

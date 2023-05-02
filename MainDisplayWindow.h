@@ -124,6 +124,8 @@ class MainDisplayWindow : public QWidget
   void                          SlotFileDifferInformation (void);
   void                          SlotAnalyzeDifferences  (void);
   void                          SlotSaveSummaryFile     (void);
+  void                          SlotTrack1CodeLineChanged (int InStartLine);
+  void                          SlotTrack2CodeLineChanged (int InStartLine);
 
  //! Public Signals
  signals :

@@ -319,6 +319,15 @@ MainDisplayWindow::CreateConnections(void)
           SIGNAL(SignalFileItemSelected(FileTreeFile*)),
           sourceDiffWindow,
           SLOT(SlotSetFileItem(FileTreeFile*)));
+
+  connect(sourceDiffWindow,
+          SIGNAL(SignalTrack1CodeLineChanged(int)),
+          this,
+          SLOT(SlotTrack1CodeLineChanged(int)));
+  connect(sourceDiffWindow,
+          SIGNAL(SignalTrack2CodeLineChanged(int)),
+          this,
+          SLOT(SlotTrack2CodeLineChanged(int)));
 }
 
 /*****************************************************************************!
@@ -855,4 +864,25 @@ MainDisplayWindow::SlotSaveSummaryFile(void)
   if ( CreateComparisonSummary() ) {
     emit SignalSendDisplayMessage(QString("Comparison Summary Created"));
   }
+}
+
+/*****************************************************************************!
+ * Function : SlotTrack1CodeLineChanged
+ *****************************************************************************/
+void
+MainDisplayWindow::SlotTrack1CodeLineChanged
+(int InStartLine)
+{
+  codeWindow1->SlotSetCurrentLine(InStartLine);
+}
+
+/*****************************************************************************!
+ * Function : SlotTrack2CodeLineChanged
+ *****************************************************************************/
+void
+MainDisplayWindow::SlotTrack2CodeLineChanged
+(int InStartLine)
+{
+  codeWindow2->SlotSetCurrentLine(InStartLine);
+  
 }

@@ -30,6 +30,7 @@ class FileSectionDiff
  //! Constructors
  public :
   FileSectionDiff               (QStringList InLines, int &InCurrentLine);
+  FileSectionDiff               (FileSectionDiff* InDiff);
 
  //! Destructor
  public :
@@ -77,10 +78,8 @@ class FileSectionDiff
   QStringList                           targetChangeLines;
   int                                   sourceStartLine;
   int                                   sourceEndLine;
-  int                                   sourceLineCount;
   int                                   targetStartLine;
   int                                   targetEndLine;
-  int                                   targetLineCount;
 
  //! Public Slots
  public slots :

@@ -6,7 +6,7 @@
     "height"                            : 1020
   },
   "Paths" : {
-    "sourcepath"                        : "D:/Source/NCUCodeMerge/Track2_NCU_Code/src"
+    "sourcepath"                        : "C:/users/greg.saltis/Source/NCUCodeMerge/Track2_NCU_Code/src"
   },
   "Diff" : {
     "diff"                              : "C:\\Program Files (x86)\\Vim\\vim82\\diff.exe",
@@ -19,13 +19,13 @@
     "needlibdl"                         : true
   },
   "Clang" : {
-    "clang"                             : "c:\\Program Files (x86)\\Clang\\bin\\clang.exe",
+    "clang"                             : "c:\\Program Files\\LLVM\\bin\\clang.exe",
     "includepaths"                      : [
       { "option" : "-isystem ",
-        "path" : "d:/Source/NCUCodeMerge/arm926/host-cross/arm-wrs-linux-gnueabi/sysroot/usr/include"
+        "path" : "C:\\users\\greg.saltis\\Source\\arm926\\host-cross\\arm-wrs-linux-gnueabi\\sysroot\\usr\\include"
       },
       { "option" : "-I",
-        "path" : "D:/Source/NCUCodeMerge/Track2_NCU_CODE/src/include"
+        "path" : "C:/users/greg.saltis/Source/NCUCodeMerge/Track2_NCU_CODE/src/include"
       }
     ],
     "options" : [
@@ -38,7 +38,7 @@
     },
     "headerexcludepaths" : [
       "C:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32",
-      "c:/Program Files (x86)/Clang"
+      "c:/Program Files (x86)/LLVM"
     ],
     "codegather" : {
       "options" : [

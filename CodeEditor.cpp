@@ -181,3 +181,17 @@ void CodeEditor::updateLineNumberArea(const QRect &rect, int dy)
     if (rect.contains(viewport()->rect()))
         updateLineNumberAreaWidth(0);
 }
+
+/*****************************************************************************!
+ * Function : SlotSetCurrentLine
+ *****************************************************************************/
+void
+CodeEditor::SlotSetCurrentLine
+(int InLineNumber)
+{
+  QTextDocument* textDoc = document();
+  QTextCursor textCursor(textDoc->findBlockByLineNumber(InLineNumber - 1));
+  
+  textCursor.select(QTextCursor::LineUnderCursor);
+  setTextCursor(textCursor);
+}

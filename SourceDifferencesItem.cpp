@@ -23,13 +23,15 @@
  *****************************************************************************/
 SourceDifferencesItem::SourceDifferencesItem
 (FileTreeFile* InFileItem, QWidget* InParent, int InY, int InWidth, FileSectionDiff* InDiff) :
-  QWidget(InParent), diff(InDiff), fileItem(InFileItem)
+  QWidget(InParent), fileItem(InFileItem)
 {
   int                                   n;
   int                                   height;
   QPalette pal;
   move(0, InY);
   setParent(InParent);
+
+  diff = InDiff;
   n = diff->GetTargetLinesChangedCount() + diff->GetLinesChangedCount();
   height = SOURCE_DIFFERENCES_ITEM_HEIGHT * n;
   height = height == 0 ? SOURCE_DIFFERENCES_ITEM_HEIGHT : height;
@@ -231,7 +233,6 @@ SourceDifferencesItem::mousePressEvent
   if ( button != Qt::LeftButton ) {
     return;
   }
-
   emit SignalDifferenceSelected(diff);
 }
 
