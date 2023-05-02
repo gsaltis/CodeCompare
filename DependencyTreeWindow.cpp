@@ -308,7 +308,7 @@ DependencyTreeWindow::ProcessTopLevelDirectory
   QString                               fullPath;
   QString                               name = InInfo.fileName();
   QBrush                                fg(Qt::gray);
-  
+
   fullPath = InInfo.absoluteFilePath();
   makeFileName = fullPath + QString("/Makefile");
 
@@ -392,7 +392,6 @@ void
 DependencyTreeWindow::SlotSourceDirectorySelected
 (QString InSourceDirectoryName)
 {
-
   QDir                                  dir(InSourceDirectoryName,
                                             QString(""), QDir::Name,
                                             QDir::Dirs | QDir::NoDotAndDotDot);

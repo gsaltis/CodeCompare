@@ -41,6 +41,9 @@ mainSystemConfig;
 QString
 mainCodeBase = QString("");
 
+bool
+mainStartAnalysis = false;
+
 QApplication*
 application;
 
@@ -87,15 +90,19 @@ main
   QCommandLineOption SystemConfigOption(QStringList() << "s" << "system",
                                          QCoreApplication::translate("main", "Specifiy a System Configuration file>."),
                                          QCoreApplication::translate("main", "system"));
+  QCommandLineOption StartAnalysisOption(QStringList() << "a" << "analysis",
+                                         QCoreApplication::translate("main", "Start Analysis at start up."));
   commandLineParser.addOption(codeBase1NameOption);
   commandLineParser.addOption(codeBase2NameOption);
   commandLineParser.addOption(SystemConfigOption);
+  commandLineParser.addOption(StartAnalysisOption);
   commandLineParser.process(*application);
   mainCodeBase = commandLineParser.value(codeBase1NameOption);
   mainTrack1Directory = commandLineParser.value(codeBase1NameOption);
   mainTrack2Directory = commandLineParser.value(codeBase2NameOption);
   systemConfigFileName = commandLineParser.value(SystemConfigOption);
-
+  mainStartAnalysis = commandLineParser.isSet(StartAnalysisOption);
+  
   if ( ! systemConfigFileName.isEmpty() ) {
     MainConfigFilename = systemConfigFileName;
   }
@@ -108,6 +115,9 @@ main
   if ( !mainTrack1Directory.isEmpty() && !mainTrack2Directory.isEmpty() ) {
     if ( VerifyCodeTracks(mainTrack1Directory, mainTrack2Directory) ) {
       w->SetTracksDirectoryNames(mainTrack1Directory, mainTrack2Directory);
+      if ( mainStartAnalysis ) {
+        w->StartAnalysis();
+      }
     } else {
       exit(EXIT_FAILURE);
     }
@@ -152,5 +162,3 @@ VerifyCodeTracks
 
   return true;
 }
-
-  

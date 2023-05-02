@@ -211,6 +211,7 @@ void
 DependencyTreeWidgetItem::PerformMake
 ()
 {
+  QString                               errorString;
   QString                               text;
   QString                               fullPath;
   QProcess                              makeProcess;
@@ -244,6 +245,7 @@ DependencyTreeWidgetItem::PerformMake
   makeProcess.start(program, args);
   makeProcess.waitForFinished();
   outputString = QString(makeProcess.readAllStandardOutput());
+  errorString = QString(makeProcess.readAllStandardError());
   ParseMakefileOutput(outputString, fullPath);
   if ( mainSystemConfig->GetMakeNeedLIBDLTarget() ) {
     if ( ! alreadyHasLIBDL ) {

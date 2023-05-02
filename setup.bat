@@ -7,6 +7,7 @@ doskey mq=qmake
 doskey co=release\CodeCompare $*
 rem doskey co2=release\CodeCompare -1 C:\users\greg.saltis\Source\NCUCodeMerge\Track3_NCU_Code-master\G3\src -2 C:\users\greg.saltis\Source\NCUCodeMerge\Track2_NCU_Code-master\src $*
 doskey co2=release\CodeCompare -1 D:\Source\NCUCodeMerge\Track3_NCU_Code\G3\src -2 D:\Source\NCUCodeMerge\Track2_NCU_Code\src $*
-doskey co1=release\CodeCompare -1 C:\Source\NCUCodeMerge\Track2_NCU_Code\src
+rem doskey co1=release\CodeCompare -1 C:\Source\NCUCodeMerge\Track2_NCU_Code\src
+doskey co1=release\CodeCompare -1 D:\Source\NCUCodeMerge\Track2_NCU_Code\src
 doskey cod=gdb debug\CodeCompare $*
 title CodeCompare

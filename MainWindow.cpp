@@ -233,3 +233,14 @@ MainWindow::SlotSetMessage
 {
   messageWindow->setText(InMessage);
 }
+
+/*****************************************************************************!
+ * Function : StartAnalysis
+ *****************************************************************************/
+void
+MainWindow::StartAnalysis
+()
+{
+  displayWindow->SlotAnalyzeDifferences();
+
+}

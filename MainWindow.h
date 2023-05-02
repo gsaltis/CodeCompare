@@ -49,6 +49,7 @@ class MainWindow : public QMainWindow
  public :
   void                          SetCodeBaseDirectoryName(QString InCodeBaseDirectoryName);
   void                          SetTracksDirectoryNames         (QString InTrack1DirectoryName, QString InTrack2DirectoryName);
+  void                          StartAnalysis                   ();
 
  //! Public Data
  public :
