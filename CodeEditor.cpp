@@ -191,7 +191,8 @@ CodeEditor::SlotSetCurrentLine
 {
   QTextDocument* textDoc = document();
   QTextCursor textCursor(textDoc->findBlockByLineNumber(InLineNumber - 1));
-  
-  textCursor.select(QTextCursor::LineUnderCursor);
+  // textCursor.select(QTextCursor::LineUnderCursor);
+  textCursor.movePosition(QTextCursor::StartOfLine);
   setTextCursor(textCursor);
+  centerCursor();
 }

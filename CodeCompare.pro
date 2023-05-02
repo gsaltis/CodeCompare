@@ -4,6 +4,8 @@ QMAKE_CC                        = @echo [C+] $@ && gcc
 
 QMAKE_MOC                       = @echo [MO] $@ && moc 
 
+QMAKE_MOC_EXE                   = @echo [MO] $@ && moc.exe
+
 QMAKE_LINK                      = @echo [LD] $@ && g++ 
 
 QMAKE_RC                        = @echo [RC] $@ && windres 

@@ -31,13 +31,17 @@ SourceDifferencesItem::SourceDifferencesItem
   move(0, InY);
   setParent(InParent);
 
+  baseColor = QColor(51, 102, 153);
+  selectedColor = baseColor.darker(150);
+  
+  setMouseTracking(true);
   diff = InDiff;
   n = diff->GetTargetLinesChangedCount() + diff->GetLinesChangedCount();
   height = SOURCE_DIFFERENCES_ITEM_HEIGHT * n;
   height = height == 0 ? SOURCE_DIFFERENCES_ITEM_HEIGHT : height;
   resize(InWidth, height);
   pal = palette();
-  pal.setBrush(QPalette::Window, QBrush(QColor(255, 255, 255, 0)));
+  pal.setBrush(QPalette::Window, QBrush(baseColor));
   setPalette(pal);
   setAutoFillBackground(true);
   setCursor(Qt::PointingHandCursor);
@@ -234,5 +238,49 @@ SourceDifferencesItem::mousePressEvent
     return;
   }
   emit SignalDifferenceSelected(diff);
+}
+
+/*****************************************************************************!
+ * Function : mouseMoveEvent
+ *****************************************************************************/
+void
+SourceDifferencesItem::mouseMoveEvent
+(QMouseEvent* InEvent)
+{
+  Qt::KeyboardModifiers                 mods = InEvent->modifiers();
+  Qt::MouseButton                       button = InEvent->button();
+
+  if ( mods != Qt::NoModifier ) {
+    return;
+  }
+
+  if ( button != Qt::LeftButton ) {
+    return;
+  }
+  emit SignalDifferenceSelected(diff);
+}
+
+/*****************************************************************************!
+ * 
+ *****************************************************************************/
+void
+SourceDifferencesItem::enterEvent
+(QEnterEvent* )
+{
+  QPalette pal = palette();
+  pal.setBrush(QPalette::Window, QBrush(selectedColor));
+  setPalette(pal);
+}
+
+/*****************************************************************************!
+ * 
+ *****************************************************************************/
+void
+SourceDifferencesItem::leaveEvent
+(QEvent* )
+{
+  QPalette pal = palette();
+  pal.setBrush(QPalette::Window, QBrush(baseColor));
+  setPalette(pal);
 }
 

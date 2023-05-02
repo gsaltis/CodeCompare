@@ -53,6 +53,9 @@ class SourceDifferencesItem : public QWidget
  //! Protected Methods
  protected :
   void                          mousePressEvent         (QMouseEvent* InEvent);
+  void                          mouseMoveEvent          (QMouseEvent* InEvent);
+  virtual void                  enterEvent              (QEnterEvent* InEvent);
+  virtual void                  leaveEvent              (QEvent* InEvent);
   
  //! Protected Data
  protected :
@@ -73,6 +76,8 @@ class SourceDifferencesItem : public QWidget
   QList<QLabel*>                DifferenceLineLabels;
   FileSectionDiff*              diff;
   FileTreeFile*                 fileItem;
+  QColor                        baseColor;
+  QColor                        selectedColor;
   
  //! Public Slots
  public slots :
