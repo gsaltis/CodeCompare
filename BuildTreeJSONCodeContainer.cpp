@@ -12,6 +12,8 @@
 #include <QtGui>
 #include <QWidget>
 #include <QJsonDocument>
+#include <QTreeWidgetItem>
+#include <QHeaderView>
 
 /*****************************************************************************!
  * Local Headers
@@ -61,18 +63,18 @@ BuildTreeJSONCodeContainer::initialize()
 void
 BuildTreeJSONCodeContainer::CreateSubWindows()
 {
-  splitter = new QSplitter(this);
+  QTreeWidgetItem*                              headerItem;
+  QHeaderView*                                  headerView;
+  
   jsonFileDisplay = new QTreeWidget(this);
   jsonFileDisplay->move(0, 0);
   jsonFileDisplay->setColumnCount(2);
-
-  errorWindow = new QTextEdit(this);
-  splitter->addWidget(jsonFileDisplay);
-  splitter->addWidget(errorWindow);
-  splitter->setOrientation(Qt::Vertical);
-
-  errorWindowHeight = 200;
-  errorWindow->setMaximumHeight(errorWindowHeight);
+  headerView = jsonFileDisplay->header();
+  headerItem = new QTreeWidgetItem();
+  headerItem->setText(0, "Name");
+  headerItem->setText(1, "Value");
+  headerView->resizeSection(0, 200);
+  jsonFileDisplay->setHeaderItem(headerItem);
 }
 
 /*****************************************************************************!
@@ -81,15 +83,6 @@ BuildTreeJSONCodeContainer::CreateSubWindows()
 void
 BuildTreeJSONCodeContainer::InitializeSubWindows()
 {
-  QPalette                              pal;
-  QColor                                background = QColor(0, 0, 200);
-  
-  errorWindow->setTextBackgroundColor(background);
-  errorWindow->setTextColor(QColor(240, 240, 0));
-  pal = errorWindow->palette();
-  pal.setBrush(QPalette::Base, QBrush(background));
-  errorWindow->setPalette(pal);
-  errorWindow->setAutoFillBackground(true);
 }
 
 /*****************************************************************************!
@@ -106,7 +99,7 @@ BuildTreeJSONCodeContainer::resizeEvent
   size = InEvent->size();
   width = size.width();
   height = size.height();
-  splitter->resize(width, height);
+  jsonFileDisplay->resize(width, height);
 }
 
 /*****************************************************************************!
@@ -158,7 +151,6 @@ BuildTreeJSONCodeContainer::SlotTreeItemSelected
   
   outputString = QString(process.readAllStandardOutput());
   errorOutputString = QString(process.readAllStandardError());
-  errorWindow->setText(errorOutputString);
   jsonCodeDoc = QJsonDocument::fromJson(outputString.toLatin1());
   topObject = jsonCodeDoc.object();
   topKeys = topObject.keys();
@@ -181,47 +173,6 @@ BuildTreeJSONCodeContainer::SlotTreeItemSelected
       continue;
     }
   }
-  
-#if 0
-  errorOutputLines = errorOutputString.split("\r\n");
-  foreach (headerLine, errorOutputLines) {
-    found = false;
-    foreach ( excludeLine, excludeLines) {
-      if ( headerLine.contains(excludeLine) ) {
-        found = true;
-        continue;
-      }
-    }
-    if ( !found ) {
-      if ( headerLine.isEmpty() ) {
-        continue;
-      }
-      if (headerLine[0] != QChar('.') ) {
-        continue;
-      }
-      st = headerLine.remove(QRegularExpression("^[.]+ "));
-      st = QDir::toNativeSeparators(st);
-      st2 = st.sliced(0, sourcePathLen);
-      if ( st2.compare(sourcePath, Qt::CaseInsensitive) == 0 ) {
-        st = st.sliced(sourcePathLen);
-      }
-      st = QString("$ACU_SOURCE_DIR") + st;
-      headerLines << st;
-    }
-  }
-
-  y = 0;
-
-  container->resize(size().width(), headerLines.count() * BUILD_TREE_HIERARCHY_TABLE_ITEM_HEIGHT);
-  headerLines.sort();
-  foreach (headerLine, headerLines) {
-    item = new BuildTreeHierarchyTableItem(headerLine, container);
-    item->show();
-    item->move(0, y);
-    y += BUILD_TREE_HIERARCHY_TABLE_ITEM_HEIGHT;
-    elements << item;
-  }
-#endif
 }
 
 /*****************************************************************************!

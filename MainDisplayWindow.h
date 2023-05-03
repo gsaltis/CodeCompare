@@ -17,6 +17,7 @@
 #include <QAction>
 #include <SourceCodeComparisonToolBar.h>
 #include <QStackedWidget>
+#include <QTextEdit>
 
 /*****************************************************************************!
  * Local Headers
@@ -119,6 +120,8 @@ class MainDisplayWindow : public QWidget
   BuildTreeJSONCodeContainer*   jsonCode2;
   QStackedWidget*               stack1;
   QStackedWidget*               stack2;
+  QStackedWidget*               stack3;
+  QTextEdit*                    clangErrorWindow;
   
  //! Public Slots
  public slots :

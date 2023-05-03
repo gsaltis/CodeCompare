@@ -142,51 +142,32 @@ MainDisplayWindow::CreateSubWindows()
 
   stack1 = new QStackedWidget();
   stack2 = new QStackedWidget();
+  stack3 = new QStackedWidget();
+
   codeWindow1 = new CodeEditor();
   codeWindow2 = new CodeEditor();
+  
   jsonCode1 = new BuildTreeJSONCodeContainer(codeTrack1);
   jsonCode2 = new BuildTreeJSONCodeContainer(codeTrack2);
-  stack1->addWidget(codeWindow1);
-  stack1->addWidget(jsonCode1);
-  stack2->addWidget(codeWindow2);
-  stack2->addWidget(jsonCode2);
-
   sourceFileCompareTree = new QTreeWidget(this);
-  headerItem = new QTreeWidgetItem();
-  headerItem->setText(0, "Track 1");
-  headerItem->setText(1, "Track 2");
-  headerView = sourceFileCompareTree->header();
-  pal = headerView->palette();
-  pal.setBrush(QPalette::Window, QBrush(QColor(128, 128, 128)));
-  headerView->setPalette(pal);
-  headerView->setAutoFillBackground(true);
-  
-  headerView->resizeSection(0, 200);
-  sourceFileCompareTree->resize(300, windowH);
+
+  clangErrorWindow = new QTextEdit();
+  pal = clangErrorWindow->palette();
+  pal.setBrush(QPalette::Base, QBrush(QColor(0, 0, 200)));
+  clangErrorWindow->setPalette(pal);
+  clangErrorWindow->setTextBackgroundColor(QColor(0, 0, 200));
+  clangErrorWindow->setTextColor(QColor(244, 244, 244));
+  clangErrorWindow->setAutoFillBackground(true);
   
   sourceDiffWindow = new SourceDifferencesWindow();
+  stack3->resize(300, 277);
   sourceFilesCompareViewToolBar = new SourceCodeComparisonToolBar();
 
-  sourceFileCompareTree->setColumnCount(2);
-  sourceFileCompareTree->setHeaderItem(headerItem);
   sourceFileCompareToolBar = new QToolBar();
-  sourceFileCompareToolBar->resize(100, 32);
-  sourceFileCompareToolBar->setIconSize(QSize(32, 32));
-  sourceFileCompareToolBar->addAction(ActionCollapseSourceCompareTree);
-  sourceFileCompareToolBar->addAction(ActionOnlyDifferences);
-  sourceFileCompareToolBar->addAction(ActionFilesDifferInformation);
-  sourceFileCompareToolBar->addAction(ActionAnalyzeDifferences);
-  sourceFileCompareToolBar->addAction(ActionSaveSummaryFile);
-
 
   codeWindowContainer1 = new TitledWindow(stack1, QString("Track 2"));
   codeWindowContainer2 = new TitledWindow(stack2, QString("Track 3"));
-  stack1->setCurrentIndex(0);
-  stack2->setCurrentIndex(0);
-  
-  codeWindowContainer1->resize(QSize(600, 200));
-  codeWindowContainer2->resize(QSize(600, 200));
-                                
+
   sourceFileCompareContainer = new TitledWindow(sourceFileCompareTree,
                                                 sourceFileCompareToolBar,
                                                 QString("File Comparison"));
@@ -203,18 +184,6 @@ MainDisplayWindow::CreateSubWindows()
   sourceFilesChangesSplitter = new QSplitter();
   sourceFilesChangesSplitter->resize(windowW - 300, windowH - 300);
   
-  sourceFilesChangesSplitter->setOrientation(Qt::Vertical);
-
-  sourceFilesSplitter->addWidget(codeWindowContainer1);
-  sourceFilesSplitter->addWidget(codeWindowContainer2);
-
-  sourceFilesChangesSplitter->addWidget(sourceFilesCompareViewToolBar);
-  sourceFilesChangesSplitter->addWidget(sourceFilesSplitter);
-  sourceFilesChangesSplitter->addWidget(sourceDiffWindow);
-  
-  splitter->addWidget(compareContainer);
-  splitter->addWidget(sourceFilesChangesSplitter);
-
   dependencyTreeWindow = new DependencyTreeWindow(codeTrack1);
   dependencyTreeWindow->setParent(this);
   dependencyTreeWindow->hide();
@@ -222,7 +191,57 @@ MainDisplayWindow::CreateSubWindows()
   buildTreeWindow = new BuildTreeWindow(codeTrack1, codeTrack2);
   buildTreeWindow->setParent(this);
   buildTreeWindow->hide();
+  
+  stack1->addWidget(codeWindow1);
+  stack1->addWidget(jsonCode1);
+  stack2->addWidget(codeWindow2);
+  stack2->addWidget(jsonCode2);
+  stack3->addWidget(sourceDiffWindow);
+  stack3->addWidget(clangErrorWindow);
+  
+  codeWindowContainer1->resize(QSize(600, 200));
+  codeWindowContainer2->resize(QSize(600, 200));
+                                
+  sourceFilesChangesSplitter->setOrientation(Qt::Vertical);
 
+  sourceFilesSplitter->addWidget(codeWindowContainer1);
+  sourceFilesSplitter->addWidget(codeWindowContainer2);
+
+  sourceFilesChangesSplitter->addWidget(sourceFilesCompareViewToolBar);
+  sourceFilesChangesSplitter->addWidget(sourceFilesSplitter);
+  sourceFilesChangesSplitter->addWidget(stack3);
+  
+  splitter->addWidget(compareContainer);
+  splitter->addWidget(sourceFilesChangesSplitter);
+
+  
+  headerItem = new QTreeWidgetItem();
+  headerItem->setText(0, "Track 1");
+  headerItem->setText(1, "Track 2");
+  headerView = sourceFileCompareTree->header();
+  pal = headerView->palette();
+  pal.setBrush(QPalette::Window, QBrush(QColor(128, 128, 128)));
+  headerView->setPalette(pal);
+  headerView->setAutoFillBackground(true);
+  
+  headerView->resizeSection(0, 200);
+  sourceFileCompareTree->resize(300, windowH);
+  
+  sourceFileCompareTree->setColumnCount(2);
+  sourceFileCompareTree->setHeaderItem(headerItem);
+
+  sourceFileCompareToolBar->resize(100, 32);
+  sourceFileCompareToolBar->setIconSize(QSize(32, 32));
+  sourceFileCompareToolBar->addAction(ActionCollapseSourceCompareTree);
+  sourceFileCompareToolBar->addAction(ActionOnlyDifferences);
+  sourceFileCompareToolBar->addAction(ActionFilesDifferInformation);
+  sourceFileCompareToolBar->addAction(ActionAnalyzeDifferences);
+  sourceFileCompareToolBar->addAction(ActionSaveSummaryFile);
+
+
+  stack1->setCurrentIndex(0);
+  stack2->setCurrentIndex(0);
+  stack3->setCurrentIndex(0);
   DisplayTracks();
 }
 
@@ -923,6 +942,7 @@ MainDisplayWindow::SlotCodeViewSelected(void)
 {
   stack1->setCurrentIndex(0);
   stack2->setCurrentIndex(0);
+  stack3->setCurrentIndex(0);
 }
 
 /*****************************************************************************!
@@ -933,4 +953,5 @@ MainDisplayWindow::SlotFunctionViewSelected(void)
 {
   stack1->setCurrentIndex(1);
   stack2->setCurrentIndex(1);
+  stack3->setCurrentIndex(1);
 }

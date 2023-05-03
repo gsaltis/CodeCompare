@@ -14,9 +14,7 @@
 #include <QtGui>
 #include <QWidget>
 #include <QTreeWidget>
-#include <QTextEdit>
 #include <QTreeWidgetItem>
-#include <QSplitter>
 #include <QJsonValue>
 
 /*****************************************************************************!
@@ -77,9 +75,6 @@ class BuildTreeJSONCodeContainer : public QWidget
  //! Private Data
  private :
   QTreeWidget*                  jsonFileDisplay;
-  QTextEdit*                    errorWindow;
-  int                           errorWindowHeight;
-  QSplitter*                    splitter;
   CodeTrack*                    codeTrack;
   
  //! Public Slots
