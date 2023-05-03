@@ -19,27 +19,25 @@
  *****************************************************************************/
 #include "MainWindow.h"
 #include "CodeBaseOpenDialog.h"
+#include "trace.h"
 
 /*****************************************************************************!
  * Function : MainWindow
  *****************************************************************************/
 MainWindow::MainWindow
-() : QMainWindow()
+(QString InTrack1DirectoryName, QString InTrack2DirectoryName, bool InStartAnalysis) 
 {
-}
-
-/*****************************************************************************!
- * Function : MainWindow
- *****************************************************************************/
-MainWindow::MainWindow
-(QWidget* parent) : QMainWindow(parent)
-{
+  track1DirectoryName = InTrack1DirectoryName;
+  track2DirectoryName = InTrack2DirectoryName;
   Initialize();
   CreateActions();
   CreateMenus();
   InitializeSubWindows();
   CreateSubWindows();
   CreateConnections();
+  if ( InStartAnalysis ) {
+    StartAnalysis();
+  }
 }
 
 /*****************************************************************************!
@@ -66,7 +64,7 @@ MainWindow::Initialize()
 void
 MainWindow::CreateSubWindows()
 {
-  displayWindow = new MainDisplayWindow();  
+  displayWindow = new MainDisplayWindow(track1DirectoryName, track2DirectoryName);
   displayWindow->setParent(this);
   statusbar = statusBar();
   messageWindow = new QLabel(statusbar);
@@ -215,16 +213,6 @@ MainWindow::SetCodeBaseDirectoryName
 }
 
 /*****************************************************************************!
- * Function : SetTracksDirectoryNames
- *****************************************************************************/
-void
-MainWindow::SetTracksDirectoryNames
-(QString InTrack1DirectoryName, QString InTrack2DirectoryName)
-{
-  displayWindow->SetTracksDirectoryNames(InTrack1DirectoryName, InTrack2DirectoryName);
-}
-
-/*****************************************************************************!
  * Function : SlotSetMessage
  *****************************************************************************/
 void
@@ -242,5 +230,4 @@ MainWindow::StartAnalysis
 ()
 {
   displayWindow->SlotAnalyzeDifferences();
-
 }

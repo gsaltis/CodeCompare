@@ -30,6 +30,7 @@
 #include "CodeHighlighter.h"
 #include "BuildLine.h"
 #include "BuildCompileLine.h"
+#include "CodeTrack.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -48,7 +49,7 @@ class BuildTreeWindow : public QFrame
 
  //! Constructors
  public :
-  BuildTreeWindow               ();
+  BuildTreeWindow               (CodeTrack* InCodeTrack1, CodeTrack* InCodeTrack2);
 
  //! Destructor
  public :
@@ -92,6 +93,8 @@ class BuildTreeWindow : public QFrame
   CodeHighlighter*              codeHighlighter;
   QTreeWidget*                  compilerOptionsTree;
   TitledWindow*                 compilerOptionsWindow;
+  CodeTrack*                    codeTrack1;
+  CodeTrack*                    codeTrack2;
   
  //! Public Slots
  public slots :

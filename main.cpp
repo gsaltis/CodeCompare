@@ -111,25 +111,10 @@ main
   }
   mainSystemConfig = new SystemConfig();
   mainSystemConfig->ReadJSON(MainConfigFilename);
-  w = new MainWindow(NULL);
+  w = new MainWindow(mainTrack1Directory, mainTrack2Directory, mainStartAnalysis);
   w->resize(mainSystemConfig->GetMainWindowSize());
   w->move(mainSystemConfig->GetMainWindowLocation());
   w->show();
-  if ( !mainTrack1Directory.isEmpty() && !mainTrack2Directory.isEmpty() ) {
-    if ( VerifyCodeTracks(mainTrack1Directory, mainTrack2Directory) ) {
-      w->SetTracksDirectoryNames(mainTrack1Directory, mainTrack2Directory);
-      if ( mainStartAnalysis ) {
-        w->StartAnalysis();
-      }
-    } else {
-      exit(EXIT_FAILURE);
-    }
-  }
-  else if ( ! mainCodeBase.isEmpty() ) {
-    w->SetCodeBaseDirectoryName(mainCodeBase);
-  } else {
-    exit(EXIT_FAILURE);
-  }
   splashScreen.finish(w);
   return application->exec();
 }

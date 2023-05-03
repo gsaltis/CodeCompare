@@ -38,8 +38,7 @@ class MainWindow : public QMainWindow
 
  //! Constructors
  public :
-  MainWindow                    ();
-  MainWindow                    (QWidget* );
+  MainWindow                    (QString InTrack1DirectoryName, QString InTrack2DirectoryName, bool InStartAnalysis) ;
 
  //! Destructor
  public :
@@ -47,8 +46,7 @@ class MainWindow : public QMainWindow
 
  //! Public Methods
  public :
-  void                          SetCodeBaseDirectoryName(QString InCodeBaseDirectoryName);
-  void                          SetTracksDirectoryNames         (QString InTrack1DirectoryName, QString InTrack2DirectoryName);
+  void                          SetCodeBaseDirectoryName        (QString InCodeBaseDirectoryName);
   void                          StartAnalysis                   ();
 
  //! Public Data
@@ -78,6 +76,8 @@ class MainWindow : public QMainWindow
   QStatusBar*                   statusbar;
   QMenu*                        actionMenu;
   QLabel*                       messageWindow;
+  QString                       track1DirectoryName;
+  QString                       track2DirectoryName;
   
  //! Public Slots
  public slots :

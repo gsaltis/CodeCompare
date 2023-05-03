@@ -23,6 +23,7 @@
 #include "BuildUnknownLine.h"
 #include "BuildForLine.h"
 #include "BuildEchoLine.h"
+
 #include "main.h"
 #include "trace.h"
 
@@ -30,8 +31,10 @@
  * Function : DependencyTreeWidgetItem
  *****************************************************************************/
 DependencyTreeWidgetItem::DependencyTreeWidgetItem
-(QStringList InNames, QFileInfo InInfo, BuildSystem* InBuildSystem) : QTreeWidgetItem(InNames)
+(QStringList InNames, QFileInfo InInfo, BuildSystem* InBuildSystem,
+ CodeTrack* InCodeTrack) : QTreeWidgetItem(InNames)
 {
+  codeTrack = InCodeTrack;
   buildSystem = InBuildSystem;
   buildLines = new BuildLineSet();
   fileInfo = QFileInfo(InInfo);
@@ -215,6 +218,7 @@ DependencyTreeWidgetItem::PerformMake
   QString                               text;
   QString                               fullPath;
   QProcess                              makeProcess;
+  QProcessEnvironment                   processEnvironment;                              
   QStringList                           args;
   QString                               program;
   QString                               outputString;
@@ -242,6 +246,8 @@ DependencyTreeWidgetItem::PerformMake
   args = mainSystemConfig->GetMakeArgs();
   args << mainSystemConfig->GetMakeTarget();
 
+  processEnvironment.insert("ACE_SOURCE_DIR", codeTrack->GetBasePath());
+  makeProcess.setProcessEnvironment(processEnvironment);
   makeProcess.start(program, args);
   makeProcess.waitForFinished();
   outputString = QString(makeProcess.readAllStandardOutput());

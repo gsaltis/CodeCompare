@@ -26,9 +26,10 @@
  * Function : BuildTreeJSONCodeContainer
  *****************************************************************************/
 BuildTreeJSONCodeContainer::BuildTreeJSONCodeContainer
-() : QWidget()
+(CodeTrack* InCodeTrack) : QWidget()
 {
   QPalette pal;
+  codeTrack = InCodeTrack;
   pal = palette();
   pal.setBrush(QPalette::Window, QBrush(QColor(255, 255, 255)));
   setPalette(pal);

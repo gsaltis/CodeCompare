@@ -24,9 +24,10 @@
  * Function : DependencyTreeWindow
  *****************************************************************************/
 DependencyTreeWindow::DependencyTreeWindow
-() : QWidget()
+(CodeTrack* InCodeTrack) : QWidget()
 {
   QPalette pal;
+  codeTrack = InCodeTrack;
   pal = palette();
   pal.setBrush(QPalette::Window, QBrush(QColor(255, 255, 255)));
   setPalette(pal);
@@ -317,7 +318,7 @@ DependencyTreeWindow::ProcessTopLevelDirectory
   if ( info.exists() ) {
     fg.setColor(Qt::black);
   }
-  treeItem = new DependencyTreeWidgetItem(QStringList(name), InInfo, buildSystem);
+  treeItem = new DependencyTreeWidgetItem(QStringList(name), InInfo, buildSystem, codeTrack);
   treeItem->setData(0, Qt::ForegroundRole, fg);
   if ( info.exists() ) {
     font = treeItem->font(0);
@@ -359,7 +360,7 @@ DependencyTreeWindow::ProcessTreeDirectory
     }
     
     fileName = info.fileName();
-    treeItem = new DependencyTreeWidgetItem(QStringList(fileName), info, buildSystem);
+    treeItem = new DependencyTreeWidgetItem(QStringList(fileName), info, buildSystem, codeTrack);
     treeItem->setData(0, Qt::ForegroundRole, fg);
     InTreeItem->addChild(treeItem);
     if ( makeFileInfo.exists() ) {

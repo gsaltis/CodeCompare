@@ -23,6 +23,7 @@
  * Local Headers
  *****************************************************************************/
 #include "BuildLine.h"
+#include "CodeTrack.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -41,7 +42,7 @@ class BuildTreeJSONCodeContainer : public QWidget
 
  //! Constructors
  public :
-  BuildTreeJSONCodeContainer    ();
+  BuildTreeJSONCodeContainer    (CodeTrack* InCodeTrack);
 
  //! Destructor
  public :
@@ -79,6 +80,7 @@ class BuildTreeJSONCodeContainer : public QWidget
   QTextEdit*                    errorWindow;
   int                           errorWindowHeight;
   QSplitter*                    splitter;
+  CodeTrack*                    codeTrack;
   
  //! Public Slots
  public slots :

@@ -66,11 +66,11 @@ void
 SourceCodeComparisonToolBar::CreateSubWindows()
 {
   //! Create the CodeViewButton button
-  CodeViewButton = new CodeCompareToolBarButton(this, 0, QIcon(QPixmap(":/images/CodeView.png")));
+  CodeViewButton = new CodeCompareToolBarButton(this, 2, QIcon(QPixmap(":/images/List.png")));
   connect(CodeViewButton, SIGNAL(pressed()), this, SLOT(SlotCodeViewButtonPushed()));
 
   //! Create the FunctionViewButton button
-  FunctionViewButton = new CodeCompareToolBarButton(this, 37, QIcon(QPixmap(":/images/FunctionView.png")));
+  FunctionViewButton = new CodeCompareToolBarButton(this, 37, QIcon(QPixmap(":/images/FlowBlock.png")));
   connect(FunctionViewButton, SIGNAL(pressed()), this, SLOT(SlotFunctionViewButtonPushed()));
 }
 

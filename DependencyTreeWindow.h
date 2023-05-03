@@ -26,6 +26,7 @@
 #include "BuildLineDisplayForm.h"
 #include "BuildLineSet.h"
 #include "BuildSystem.h"
+#include "CodeTrack.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -44,7 +45,7 @@ class DependencyTreeWindow : public QWidget
 
  //! Constructors
  public :
-  DependencyTreeWindow          ();
+  DependencyTreeWindow          (CodeTrack* InCodeTrack);
 
  //! Destructor
  public :
@@ -84,6 +85,7 @@ class DependencyTreeWindow : public QWidget
   DirectoryTreeElement*         topElement;
   BuildLineDisplayForm*         buildLineDisplayWindow;
   BuildSystem*                  buildSystem;
+  CodeTrack*                    codeTrack;
   
  //! Public Slots
  public slots :

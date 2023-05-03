@@ -21,6 +21,7 @@
 #include "BuildLine.h"
 #include "BuildLineSet.h"
 #include "BuildSystem.h"
+#include "CodeTrack.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -33,7 +34,8 @@ class DependencyTreeWidgetItem : public QTreeWidgetItem
 {
  //! Constructors
  public :
-  DependencyTreeWidgetItem      (QStringList InNames, QFileInfo InInfo, BuildSystem* InBuildSystem);
+  DependencyTreeWidgetItem      (QStringList InNames, QFileInfo InInfo, BuildSystem* InBuildSystem,
+                                 CodeTrack* InCodeTrack);
 
  //! Destructor
  public :
@@ -66,6 +68,7 @@ class DependencyTreeWidgetItem : public QTreeWidgetItem
   BuildSystem*                  buildSystem;
   QFileInfo                     fileInfo;
   QString                       buildString;
+  CodeTrack*                    codeTrack;
   
  //! Public Slots
  public slots :

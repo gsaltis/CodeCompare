@@ -33,17 +33,27 @@
  * Function : MainDisplayWindow
  *****************************************************************************/
 MainDisplayWindow::MainDisplayWindow
-() : QWidget()
+(QString InTrack1DirectoryName, QString InTrack2DirectoryName) : QWidget()
+{
+  Track1DirectoryName = InTrack1DirectoryName;
+  Track2DirectoryName = InTrack2DirectoryName;
+  displayDiffsAtStart = false;
+  SetBackgroundColor();  
+  Initialize();
+}
+
+/*****************************************************************************!
+ * Function : SetBackgroundColor
+ *****************************************************************************/
+void
+MainDisplayWindow::SetBackgroundColor
+()
 {
   QPalette                              pal;
-
-  displayDiffsAtStart = false;
   pal = palette();
   pal.setBrush(QPalette::Window, QBrush(QColor(160, 160, 160)));
   setPalette(pal);
   setAutoFillBackground(true);
-
-  Initialize();
 }
 
 /*****************************************************************************!
@@ -60,6 +70,9 @@ MainDisplayWindow::~MainDisplayWindow
 void
 MainDisplayWindow::Initialize()
 {
+  codeTrack1 = new CodeTrack(Track1DirectoryName);
+  codeTrack2 = new CodeTrack(Track2DirectoryName);
+  
   CreateActions();
   InitializeSubWindows();  
   CreateSubWindows();
@@ -130,18 +143,14 @@ MainDisplayWindow::CreateSubWindows()
   stack1 = new QStackedWidget();
   stack2 = new QStackedWidget();
   codeWindow1 = new CodeEditor();
-  TRACE_FUNCTION_POINTER(codeWindow1);
   codeWindow2 = new CodeEditor();
-  TRACE_FUNCTION_POINTER(codeWindow2);
-  jsonCode1 = new BuildTreeJSONCodeContainer();
-  TRACE_FUNCTION_POINTER(jsonCode1);
-  jsonCode2 = new BuildTreeJSONCodeContainer();
-  TRACE_FUNCTION_POINTER(jsonCode2);
+  jsonCode1 = new BuildTreeJSONCodeContainer(codeTrack1);
+  jsonCode2 = new BuildTreeJSONCodeContainer(codeTrack2);
   stack1->addWidget(codeWindow1);
   stack1->addWidget(jsonCode1);
   stack2->addWidget(codeWindow2);
   stack2->addWidget(jsonCode2);
-  
+
   sourceFileCompareTree = new QTreeWidget(this);
   headerItem = new QTreeWidgetItem();
   headerItem->setText(0, "Track 1");
@@ -206,13 +215,15 @@ MainDisplayWindow::CreateSubWindows()
   splitter->addWidget(compareContainer);
   splitter->addWidget(sourceFilesChangesSplitter);
 
-  dependencyTreeWindow = new DependencyTreeWindow();
+  dependencyTreeWindow = new DependencyTreeWindow(codeTrack1);
   dependencyTreeWindow->setParent(this);
   dependencyTreeWindow->hide();
 
-  buildTreeWindow = new BuildTreeWindow();
+  buildTreeWindow = new BuildTreeWindow(codeTrack1, codeTrack2);
   buildTreeWindow->setParent(this);
   buildTreeWindow->hide();
+
+  DisplayTracks();
 }
 
 /*****************************************************************************!
@@ -397,20 +408,13 @@ MainDisplayWindow::SetCodeBaseDirectoryName
 }
 
 /*****************************************************************************!
- * Function : SetTracksDirectoryNames
+ * Function : DisplayTracks
  *****************************************************************************/
 void
-MainDisplayWindow::SetTracksDirectoryNames
-(QString InTrack1DirectoryName, QString InTrack2DirectoryName)
+MainDisplayWindow::DisplayTracks
+()
 {
   FileTreeWidgetItem*                   sourceItems;
-
-  codeTrack1 = new CodeTrack(InTrack1DirectoryName);
-  codeTrack2 = new CodeTrack(InTrack2DirectoryName);
-  
-  Track1DirectoryName = InTrack1DirectoryName;
-  Track2DirectoryName = InTrack2DirectoryName;
-  
   if ( codeWindowContainer1 ) {
     codeWindowContainer1->SetHeaderText(Track1DirectoryName);
   }
@@ -917,10 +921,8 @@ MainDisplayWindow::SlotTrack2CodeLineChanged
 void
 MainDisplayWindow::SlotCodeViewSelected(void)
 {
-  TRACE_FUNCTION_START();
   stack1->setCurrentIndex(0);
   stack2->setCurrentIndex(0);
-  TRACE_FUNCTION_END();  
 }
 
 /*****************************************************************************!
@@ -929,8 +931,6 @@ MainDisplayWindow::SlotCodeViewSelected(void)
 void
 MainDisplayWindow::SlotFunctionViewSelected(void)
 {
-  TRACE_FUNCTION_START();
   stack1->setCurrentIndex(1);
   stack2->setCurrentIndex(1);
-  TRACE_FUNCTION_END();  
 }

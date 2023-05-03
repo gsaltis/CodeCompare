@@ -25,7 +25,7 @@ CodeCompareToolBarButton::CodeCompareToolBarButton
 (QWidget *InParent, int InX, QIcon InIcon) : QPushButton()
 {
   setParent(InParent);
-  move(InX, 1);
+  move(InX, 2);
   setIcon(InIcon);
   setAutoFillBackground(true);
   setMouseTracking(true);
@@ -47,8 +47,8 @@ void
 CodeCompareToolBarButton::initialize()
 {
   mouseIn = false;
-  resize(30,30);
-  setIconSize(QSize(28, 28));
+  resize(28, 28);
+  setIconSize(QSize(24, 24));
   setCursor(Qt::PointingHandCursor);
   InitializeSubWindows();  
   CreateSubWindows();
@@ -122,11 +122,11 @@ CodeCompareToolBarButton::paintEvent
   QPushButton::paintEvent(event);
 
   QPainter painter(this);
-  painter.setPen(QPen(QBrush(QColor(255, 255, 255)), 4));
+  painter.setPen(QPen(QBrush(QColor(255, 255, 255)), 2));
   if ( mouseIn ) {
-    painter.setPen(QPen(QBrush(QColor(0, 0, 0)), 4));
+    painter.setPen(QPen(QBrush(QColor(128, 128, 128)), 2));
   }
-  painter.drawRoundedRect(rect(), 0, 0);
+  painter.drawRoundedRect(rect(), 4, 4);
 }
 
 /*****************************************************************************!

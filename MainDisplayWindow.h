@@ -48,7 +48,7 @@ class MainDisplayWindow : public QWidget
 
  //! Constructors
  public :
-  MainDisplayWindow             ();
+  MainDisplayWindow             (QString InTrack1DirectoryName, QString InTrack2DirectoryName);
 
  //! Destructor
  public :
@@ -57,7 +57,7 @@ class MainDisplayWindow : public QWidget
  //! Public Methods
  public :
   void                          SetCodeBaseDirectoryName        (QString InCodeBaseDirectoryName);
-  void                          SetTracksDirectoryNames         (QString InTrack1DirectoryName, QString InTrack2DirectoryName);
+  void                          DisplayTracks                   ();
   
  //! Public Data
  public :
@@ -88,7 +88,8 @@ class MainDisplayWindow : public QWidget
   void                          AnalyzeDifferences              (FileTreeWidgetItem* InItem);
   bool                          CreateComparisonSummary         (void);
   void                          CreateComparisonSummaryItems    (QFile* InFile, FileTreeWidgetItem* InItem);
-
+  void                          SetBackgroundColor              ();
+  
  //! Private Data
  private :
   QString                       Track1DirectoryName;

@@ -36,10 +36,12 @@ CompareTopLevelNames
  * Function : BuildTreeWindow
  *****************************************************************************/
 BuildTreeWindow::BuildTreeWindow
-() : QFrame()
+(CodeTrack* InCodeTrack1, CodeTrack* InCodeTrack2) : QFrame()
 {
   QPalette pal;
   pal = palette();
+  codeTrack1 = InCodeTrack1;
+  codeTrack2 = InCodeTrack2;
   setWindowTitle("BuildTreeWindow");
   pal.setBrush(QPalette::Window, QBrush(QColor(224, 224, 224)));
   setPalette(pal);
@@ -111,7 +113,7 @@ BuildTreeWindow::CreateSubWindows()
   fileDisplay->setPalette(pal);
   fileDisplay->setAutoFillBackground(true);
   
-  jsonDisplay = new BuildTreeJSONCodeContainer();
+  jsonDisplay = new BuildTreeJSONCodeContainer(codeTrack1);
   hierarchyDisplay = new BuildTreeHierarchyContainer();
   
   fileTabPane->addTab(fileDisplay, QString("Code Text"));
