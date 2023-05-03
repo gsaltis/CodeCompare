@@ -69,7 +69,7 @@ class BuildLine : public QWidget
   void                          Dump                    (void);
   QString                       GetFilePath             (void);
   void                          SetFilePath             (QString InFilePath);
-  
+
  //! Public Data
  public :
   

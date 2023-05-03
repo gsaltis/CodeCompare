@@ -35,6 +35,8 @@
 #include "SourceDifferencesWindow.h"
 #include "CodeTrack.h"
 #include "BuildTreeJSONCodeContainer.h"
+#include "BuildLineSet.h"
+#include "BuildLine.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -90,6 +92,9 @@ class MainDisplayWindow : public QWidget
   bool                          CreateComparisonSummary         (void);
   void                          CreateComparisonSummaryItems    (QFile* InFile, FileTreeWidgetItem* InItem);
   void                          SetBackgroundColor              ();
+  void                          PerformMake                     ();
+  void                          ParseMakefileOutput             (QString InMakeOutput, QString InFullPath);
+  BuildLine*                    ParseMakefileOutputLine         (QString InOutputLine);
   
  //! Private Data
  private :
@@ -122,6 +127,8 @@ class MainDisplayWindow : public QWidget
   QStackedWidget*               stack2;
   QStackedWidget*               stack3;
   QTextEdit*                    clangErrorWindow;
+  BuildLineSet*                 buildLines;
+  BuildSystem*                  buildSystem;
   
  //! Public Slots
  public slots :

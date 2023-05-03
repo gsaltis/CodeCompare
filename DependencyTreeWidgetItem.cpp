@@ -245,8 +245,7 @@ DependencyTreeWidgetItem::PerformMake
   program = mainSystemConfig->GetMakeExeName();
   args = mainSystemConfig->GetMakeArgs();
   args << mainSystemConfig->GetMakeTarget();
-
-  processEnvironment.insert("ACE_SOURCE_DIR", codeTrack->GetBasePath());
+  // processEnvironment.insert("ACE_SOURCE_DIR", codeTrack->GetBasePath());
   makeProcess.setProcessEnvironment(processEnvironment);
   makeProcess.start(program, args);
   makeProcess.waitForFinished();
