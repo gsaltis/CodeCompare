@@ -68,6 +68,7 @@ SOURCES                         += \
 				   CodeBaseForm.cpp                             \
 				   CodeBaseOpenDialog.cpp                       \
 				   CodeCompareDir.cpp                           \
+				   CodeCompareToolBarButton.cpp                 \
 				   CodeEditor.cpp                               \
 				   CodeHighlighter.cpp                          \
 				   CodeNameWindow.cpp                           \
@@ -87,6 +88,7 @@ SOURCES                         += \
 				   MainDisplayWindow.cpp                        \
 				   MainWindow.cpp                               \
 				   MonitoredLabel.cpp                           \
+				   SourceCodeComparisonToolBar.cpp              \
 				   SourceDifferencesItem.cpp                    \
 				   SourceDifferencesWindow.cpp                  \
 				   SourceFileCompareAnalyzeStatsWindow.cpp      \
@@ -132,6 +134,7 @@ HEADERS                         += \
 				   CodeBaseForm.h                               \
 				   CodeBaseOpenDialog.h                         \
 				   CodeCompareDir.h                             \
+				   CodeCompareToolBarButton.h                   \
 				   CodeEditor.h                                 \
 				   CodeHighlighter.h                            \
 				   CodeNameWindow.h                             \
@@ -150,7 +153,8 @@ HEADERS                         += \
 				   LineNumberArea.h                             \
 				   MainDisplayWindow.h                          \
 				   MainWindow.h                                 \
-				   MonitoredLabel.h                             \                                    \
+				   MonitoredLabel.h                             \
+				   SourceCodeComparisonToolBar.h                \
 				   SourceDifferencesItem.h                      \
 				   SourceDifferencesWindow.h                    \
 				   SourceFileCompareAnalyzeStatsWindow.h        \

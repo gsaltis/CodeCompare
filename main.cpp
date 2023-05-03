@@ -47,6 +47,9 @@ mainStartAnalysis = false;
 QApplication*
 application;
 
+QColor
+MainToolBarBackgroundColor = QColor(240, 240, 240);
+
 /*****************************************************************************!
  * Local Functions
  *****************************************************************************/

@@ -190,7 +190,8 @@ TitledWindow::SetSize
 
   height = InSize.height();
   width  = InSize.width();
-
+  TRACE_FUNCTION_INT(width);
+  TRACE_FUNCTION_INT(height);
   toolbarY = toolbarX = toolbarW = toolbarH = 0;
   if ( toolbar ) {
     toolbarH = toolbar->size().height();
@@ -208,6 +209,8 @@ TitledWindow::SetSize
   }
 
   if ( container ) {
+    TRACE_FUNCTION_POINTER(container);
+    TRACE_FUNCTION_LOCATION();
     container->resize(width, containerH);
     container->move(0, containerY);
     toolbarY = height - (toolbarH + 1);
@@ -266,7 +269,16 @@ void
 TitledWindow::SetContainer
 (QWidget* InContainer)
 {
+  TRACE_FUNCTION_START();
+  TRACE_FUNCTION_POINTER(container);
+  TRACE_FUNCTION_POINTER(InContainer);
+  if ( container ) {
+    container->hide();
+    container->setParent(NULL);
+  }
   container = InContainer;
   container->setParent(this);
+  container->show();
   SetSize(size());
+  TRACE_FUNCTION_END();
 }

@@ -33,4 +33,8 @@ mainCodeBase;
 
 extern QApplication*
 application;
+
+extern QColor
+MainToolBarBackgroundColor;
+
 #endif /* _main_h_*/

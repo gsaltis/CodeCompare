@@ -1,5 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
   <qresource>
+    <file>images/CodeView.png</file>
+    <file>images/FunctionView.png</file>
     <file>images/Collapse.png</file>
     <file>images/Equal.png</file>
     <file>images/File.png</file>

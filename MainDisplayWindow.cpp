@@ -126,10 +126,22 @@ MainDisplayWindow::CreateSubWindows()
   windowSize = mainSystemConfig->GetMainWindowSize();
   windowW = windowSize.width();
   windowH = windowSize.height();
-  
-  codeWindow1 = new CodeEditor();
-  codeWindow2 = new CodeEditor();
 
+  stack1 = new QStackedWidget();
+  stack2 = new QStackedWidget();
+  codeWindow1 = new CodeEditor();
+  TRACE_FUNCTION_POINTER(codeWindow1);
+  codeWindow2 = new CodeEditor();
+  TRACE_FUNCTION_POINTER(codeWindow2);
+  jsonCode1 = new BuildTreeJSONCodeContainer();
+  TRACE_FUNCTION_POINTER(jsonCode1);
+  jsonCode2 = new BuildTreeJSONCodeContainer();
+  TRACE_FUNCTION_POINTER(jsonCode2);
+  stack1->addWidget(codeWindow1);
+  stack1->addWidget(jsonCode1);
+  stack2->addWidget(codeWindow2);
+  stack2->addWidget(jsonCode2);
+  
   sourceFileCompareTree = new QTreeWidget(this);
   headerItem = new QTreeWidgetItem();
   headerItem->setText(0, "Track 1");
@@ -144,6 +156,7 @@ MainDisplayWindow::CreateSubWindows()
   sourceFileCompareTree->resize(300, windowH);
   
   sourceDiffWindow = new SourceDifferencesWindow();
+  sourceFilesCompareViewToolBar = new SourceCodeComparisonToolBar();
 
   sourceFileCompareTree->setColumnCount(2);
   sourceFileCompareTree->setHeaderItem(headerItem);
@@ -157,8 +170,11 @@ MainDisplayWindow::CreateSubWindows()
   sourceFileCompareToolBar->addAction(ActionSaveSummaryFile);
 
 
-  codeWindowContainer1 = new TitledWindow(codeWindow1, QString("Track 2"));
-  codeWindowContainer2 = new TitledWindow(codeWindow2, QString("Track 3"));
+  codeWindowContainer1 = new TitledWindow(stack1, QString("Track 2"));
+  codeWindowContainer2 = new TitledWindow(stack2, QString("Track 3"));
+  stack1->setCurrentIndex(0);
+  stack2->setCurrentIndex(0);
+  
   codeWindowContainer1->resize(QSize(600, 200));
   codeWindowContainer2->resize(QSize(600, 200));
                                 
@@ -183,6 +199,7 @@ MainDisplayWindow::CreateSubWindows()
   sourceFilesSplitter->addWidget(codeWindowContainer1);
   sourceFilesSplitter->addWidget(codeWindowContainer2);
 
+  sourceFilesChangesSplitter->addWidget(sourceFilesCompareViewToolBar);
   sourceFilesChangesSplitter->addWidget(sourceFilesSplitter);
   sourceFilesChangesSplitter->addWidget(sourceDiffWindow);
   
@@ -328,6 +345,14 @@ MainDisplayWindow::CreateConnections(void)
           SIGNAL(SignalTrack2CodeLineChanged(int)),
           this,
           SLOT(SlotTrack2CodeLineChanged(int)));
+  connect(sourceFilesCompareViewToolBar,
+          SIGNAL(SignalCodeViewSelected()),
+          this,
+          SLOT(SlotCodeViewSelected()));
+  connect(sourceFilesCompareViewToolBar,
+          SIGNAL(SignalFunctionViewSelected()),
+          this,
+          SLOT(SlotFunctionViewSelected()));
 }
 
 /*****************************************************************************!
@@ -884,5 +909,28 @@ MainDisplayWindow::SlotTrack2CodeLineChanged
 (int InStartLine)
 {
   codeWindow2->SlotSetCurrentLine(InStartLine);
-  
+}
+
+/*****************************************************************************!
+ * Function : SlotCodeViewSelected
+ *****************************************************************************/
+void
+MainDisplayWindow::SlotCodeViewSelected(void)
+{
+  TRACE_FUNCTION_START();
+  stack1->setCurrentIndex(0);
+  stack2->setCurrentIndex(0);
+  TRACE_FUNCTION_END();  
+}
+
+/*****************************************************************************!
+ * Function : SlotFunctionViewSelected
+ *****************************************************************************/
+void
+MainDisplayWindow::SlotFunctionViewSelected(void)
+{
+  TRACE_FUNCTION_START();
+  stack1->setCurrentIndex(1);
+  stack2->setCurrentIndex(1);
+  TRACE_FUNCTION_END();  
 }

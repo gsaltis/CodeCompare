@@ -15,6 +15,8 @@
 #include <QWidget>
 #include <QToolBar>
 #include <QAction>
+#include <SourceCodeComparisonToolBar.h>
+#include <QStackedWidget>
 
 /*****************************************************************************!
  * Local Headers
@@ -31,6 +33,7 @@
 #include "SourceFileCompareTreeContainer.h"
 #include "SourceDifferencesWindow.h"
 #include "CodeTrack.h"
+#include "BuildTreeJSONCodeContainer.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -110,6 +113,11 @@ class MainDisplayWindow : public QWidget
   SourceDifferencesWindow*      sourceDiffWindow;
   CodeTrack*                    codeTrack1;
   CodeTrack*                    codeTrack2;
+  SourceCodeComparisonToolBar*  sourceFilesCompareViewToolBar;
+  BuildTreeJSONCodeContainer*   jsonCode1;
+  BuildTreeJSONCodeContainer*   jsonCode2;
+  QStackedWidget*               stack1;
+  QStackedWidget*               stack2;
   
  //! Public Slots
  public slots :
@@ -126,6 +134,8 @@ class MainDisplayWindow : public QWidget
   void                          SlotSaveSummaryFile     (void);
   void                          SlotTrack1CodeLineChanged (int InStartLine);
   void                          SlotTrack2CodeLineChanged (int InStartLine);
+  void                          SlotCodeViewSelected    (void);
+  void                          SlotFunctionViewSelected (void);
 
  //! Public Signals
  signals :
