@@ -57,6 +57,7 @@ SOURCES                         += \
 				   BuildLineUnknownDisplayForm.cpp              \
 				   BuildRanlibLine.cpp                          \
 				   BuildSystem.cpp                              \
+				   BuildSystemTree.cpp                          \
 				   BuildTreeHierarchyContainer.cpp              \
 				   BuildTreeHierarchyTable.cpp                  \
 				   BuildTreeHierarchyTableItem.cpp              \
@@ -123,6 +124,7 @@ HEADERS                         += \
 				   BuildLineUnknownDisplayForm.h                \
 				   BuildRanlibLine.h                            \
 				   BuildSystem.h                                \
+				   BuildSystemTree.h                            \
 				   BuildTreeHierarchyContainer.h                \
 				   BuildTreeHierarchyTable.h                    \
 				   BuildTreeHierarchyTableItem.h                \

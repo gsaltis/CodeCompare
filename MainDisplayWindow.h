@@ -37,6 +37,7 @@
 #include "BuildTreeJSONCodeContainer.h"
 #include "BuildLineSet.h"
 #include "BuildLine.h"
+#include "BuildSystemTree.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -110,6 +111,7 @@ class MainDisplayWindow : public QWidget
   QToolBar*                     sourceFileCompareToolBar;
   DependencyTreeWindow*         dependencyTreeWindow;
   BuildTreeWindow*              buildTreeWindow;
+  BuildSystemTree*              buildSystemTree;
   BuildTreeWindowContainer*     buildTreeContainer;
   bool                          displayDiffsAtStart;
   SourceFileCompareTreeContainer* compareContainer;
@@ -126,6 +128,7 @@ class MainDisplayWindow : public QWidget
   QStackedWidget*               stack1;
   QStackedWidget*               stack2;
   QStackedWidget*               stack3;
+  QStackedWidget*               stack4;
   QTextEdit*                    clangErrorWindow;
   BuildLineSet*                 buildLines;
   BuildSystem*                  buildSystem;

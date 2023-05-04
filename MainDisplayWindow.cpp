@@ -152,9 +152,12 @@ MainDisplayWindow::CreateSubWindows()
   stack1 = new QStackedWidget();
   stack2 = new QStackedWidget();
   stack3 = new QStackedWidget();
+  stack4 = new QStackedWidget();
 
   codeWindow1 = new CodeEditor();
   codeWindow2 = new CodeEditor();
+
+  buildSystemTree = new BuildSystemTree();
   
   jsonCode1 = new BuildTreeJSONCodeContainer(codeTrack1);
   jsonCode2 = new BuildTreeJSONCodeContainer(codeTrack2);
@@ -177,7 +180,7 @@ MainDisplayWindow::CreateSubWindows()
   codeWindowContainer1 = new TitledWindow(stack1, QString("Track 2"));
   codeWindowContainer2 = new TitledWindow(stack2, QString("Track 3"));
 
-  sourceFileCompareContainer = new TitledWindow(sourceFileCompareTree,
+  sourceFileCompareContainer = new TitledWindow(stack4,
                                                 sourceFileCompareToolBar,
                                                 QString("File Comparison"));
   compareContainer = new SourceFileCompareTreeContainer(sourceFileCompareContainer, sourceFileCompareTree);
@@ -208,6 +211,8 @@ MainDisplayWindow::CreateSubWindows()
   stack2->addWidget(jsonCode2);
   stack3->addWidget(sourceDiffWindow);
   stack3->addWidget(clangErrorWindow);
+  stack4->addWidget(sourceFileCompareTree);
+  stack4->addWidget(buildSystemTree);
   
   codeWindowContainer1->resize(QSize(600, 200));
   codeWindowContainer2->resize(QSize(600, 200));
@@ -825,7 +830,7 @@ MainDisplayWindow::SlotAnalyzeDifferences(void)
   AnalyzeDifferences(treeItem);
   compareContainer->SetFileTreeItem(NULL);
   ActionSaveSummaryFile->setEnabled(true);
-  buildTreeWindow->SlotBuildSystemSelected(buildSystem);
+  buildSystemTree->SetBuildSystem(buildSystem);
   emit SignalAnalysisDone();
 }
 
@@ -1154,6 +1159,7 @@ MainDisplayWindow::SlotCodeViewSelected(void)
   stack1->setCurrentIndex(0);
   stack2->setCurrentIndex(0);
   stack3->setCurrentIndex(0);
+  stack4->setCurrentIndex(0);
 }
 
 /*****************************************************************************!
@@ -1165,4 +1171,5 @@ MainDisplayWindow::SlotFunctionViewSelected(void)
   stack1->setCurrentIndex(1);
   stack2->setCurrentIndex(1);
   stack3->setCurrentIndex(1);
+  stack4->setCurrentIndex(1);
 }
