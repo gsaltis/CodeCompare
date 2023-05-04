@@ -71,7 +71,8 @@ class BuildTreeJSONCodeContainer : public QWidget
   void                          ProcessCallExpr         (QTreeWidgetItem* InTreeItem, QJsonObject InObject);
   void                          ProcessDeclStmt         (QTreeWidgetItem* InTreeItem, QJsonObject InObject);
   void                          ProcessSingleItem       (QJsonValue InValue, QTreeWidgetItem* InItem);
-
+  void                          ProcessRangeObject                      (QTreeWidgetItem* InTreeItem, QJsonValue InValue);
+  void                          ProcessValue                            (QTreeWidgetItem* InTreeItem, QJsonValue InValue);
  //! Private Data
  private :
   QTreeWidget*                  jsonFileDisplay;

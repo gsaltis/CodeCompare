@@ -235,6 +235,8 @@ BuildTreeJSONCodeContainer::ProcessInnerTranslationUnitArray
     name = obj["name"].toString();
     treeItem1 = new QTreeWidgetItem(QStringList(name));
     jsonFileDisplay->addTopLevelItem(treeItem1);
+    ProcessValue(treeItem1, InTUArray[i]);
+    continue;
     keys = obj.keys();
 
     //!
@@ -261,7 +263,11 @@ BuildTreeJSONCodeContainer::ProcessInnerTranslationUnitArray
         ProcessTopLevelInnerObject(treeItem2, obj[key].toArray());
         continue;
       }
-      
+
+      if ( key == "range" ) {
+        ProcessRangeObject(treeItem2, obj[key]);
+        continue;
+      }
       //!
       if ( key == "type" ) {
         QJsonObject                     obj2 = obj["type"].toObject();
@@ -309,6 +315,11 @@ void
 BuildTreeJSONCodeContainer::ProcessTopLevelInnerObject
 (QTreeWidgetItem* InTreeItem, QJsonArray InArray)
 {
+  for (int i = 0; i < InArray.size(); i++) {
+    ProcessValue(InTreeItem, InArray[i]);
+  }
+}
+#if 0
   int                                   i;
   QString                               kind;
   QString                               name;
@@ -316,21 +327,26 @@ BuildTreeJSONCodeContainer::ProcessTopLevelInnerObject
   QTreeWidgetItem*                      treeItem1;
   QJsonArray                            innerArray;
   
-  for (i = 0; i < InArray.size(); i++) {
     obj = InArray[i].toObject();
     kind = obj["kind"].toString();
     name = obj["name"].toString();
-    innerArray = obj["inner"].toArray();
     treeItem1 = new QTreeWidgetItem();
     InTreeItem->addChild(treeItem1);
     treeItem1->setText(0, kind);
     treeItem1->setText(1, name);
+    if ( kind == "ParmVarDecl" ) {
+      ProcessValue(treeItem1,  InArray[i]);
+    }
+    if ( kind == "loc" ) {
+      ProcessValue(treeItem1, InArray[i]);
+    }
+    innerArray = obj["inner"].toArray();
     if ( kind == "CompoundStmt" ) {
       ProcessCompoundStatement(treeItem1, innerArray);
     }
   }
 }
-
+#endif
 /*****************************************************************************!
  * Function : ProcessCompoundStatement
  *****************************************************************************/
@@ -350,6 +366,9 @@ BuildTreeJSONCodeContainer::ProcessCompoundStatement
       ProcessCallExpr(treeItem1, obj);
     }
     if ( kind == "DeclStmt" ) {
+      ProcessDeclStmt(treeItem1, obj);
+    }
+    if ( kind == "loc" ) {
       ProcessDeclStmt(treeItem1, obj);
     }
   }
@@ -407,46 +426,15 @@ void
 BuildTreeJSONCodeContainer::ProcessDeclStmt
 (QTreeWidgetItem* InTreeItem, QJsonObject InObject)
 {
-  QString                               name;
+  QStringList                           keys;
   QTreeWidgetItem*                      item;
-  QTreeWidgetItem*                      item2;
-  QStringList                           keys, keys2;
-  QJsonObject                           obj2;
-  QJsonArray                            array1;
-  QJsonValue                            value;
   
   keys = InObject.keys();
-
   foreach ( auto key, keys ) {
     item = new QTreeWidgetItem();
     item->setText(0, key);
     InTreeItem->addChild(item);
-    value = InObject[key];
-    if ( !value.isObject() && !value.isArray() ) {
-      ProcessSingleItem(value, item);
-      continue;
-    }
-    if ( key == "inner" ) {
-      array1 = InObject[key].toArray();
-      for ( int i1 = 0 ; i1 < array1.size(); i1++ ) {
-        value = array1[i1];
-        if ( !value.isObject() && !value.isArray() ) {
-          ProcessSingleItem(value, item);
-          continue;
-        }
-        obj2 = value.toObject();
-        keys2 = obj2.keys();
-        foreach ( auto key2, keys2) {
-          item2 = new QTreeWidgetItem();
-          item2->setText(0, key2);
-          item->addChild(item2);
-          if ( key2 == "name" ) {
-            name = obj2[key2].toString();
-            InTreeItem->setText(1, name);
-          }
-        }
-      }
-    }
+    ProcessValue(item, InObject[key]);
   }
 }
 
@@ -466,3 +454,86 @@ BuildTreeJSONCodeContainer::ProcessSingleItem
     return;
   }
 }  
+
+/*****************************************************************************!
+ * Function : ProcessRangeObject
+ *****************************************************************************/
+void
+BuildTreeJSONCodeContainer::ProcessRangeObject
+(QTreeWidgetItem* InItem, QJsonValue InRangeObject)
+{
+  ProcessValue(InItem, InRangeObject);
+}
+
+/*****************************************************************************!
+ * Function : ProcessValue
+ *****************************************************************************/
+void
+BuildTreeJSONCodeContainer::ProcessValue
+(QTreeWidgetItem* InItem, QJsonValue InValue)
+{
+  QJsonValue::Type                      type;
+
+  type = InValue.type();
+
+  switch (type) {
+    case QJsonValue::Null : {
+      InItem->setText(1, QString("Null"));
+      return;
+    }
+    case QJsonValue::Bool : {
+      InItem->setText(1, InValue.toBool() ? "True" : "False");
+      return;
+    }
+    case QJsonValue::String : {
+      InItem->setText(1, InValue.toString());
+      return;
+    }
+    case QJsonValue::Double : {
+      if ( InValue.isDouble() ) {
+        InItem->setText(1, QString("%1").arg(InValue.toDouble()));
+        return;
+      }
+      InItem->setText(1, QString("%1").arg(InValue.toInt()));
+      return;
+    }
+    case QJsonValue::Object : {
+      QJsonObject                               obj = InValue.toObject();
+      QStringList                               keys = obj.keys();
+
+      foreach ( auto key, keys ) {
+        QTreeWidgetItem*                        item;
+
+        item = new QTreeWidgetItem(QStringList(key));
+        InItem->addChild(item);
+        ProcessValue(item, obj[key]);
+      }
+      return;
+    }
+    case QJsonValue::Array : {
+      QJsonArray                                obj = InValue.toArray();
+      int                                       n = obj.count();
+      for ( auto i = 0 ; i < n; i++ ) {
+        QTreeWidgetItem*                        item;
+        QJsonValue                              val = obj[i];
+        QString                                 st;
+
+        st = QString("%1").arg(i);
+        if ( val.isObject() ) {
+          QJsonObject                           obj2 = val.toObject();
+          QJsonValue                            val2 = obj2["kind"];
+          if ( val2.isString() ) {
+            st = val2.toString();
+          }
+        }
+        item = new QTreeWidgetItem(QStringList(st));
+        InItem->addChild(item);
+        ProcessValue(item, obj[i]);
+      }
+      return;
+    }
+    case QJsonValue::Undefined : {
+      break;
+    }
+  }
+}

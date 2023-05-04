@@ -187,6 +187,7 @@ MainDisplayWindow::CreateSubWindows()
           SLOT(SlotAnalysisDone()));
 
   splitter = new QSplitter(this);
+  splitter->show();
   sourceFilesSplitter = new QSplitter();
   sourceFilesSplitter->resize(windowW - 300, windowH);
   
@@ -824,6 +825,7 @@ MainDisplayWindow::SlotAnalyzeDifferences(void)
   AnalyzeDifferences(treeItem);
   compareContainer->SetFileTreeItem(NULL);
   ActionSaveSummaryFile->setEnabled(true);
+  buildTreeWindow->SlotBuildSystemSelected(buildSystem);
   emit SignalAnalysisDone();
 }
 
@@ -837,13 +839,17 @@ MainDisplayWindow::AnalyzeDifferences
   int                                   i, n;
   int                                   linesDiffer = 0;
   
-  PerformMake();
   n = InItem->childCount();
   for ( i = 0 ; i < n ; i++ ) {
     FileTreeWidgetItem*                 item;
 
     item = (FileTreeWidgetItem*)InItem->child(i);
     if ( item->GetIsDirectory() ) {
+      auto st = item->GetAbsoluteFileName1() + "/Makefile";
+      QFileInfo f(st);
+      if ( f.exists() ) {
+        PerformMake(item->GetTreeElement());
+      }
       AnalyzeDifferences(item);
     } else if ( item->IsSourceFile() ) {
       item->DiffFiles(linesDiffer);
@@ -861,7 +867,7 @@ MainDisplayWindow::AnalyzeDifferences
  *****************************************************************************/
 void
 MainDisplayWindow::PerformMake
-()
+(FileTreeElement* InTreeElement)
 {
   QString                               errorString;
   QString                               text;
@@ -876,8 +882,9 @@ MainDisplayWindow::PerformMake
   bool                                  alreadyHasLIBDL = false;
   QFile                                 file;
   
-  fullPath = Track1DirectoryName;
+  fullPath = InTreeElement->GetAbsoluteFileName1();
 
+  TRACE_FUNCTION_QSTRING(fullPath);
   if ( mainSystemConfig->GetMakeNeedLIBDLTarget() ) {
     // Create libdl.a since some of the targets rely on -ldl
     libdlPath = fullPath + QString("/libdl.a");
@@ -901,7 +908,8 @@ MainDisplayWindow::PerformMake
   makeProcess.waitForFinished();
   outputString = QString(makeProcess.readAllStandardOutput());
   errorString = QString(makeProcess.readAllStandardError());
-  ParseMakefileOutput(outputString, fullPath);
+  
+  ParseMakefileOutput(InTreeElement, outputString, fullPath);
   if ( mainSystemConfig->GetMakeNeedLIBDLTarget() ) {
     if ( ! alreadyHasLIBDL ) {
       file.remove(); 
@@ -915,12 +923,13 @@ MainDisplayWindow::PerformMake
  *****************************************************************************/
 void
 MainDisplayWindow::ParseMakefileOutput
-(QString InMakeOutput, QString InFullPath)
+(FileTreeElement* InTreeElement, QString InMakeOutput, QString InFullPath)
 {
   QStringList                           lines;
   int                                   linesCount;
   BuildLine*                            line;
 
+  (void)InTreeElement;
   lines = InMakeOutput.split("\n", Qt::SkipEmptyParts);
   linesCount = lines.count();
 

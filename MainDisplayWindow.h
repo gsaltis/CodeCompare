@@ -92,8 +92,8 @@ class MainDisplayWindow : public QWidget
   bool                          CreateComparisonSummary         (void);
   void                          CreateComparisonSummaryItems    (QFile* InFile, FileTreeWidgetItem* InItem);
   void                          SetBackgroundColor              ();
-  void                          PerformMake                     ();
-  void                          ParseMakefileOutput             (QString InMakeOutput, QString InFullPath);
+  void                          PerformMake                     (FileTreeElement* InTreeElement);
+  void                          ParseMakefileOutput             (FileTreeElement* InTreeElement, QString InMakeOutput, QString InFullPath);
   BuildLine*                    ParseMakefileOutputLine         (QString InOutputLine);
   
  //! Private Data

@@ -33,6 +33,7 @@ DependencyTreeWindow::DependencyTreeWindow
   setPalette(pal);
   setAutoFillBackground(true);
   initialize();
+  SlotTreeButtonPushed();
 }
 
 /*****************************************************************************!
