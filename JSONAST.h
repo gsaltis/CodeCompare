@@ -1,19 +1,19 @@
 /*****************************************************************************
- * FILE NAME    : gui.h
- * DATE         : April 11 2023
+ * FILE NAME    : JSONAST.h
+ * DATE         : May 05 2023
+ * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _gui_h_
-#define _gui_h_
+#ifndef _jsonast_h_
+#define _jsonast_h_
 
 /*****************************************************************************!
  * Global Headers
  *****************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <string.h>
+#include <QtCore>
+#include <QtGui>
+#include <QWidget>
+#include <QJsonDocument>
 
 /*****************************************************************************!
  * Local Headers
@@ -22,17 +22,50 @@
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define GUI_X_GAP                       5
-#define GUI_Y_GAP                       5
-#define GUI_Y_SMALL_GAP                 (GUI_Y_GAP / 2)
-#define GUI_LABEL_HEIGHT                20
 
 /*****************************************************************************!
- * Exported Data
+ * Exported Class : JSONAST
  *****************************************************************************/
+class JSONAST : public QWidget
+{
+  Q_OBJECT;
 
-/*****************************************************************************!
- * Exported Functions
- *****************************************************************************/
+ //! Constructors
+ public :
+  JSONAST                       ();
 
-#endif /* _gui_h_*/
+ //! Destructor
+ public :
+  ~JSONAST                      ();
+
+ //! Public Methods
+ public :
+  static QString                FindCallExprName        (QJsonObject InCallExprObject);
+
+ //! Public Data
+ public :
+
+ //! Protected Methods
+ protected :
+
+ //! Protected Data
+ protected :
+
+ //! Private Methods
+ private :
+
+ //! Private Data
+ private :
+
+ //! Public Slots
+ public slots :
+
+ //! Public Signals
+ signals :
+
+ //! Public Actions
+ public :
+
+};
+
+#endif /* _jsonast_h_*/

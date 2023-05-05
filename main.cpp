@@ -50,6 +50,8 @@ application;
 QColor
 MainToolBarBackgroundColor = QColor(240, 240, 240);
 
+QSplashScreen*
+splashScreen = NULL;
 /*****************************************************************************!
  * Local Functions
  *****************************************************************************/
@@ -64,6 +66,7 @@ int
 main
 (int argc, char** argv)
 {
+  QPalette                              pal;
   QString                               systemConfigFileName;
   QString                               mainTrack1Directory;
   QString                               mainTrack2Directory;
@@ -78,8 +81,13 @@ main
   application->setOrganizationName("Greg Saltis");
   application->setOrganizationDomain("www.gsaltis.com");
 
-  QSplashScreen splashScreen(splashPixmap);
-  splashScreen.show();
+  splashScreen = new QSplashScreen(splashPixmap);
+  splashScreen->setFont(QFont("", 15, QFont::Bold));
+  pal = splashScreen->palette();
+  pal.setBrush(QPalette::WindowText, QBrush(QColor(255, 255, 255)));
+  splashScreen->setPalette(pal);
+  splashScreen->setAutoFillBackground(true);
+  splashScreen->show();
   application->processEvents();
   commandLineParser.setApplicationDescription("CodeCompare");
   commandLineParser.addHelpOption();
@@ -115,7 +123,9 @@ main
   w->resize(mainSystemConfig->GetMainWindowSize());
   w->move(mainSystemConfig->GetMainWindowLocation());
   w->show();
-  splashScreen.finish(w);
+  splashScreen->finish(w);
+  delete splashScreen;
+  splashScreen = NULL;
   return application->exec();
 }
 

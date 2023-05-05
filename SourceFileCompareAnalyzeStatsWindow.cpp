@@ -252,6 +252,7 @@ SourceFileCompareAnalyzeStatsWindow::SetFileItem
   if ( fileItem ) {
     fileName1 = fileItem->GetCodeTrack1()->RemoveLeadingBasePath(fileItem->GetAbsoluteFileName1());
     LabelFileName1->setText(fileName1);
+    emit SignalCurrentFileNameChanged(fileName1);
     return;
   }
   LabelFileName1->setText("");

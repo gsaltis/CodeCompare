@@ -94,11 +94,13 @@ class SourceFileCompareTreeContainer : public QWidget
  //! Public Slots
  public slots :
   void                          SlotAnalysisDone        (void);
+  void                          SlotCurrentAnalysisFileNameChanged (QString InFilename);
 
  //! Public Signals
  signals :
   void                          SignalAnalysisDone      (void);
-
+  void                          SignalCurrentAnalysisFileNameChanged(QString InFilename);
+  
  //! Public Actions
  public :
 

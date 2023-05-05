@@ -12,6 +12,7 @@
  *****************************************************************************/
 #include <QtCore>
 #include <QGuiApplication>
+#include <QSplashScreen>
 
 /*****************************************************************************!
  * Local Headers
@@ -36,5 +37,8 @@ application;
 
 extern QColor
 MainToolBarBackgroundColor;
+
+extern QSplashScreen*
+splashScreen;
 
 #endif /* _main_h_*/

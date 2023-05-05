@@ -183,6 +183,7 @@ MainDisplayWindow::CreateSubWindows()
   sourceDiffWindow = new SourceDifferencesWindow();
   stack3->resize(300, 277);
   sourceFilesCompareViewToolBar = new SourceCodeComparisonToolBar();
+  sourceFilesCompareViewToolBar->setParent(this);
 
   sourceFileCompareToolBar = new QToolBar();
 
@@ -193,6 +194,11 @@ MainDisplayWindow::CreateSubWindows()
                                                 sourceFileCompareToolBar,
                                                 QString("File Comparison"));
   compareContainer = new SourceFileCompareTreeContainer(sourceFileCompareContainer, sourceFileCompareTree);
+  connect(compareContainer,
+          SIGNAL(SignalCurrentAnalysisFileNameChanged(QString)),
+          this,
+          SLOT(SlotCurrentAnalysisFileNameChanged(QString)));
+  
   connect(this,
           SIGNAL(SignalAnalysisDone()),
           compareContainer,
@@ -231,7 +237,6 @@ MainDisplayWindow::CreateSubWindows()
   sourceFilesSplitter->addWidget(codeWindowContainer1);
   sourceFilesSplitter->addWidget(codeWindowContainer2);
 
-  sourceFilesChangesSplitter->addWidget(sourceFilesCompareViewToolBar);
   sourceFilesChangesSplitter->addWidget(sourceFilesSplitter);
   sourceFilesChangesSplitter->addWidget(stack3);
   
@@ -288,6 +293,7 @@ MainDisplayWindow::resizeEvent
   int                                   width;
   int                                   height;
   int                                   splitterX, splitterY, splitterW, splitterH;
+  int                                   toolbarX, toolbarY, toolbarW, toolbarH;
   
   size = InEvent->size();
   width = size.width();
@@ -295,21 +301,26 @@ MainDisplayWindow::resizeEvent
 
   //!
   splitterX = (GUI_X_GAP);
-  splitterY = GUI_Y_GAP;
+  splitterY = GUI_Y_GAP * 2 + SOURCE_CODE_COMPARISON_TOOL_BAR_HEIGHT;
   splitterW = width - (GUI_X_GAP * 2);
-  splitterH = height - (GUI_Y_GAP * 2);
+  splitterH = height - (GUI_Y_GAP * 3 + SOURCE_CODE_COMPARISON_TOOL_BAR_HEIGHT);
+  
+  toolbarX = (GUI_X_GAP);
+  toolbarY = GUI_Y_GAP;
+  toolbarW = width - (GUI_X_GAP * 2);
+  toolbarH = SOURCE_CODE_COMPARISON_TOOL_BAR_HEIGHT;
   
   //!
   dependencyTreeWindowX = (GUI_X_GAP);
-  dependencyTreeWindowY = GUI_Y_GAP;
+  dependencyTreeWindowY = GUI_Y_GAP + SOURCE_CODE_COMPARISON_TOOL_BAR_HEIGHT;
   dependencyTreeWindowW = width - (GUI_X_GAP * 2);
-  dependencyTreeWindowH = height - (GUI_Y_GAP * 2);
+  dependencyTreeWindowH = height - (GUI_Y_GAP * 3 + SOURCE_CODE_COMPARISON_TOOL_BAR_HEIGHT);
 
   //!
   buildTreeWindowX = (GUI_X_GAP);
-  buildTreeWindowY = GUI_Y_GAP;
+  buildTreeWindowY = GUI_Y_GAP + SOURCE_CODE_COMPARISON_TOOL_BAR_HEIGHT;
   buildTreeWindowW = width - (GUI_X_GAP * 2);
-  buildTreeWindowH = height - ((GUI_Y_GAP * 2) + 0);
+  buildTreeWindowH = height - (GUI_Y_GAP * 3 + SOURCE_CODE_COMPARISON_TOOL_BAR_HEIGHT);
 
   //!
   if ( dependencyTreeWindow ) {
@@ -323,6 +334,12 @@ MainDisplayWindow::resizeEvent
     splitter->resize(splitterW, splitterH);
   }
 
+  //!
+  if ( sourceFilesCompareViewToolBar ) {
+    sourceFilesCompareViewToolBar->move(toolbarX, toolbarY);
+    sourceFilesCompareViewToolBar->resize(toolbarW, toolbarH);
+  }
+  
   //!
   if ( buildTreeWindow ) {
     buildTreeWindow->move(buildTreeWindowX, buildTreeWindowY);
@@ -898,7 +915,6 @@ MainDisplayWindow::PerformMake
   
   fullPath = InTreeElement->GetAbsoluteFileName1();
 
-  TRACE_FUNCTION_QSTRING(fullPath);
   if ( mainSystemConfig->GetMakeNeedLIBDLTarget() ) {
     // Create libdl.a since some of the targets rely on -ldl
     libdlPath = fullPath + QString("/libdl.a");
@@ -1191,4 +1207,16 @@ MainDisplayWindow::SlotDisplayJSONErrorOutput
 (QString InErrorOutput)
 {
   clangErrorWindow->setText(InErrorOutput);
+}
+
+/*****************************************************************************!
+ * Function : SlotCurrentAnalysisFileNameChanged
+ *****************************************************************************/
+void
+MainDisplayWindow::SlotCurrentAnalysisFileNameChanged
+(QString InFilename)
+{
+  if ( splashScreen ) {
+    splashScreen->showMessage(InFilename, Qt::AlignVCenter);
+  }
 }

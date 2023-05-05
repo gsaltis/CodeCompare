@@ -86,6 +86,7 @@ class SourceFileCompareAnalyzeStatsWindow : public SourceFileCompareStatsWindow
 
  //! Public Signals
  signals :
+  void                          SignalCurrentFileNameChanged (QString InFilename);
 
  //! Public Actions
  public :

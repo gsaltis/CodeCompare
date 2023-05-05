@@ -71,6 +71,10 @@ SourceFileCompareTreeContainer::CreateSubWindows()
   if ( ! displayStatsWindow ) {
     statsFileWindow->hide();
   }
+  connect(statsAnalyzeWindow,
+          SIGNAL(SignalCurrentFileNameChanged(QString)),
+          this,
+          SLOT(SlotCurrentAnalysisFileNameChanged(QString)));
 }
 
 /*****************************************************************************!
@@ -399,3 +403,12 @@ SourceFileCompareTreeContainer::CreateConnections(void)
           SLOT(SlotAnalysisDone()));
 }
 
+/*****************************************************************************!
+ * Function : SlotCurrentAnalysisFileNameChanged
+ *****************************************************************************/
+void
+SourceFileCompareTreeContainer::SlotCurrentAnalysisFileNameChanged
+(QString InFilename)
+{
+  emit SignalCurrentAnalysisFileNameChanged(InFilename);
+}

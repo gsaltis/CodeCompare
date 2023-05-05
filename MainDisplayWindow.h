@@ -151,6 +151,7 @@ class MainDisplayWindow : public QWidget
   void                          SlotCodeViewSelected    (void);
   void                          SlotFunctionViewSelected (void);
   void                          SlotDisplayJSONErrorOutput (QString InErrorOutput);
+  void                          SlotCurrentAnalysisFileNameChanged (QString InFilename);
 
  //! Public Signals
  signals :

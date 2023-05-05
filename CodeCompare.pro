@@ -85,6 +85,7 @@ SOURCES                         += \
 				   FileTreeElement.cpp                          \
 				   FileTreeFile.cpp                             \
 				   FileTreeWidgetItem.cpp                       \
+				   JSONAST.cpp                                  \
 				   LineNumberArea.cpp                           \
 				   MainDisplayWindow.cpp                        \
 				   MainWindow.cpp                               \
@@ -152,6 +153,7 @@ HEADERS                         += \
 				   FileTreeElement.h                            \
 				   FileTreeFile.h                               \
 				   FileTreeWidgetItem.h                         \
+				   JSONAST.h                                    \
 				   LineNumberArea.h                             \
 				   MainDisplayWindow.h                          \
 				   MainWindow.h                                 \

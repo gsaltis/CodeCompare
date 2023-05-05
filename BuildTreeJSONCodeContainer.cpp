@@ -23,6 +23,7 @@
 #include "SystemConfig.h"
 #include "trace.h"
 #include "BuildCompileLine.h"
+#include "JSONAST.h"
 
 /*****************************************************************************!
  * Function : BuildTreeJSONCodeContainer
@@ -436,6 +437,8 @@ void
 BuildTreeJSONCodeContainer::ProcessValue
 (QTreeWidgetItem* InItem, QJsonValue InValue)
 {
+  QStringList                           names;
+  QString                               callName;
   QJsonValue::Type                      type;
 
   type = InValue.type();
@@ -486,6 +489,7 @@ BuildTreeJSONCodeContainer::ProcessValue
         QJsonValue                              val = obj[i];
         QString                                 st;
 
+        names = QStringList();
         st = QString("%1").arg(i);
         if ( val.isObject() ) {
           QJsonObject                           obj2 = val.toObject();
@@ -493,8 +497,14 @@ BuildTreeJSONCodeContainer::ProcessValue
           if ( val2.isString() ) {
             st = val2.toString();
           }
+          names << st;
+          if ( st == "CallExpr" ) {
+            callName = JSONAST::FindCallExprName(obj2);
+            TRACE_FUNCTION_QSTRING(callName);
+            names << callName;
+          }
         }
-        item = new QTreeWidgetItem(QStringList(st));
+        item = new QTreeWidgetItem(names);
         InItem->addChild(item);
         ProcessValue(item, obj[i]);
       }
