@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : BuildLine.h
- * DATE         : April 03 2023
+ * FILE NAME    : TranslationUnitType.h
+ * DATE         : May 05 2023
  * PROJECT      : 
- * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
+ * COPYRIGHT    : Copyright (C) 2023 by Vertiv Company
  *****************************************************************************/
-#ifndef _buildline_h_
-#define _buildline_h_
+#ifndef _translationunittype_h_
+#define _translationunittype_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -13,86 +13,57 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
-#include <QString>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "TranslationUnit.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
 
 /*****************************************************************************!
- * Exported Class : BuildLine
+ * Exported Class : TranslationUnitType
  *****************************************************************************/
-class BuildLine : public QWidget
+class TranslationUnitType : public QWidget
 {
-  Q_OBJECT;
 
  //! Constructors
  public :
-  BuildLine                     ();
+  TranslationUnitType           (QString InName, int InLineStart, int InLineEnd);
 
  //! Destructor
  public :
-  ~BuildLine                    ();
+  ~TranslationUnitType          ();
 
+ //! Public Types
   enum Type {
-    TypeNone,
-    TypeCompile,
-    TypeLN,
-    TypeAR,
-    TypeRanlib,
-    TypeFor,
-    TypeEcho,
-    TypeUnknown
+    None,
+    Function,
+    Variable
   };
   
  //! Public Methods
  public :
-  Type
-  GetType
-  ();
 
-  virtual void
-  ParseLine
-  (QString InBuildLine) = 0;
-
-  QString
-  GetText
-  (void);
-
-  static QStringList
-  GetLineElements
-  (QString InBuildLine);
-  void                                  Dump                    (void);
-  QString                               GetFilePath             (void);
-  void                                  SetFilePath             (QString InFilePath);
-  void                                  AddTranslationUnitType  (TranslationUnitType* InType);
-
-  TranslationUnit                       GetTranslationUnit      ();
-  
  //! Public Data
  public :
-  
+
  //! Protected Methods
  protected :
 
  //! Protected Data
  protected :
-  Type                                  buildType;
-  QString                               lineText;
-  TranslationUnit                       translationUnit;
-  
+  QString                               name;
+  Type                                  type;
+  int                                   lineStart;
+  int                                   lineEnd;
+
  //! Private Methods
  private :
 
  //! Private Data
  private :
-  
-  QString                               filePath;
 
  //! Public Slots
  public slots :
@@ -105,4 +76,4 @@ class BuildLine : public QWidget
 
 };
 
-#endif /* _buildline_h_*/
+#endif /* _translationunittype_h_*/

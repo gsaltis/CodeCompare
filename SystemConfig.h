@@ -56,6 +56,7 @@ class SystemConfig : public QWidget
   QStringList                   GetClangCodeGatherOptions();
   bool                          GetDiffMissingIsDiff    ();
   QString                       GetDiff                 ();
+  QString                       GetBuildDirectoryName   ();
   
  //! Public Data
  public :
@@ -75,6 +76,7 @@ class SystemConfig : public QWidget
   void                          ReadClangInformation    (QJsonObject &InObject);
   void                          Initialize              (void);
   void                          ReadDiffInformation     (QJsonObject &InObject);
+  void                          ReadBuildInformation    (QJsonObject &InObject);
 
  //! Private Data
  private :
@@ -94,7 +96,7 @@ class SystemConfig : public QWidget
   QStringList                   ClangHeaderGatherOptions;  
   QStringList                   ClangCodeGatherOptions;
   QStringList                   ClangHeaderExcludePaths;
-
+  QString                       BuildDirectoryName;
   QString                       DiffExeName;
   bool                          DiffMissingIsDiff;
   

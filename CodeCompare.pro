@@ -4,8 +4,6 @@ QMAKE_CC                        = @echo [C+] $@ && gcc
 
 QMAKE_MOC                       = @echo [MO] $@ && moc 
 
-QMAKE_MOC_EXE                   = @echo [MO] $@ && moc.exe
-
 QMAKE_LINK                      = @echo [LD] $@ && g++ 
 
 QMAKE_RC                        = @echo [RC] $@ && windres 
@@ -85,6 +83,7 @@ SOURCES                         += \
 				   FileTreeElement.cpp                          \
 				   FileTreeFile.cpp                             \
 				   FileTreeWidgetItem.cpp                       \
+				   FunctionType.cpp                             \
 				   JSONAST.cpp                                  \
 				   LineNumberArea.cpp                           \
 				   MainDisplayWindow.cpp                        \
@@ -99,6 +98,9 @@ SOURCES                         += \
 				   SourceFileCompareTreeContainer.cpp           \
 				   SystemConfig.cpp                             \
 				   TitledWindow.cpp                             \
+				   TranslationUnit.cpp                          \
+				   TranslationUnitType.cpp                      \
+				   VariableType.cpp                             \
 				   WindowHeader.cpp                             \
 				   main.cpp                                     \
 				   trace.cpp                                    \
@@ -153,6 +155,7 @@ HEADERS                         += \
 				   FileTreeElement.h                            \
 				   FileTreeFile.h                               \
 				   FileTreeWidgetItem.h                         \
+				   FunctionType.h                               \
 				   JSONAST.h                                    \
 				   LineNumberArea.h                             \
 				   MainDisplayWindow.h                          \
@@ -167,6 +170,9 @@ HEADERS                         += \
 				   SourceFileCompareTreeContainer.h             \
 				   SystemConfig.h                               \
 				   TitledWindow.h                               \
+				   TranslationUnit.h                            \
+				   TranslationUnitType.h                        \
+				   VariableType.h                               \
 				   WindowHeader.h                               \
 				   gui.h                                        \
 				   trace.h                                      \

@@ -82,7 +82,7 @@ main
   application->setOrganizationDomain("www.gsaltis.com");
 
   splashScreen = new QSplashScreen(splashPixmap);
-  splashScreen->setFont(QFont("", 15, QFont::Bold));
+  splashScreen->setFont(QFont("", 12, QFont::Bold));
   pal = splashScreen->palette();
   pal.setBrush(QPalette::WindowText, QBrush(QColor(255, 255, 255)));
   splashScreen->setPalette(pal);

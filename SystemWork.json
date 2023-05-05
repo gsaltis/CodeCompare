@@ -18,6 +18,9 @@
     "target"                            : "all",
     "needlibdl"                         : true
   },
+  "Build" : {
+    "builddir"                        : "C:\\users\\greg.saltis\\Source\\CodeCompare\\BuildDir"
+  },
   "Clang" : {
     "clang"                             : "c:\\Program Files\\LLVM\\bin\\clang.exe",
     "includepaths"                      : [

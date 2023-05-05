@@ -182,6 +182,8 @@ void
 FileTreeFile::DiffFiles
 ()
 {
+  QString                               diffFilename;
+  QString                               buildPathName;
   QFileInfo                             fileInfo1(AbsoluteFileName1);
   QFileInfo                             fileInfo2(AbsoluteFileName2);
   QProcess                              diffProcess;
@@ -190,9 +192,21 @@ FileTreeFile::DiffFiles
   QString                               program = mainSystemConfig->GetDiff();
 
   args << AbsoluteFileName1 << AbsoluteFileName2;
+  buildPathName = QDir::toNativeSeparators(mainSystemConfig->GetBuildDirectoryName() + "\\" + GetCodeTrack1()->RemoveLeadingBasePath(AbsoluteFileName1));
+
+  QDir d;
+  if ( !d.exists(buildPathName) )  {
+    d.mkpath(buildPathName);
+  }
+  
+  diffFilename = buildPathName + "\\diffs.txt";
+  diffProcess.setStandardOutputFile(diffFilename);
   diffProcess.start(program, args);
   diffProcess.waitForFinished();
-  stdOutput = QString(diffProcess.readAllStandardOutput().trimmed());
+  QFile                                 file(diffFilename);
+  file.open(QIODeviceBase::ReadOnly);
+  stdOutput = QString(file.readAll());
+  file.close();
   if ( !stdOutput.isEmpty() ) {
     Diffs.ParseLines(stdOutput);
     FilesDiffer = true;

@@ -54,34 +54,37 @@ JSONAST::FindCallExprName
   }
   inner1 = val.toArray();
 
-  val = inner1[0];
-  if ( ! val.isObject() ) {
-    return QString();
-  }
+  for ( int i = 0 ; i < inner1.count() ; i++ ) {
+    val = inner1[i];
+    if ( ! val.isObject() ) {
+      continue;
+    }
     
-  castExpr = val.toObject();
-
-  val = castExpr["inner"];
-  if ( ! val.isArray() ) {
-    return QString();
-  }
-  inner2 = val.toArray();
-
-  val = inner2[0];
-  if ( ! val.isObject() ) {
-    return QString();
-  }
+    castExpr = val.toObject();
     
-  declRefExpr = val.toObject();
-  val = declRefExpr["referencedDecl"];
-  if ( ! val.isObject() ) {
-    return QString();
+    val = castExpr["inner"];
+    if ( ! val.isArray() ) {
+      continue;
+    }
+    inner2 = val.toArray();
+    
+    val = inner2[0];
+    if ( ! val.isObject() ) {
+      continue;
+    }
+    
+    declRefExpr = val.toObject();
+    val = declRefExpr["referencedDecl"];
+    if ( ! val.isObject() ) {
+      continue;
+    }
+    refDecl = val.toObject();
+    
+    val = refDecl["name"];
+    if ( ! val.isString() ) {
+      continue;
+    }
+    return val.toString();
   }
-  refDecl = val.toObject();
-
-  val = refDecl["name"];
-  if ( ! val.isString() ) {
-    return QString();
-  }
-  return val.toString();
+  return QString();
 }

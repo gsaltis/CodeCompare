@@ -57,6 +57,7 @@ SystemConfig::ReadJSON
   QJsonObject                           makeObject;
   QJsonObject                           pathsObject;
   QJsonObject                           diffObject;
+  QJsonObject                           buildObject;
   QJsonValue                            geomValue;
 
   file.open(QIODeviceBase::ReadOnly);
@@ -92,6 +93,11 @@ SystemConfig::ReadJSON
   diffObject = docObject["Diff"].toObject();
   if ( ! diffObject.isEmpty() ){
     ReadDiffInformation(diffObject);
+  }
+
+  buildObject = docObject["Build"].toObject();
+  if ( ! buildObject.isEmpty() ){
+    ReadBuildInformation(buildObject);
   }
 }
 
@@ -218,6 +224,16 @@ SystemConfig::SetMakeNeedLIBDLTarget
 (bool InMakeNeedLIBDLTarget)
 {
   MakeNeedLIBDLTarget = InMakeNeedLIBDLTarget;  
+}
+
+/*****************************************************************************!
+ * Function : ReadBuildInformation
+ *****************************************************************************/
+void
+SystemConfig::ReadBuildInformation
+(QJsonObject &InObject)
+{
+  BuildDirectoryName = InObject["builddir"].toString();
 }
 
 /*****************************************************************************!
@@ -355,4 +371,14 @@ SystemConfig::GetDiffMissingIsDiff
 ()
 {
   return DiffMissingIsDiff;
+}
+
+/*****************************************************************************!
+ * Function : GetBuildDirectoryName
+ *****************************************************************************/
+QString
+SystemConfig::GetBuildDirectoryName
+()
+{
+  return BuildDirectoryName;
 }

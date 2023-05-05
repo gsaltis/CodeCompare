@@ -170,11 +170,12 @@ BuildTreeJSONCodeContainer::SlotTreeItemSelected
     if ( st == "inner" ) {
       if ( value.isArray() ) {
         QJsonArray array = value.toArray();
-        ProcessInnerTranslationUnitArray(array, InFilename);
+        ProcessInnerTranslationUnitArray(InBuildLine, array, InFilename);
       }
       continue;
     }
   }
+  emit SignalBuildLineProcessed(InBuildLine, InFilename);
 }
 
 /*****************************************************************************!
@@ -182,7 +183,7 @@ BuildTreeJSONCodeContainer::SlotTreeItemSelected
  *****************************************************************************/
 void
 BuildTreeJSONCodeContainer::ProcessInnerTranslationUnitArray
-(QJsonArray InTUArray, QString InFilename)
+(BuildLine* InBuildLine, QJsonArray InTUArray, QString InFilename)
 {
   QSize                                 size2;
   QFont                                 font;
@@ -235,6 +236,8 @@ BuildTreeJSONCodeContainer::ProcessInnerTranslationUnitArray
     name = obj["name"].toString();
     treeItem1 = new QTreeWidgetItem(QStringList(name));
     jsonFileDisplay->addTopLevelItem(treeItem1);
+    TranslationUnitType* tuType = new TranslationUnitType(name, 0, 0);
+    InBuildLine->AddTranslationUnitType(tuType);
     ProcessValue(treeItem1, InTUArray[i]);
     FontifyTreeItem(treeItem1, obj, kind);
   }
@@ -500,7 +503,6 @@ BuildTreeJSONCodeContainer::ProcessValue
           names << st;
           if ( st == "CallExpr" ) {
             callName = JSONAST::FindCallExprName(obj2);
-            TRACE_FUNCTION_QSTRING(callName);
             names << callName;
           }
         }

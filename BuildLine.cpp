@@ -94,3 +94,23 @@ BuildLine::SetFilePath
 {
   filePath = InFilePath;  
 }
+
+/*****************************************************************************!
+ * Function : AddTranslationUnitType
+ *****************************************************************************/
+void
+BuildLine::AddTranslationUnitType
+(TranslationUnitType* InType)
+{
+  translationUnit << InType;
+}
+
+/*****************************************************************************!
+ * Function : GetTranslationUnit
+ *****************************************************************************/
+TranslationUnit
+BuildLine::GetTranslationUnit
+()
+{
+  return translationUnit;
+}

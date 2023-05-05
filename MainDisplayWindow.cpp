@@ -164,6 +164,11 @@ MainDisplayWindow::CreateSubWindows()
           SIGNAL(SignalBuildTreeJSONErrorOutput(QString)),
           this,
           SLOT(SlotDisplayJSONErrorOutput(QString)));
+  connect(jsonCode1,
+          SIGNAL(SignalBuildLineProcessed(BuildLine*, QString)),
+          this,
+          SLOT(SlotBuildLineProcessed(BuildLine*, QString)));
+  
   jsonCode2 = new BuildTreeJSONCodeContainer(codeTrack2);
   sourceFileCompareTree = new QTreeWidget(this);
 
@@ -730,8 +735,15 @@ MainDisplayWindow::FilesAreDifferent
   QString                               errorOutput;
   QStringList                           args;
   QString                               program = mainSystemConfig->GetDiff();
-
+  QString                               fname, ffname;
+  
+  fname = codeTrack1->RemoveLeadingBasePath(InFileName1);
+  ffname = mainSystemConfig->GetBuildDirectoryName() + QString("\\") + fname;
+  TRACE_FUNCTION_QSTRING(ffname);
+  QDir                                  d;
   if ( fileInfo1.size() != fileInfo2.size() ) {
+    bool b = d.mkdir(ffname);
+    TRACE_FUNCTION_BOOL(b);
     return true;
   }
   args << "-q" << InFileName1 << InFileName2;
@@ -739,6 +751,9 @@ MainDisplayWindow::FilesAreDifferent
   diffProcess.waitForFinished();
   stdOutput = QString(diffProcess.readAllStandardOutput().trimmed());
   errorOutput = QString(diffProcess.readAllStandardError().trimmed());
+  bool b = d.mkdir(ffname);
+  TRACE_FUNCTION_BOOL(b);
+  
   if ( ! stdOutput.isEmpty() ) {
     return true;
   }
@@ -1219,4 +1234,15 @@ MainDisplayWindow::SlotCurrentAnalysisFileNameChanged
   if ( splashScreen ) {
     splashScreen->showMessage(InFilename, Qt::AlignVCenter);
   }
+}
+
+/*****************************************************************************!
+ * Function : SlotBuildLineProcessed
+ *****************************************************************************/
+void
+MainDisplayWindow::SlotBuildLineProcessed
+(BuildLine* InBuildLine, QString InFilename)
+{
+  TRACE_FUNCTION_QSTRING(InFilename);
+  TRACE_FUNCTION_INT(InBuildLine->GetTranslationUnit().count());
 }
