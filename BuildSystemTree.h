@@ -19,6 +19,7 @@
  * Local Headers
  *****************************************************************************/
 #include "BuildSystem.h"
+#include "BuildLine.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -70,9 +71,11 @@ class BuildSystemTree : public QTreeWidget
   
  //! Public Slots
  public slots :
-
+  void                          SlotTreeWidgetItemSelected      (QTreeWidgetItem*, int);
+  
  //! Public Signals
  signals :
+  void                          SignalBuildTreeItemSelected     (BuildLine* InBuildLine, QString InFileName);
 
  //! Public Actions
  public :

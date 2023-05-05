@@ -150,6 +150,7 @@ class MainDisplayWindow : public QWidget
   void                          SlotTrack2CodeLineChanged (int InStartLine);
   void                          SlotCodeViewSelected    (void);
   void                          SlotFunctionViewSelected (void);
+  void                          SlotDisplayJSONErrorOutput (QString InErrorOutput);
 
  //! Public Signals
  signals :

@@ -65,7 +65,7 @@ class BuildTreeJSONCodeContainer : public QWidget
   void                          InitializeSubWindows    ();
   void                          resizeEvent                             (QResizeEvent* InEvent);
   void                          ProcessInnerTranslationUnitArray        (QJsonArray InTUArray, QString InFilename);
-  void                          FontifyTreeItem                         (QTreeWidgetItem* InTreeWidget, QString InKind);
+  void                          FontifyTreeItem                         (QTreeWidgetItem* InTreeWidget, QJsonObject InObject, QString InKind);
   void                          ProcessTopLevelInnerObject              (QTreeWidgetItem* InTreeItem, QJsonArray InArray);
   void                          ProcessCompoundStatement                (QTreeWidgetItem* InTreeItem, QJsonArray InArray);
   void                          ProcessCallExpr         (QTreeWidgetItem* InTreeItem, QJsonObject InObject);
@@ -73,6 +73,8 @@ class BuildTreeJSONCodeContainer : public QWidget
   void                          ProcessSingleItem       (QJsonValue InValue, QTreeWidgetItem* InItem);
   void                          ProcessRangeObject                      (QTreeWidgetItem* InTreeItem, QJsonValue InValue);
   void                          ProcessValue                            (QTreeWidgetItem* InTreeItem, QJsonValue InValue);
+  QJsonObject                   FindElementInInnerObject                (QJsonArray InInnerObject, QString InName);
+
  //! Private Data
  private :
   QTreeWidget*                  jsonFileDisplay;
@@ -84,6 +86,7 @@ class BuildTreeJSONCodeContainer : public QWidget
 
  //! Public Signals
  signals :
+  void                          SignalBuildTreeJSONErrorOutput (QString InErrorOutput);
 
  //! Public Actions
  public :

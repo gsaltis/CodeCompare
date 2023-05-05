@@ -160,9 +160,18 @@ MainDisplayWindow::CreateSubWindows()
   buildSystemTree = new BuildSystemTree();
   
   jsonCode1 = new BuildTreeJSONCodeContainer(codeTrack1);
+  connect(jsonCode1,
+          SIGNAL(SignalBuildTreeJSONErrorOutput(QString)),
+          this,
+          SLOT(SlotDisplayJSONErrorOutput(QString)));
   jsonCode2 = new BuildTreeJSONCodeContainer(codeTrack2);
   sourceFileCompareTree = new QTreeWidget(this);
 
+  connect(buildSystemTree,
+          SIGNAL(SignalBuildTreeItemSelected(BuildLine*, QString)),
+          jsonCode1,
+          SLOT(SlotTreeItemSelected(BuildLine*, QString)));
+  
   clangErrorWindow = new QTextEdit();
   pal = clangErrorWindow->palette();
   pal.setBrush(QPalette::Base, QBrush(QColor(0, 0, 200)));
@@ -1172,4 +1181,14 @@ MainDisplayWindow::SlotFunctionViewSelected(void)
   stack2->setCurrentIndex(1);
   stack3->setCurrentIndex(1);
   stack4->setCurrentIndex(1);
+}
+
+/*****************************************************************************!
+ * Function : SlotDisplayJSONErrorOutput
+ *****************************************************************************/
+void
+MainDisplayWindow::SlotDisplayJSONErrorOutput
+(QString InErrorOutput)
+{
+  clangErrorWindow->setText(InErrorOutput);
 }

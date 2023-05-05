@@ -19,6 +19,7 @@
 #include "BuildTreeItem.h"
 #include "BuildElement.h"
 #include "BuildElementSet.h"
+#include "BuildCompileLine.h"
 
 /*****************************************************************************!
  * 
@@ -104,6 +105,10 @@ BuildSystemTree::SetBuildSystem
 {
   buildSystem = InBuildSystem;
   Populate();
+  connect(this,
+          SIGNAL(itemClicked(QTreeWidgetItem*, int)),
+          this,
+          SLOT(SlotTreeWidgetItemSelected(QTreeWidgetItem*, int)));
 }
 
 /*****************************************************************************!
@@ -259,3 +264,36 @@ CompareTopLevelNames
   return b;
 }
 
+/*****************************************************************************!
+ * Function : SlotTreeItemSelected
+ *****************************************************************************/
+void
+BuildSystemTree::SlotTreeWidgetItemSelected
+(QTreeWidgetItem* InItem, int InColumn)
+{
+  BuildCompileLine*                     buildCompileLine;
+  BuildLine*                            buildLine;
+  BuildLine::Type                       type;
+  BuildTreeItem*                        item;
+  QString                               fileName;
+  QString                               filePath;
+  QStringList                           sources;
+
+  (void)InColumn;
+
+  item = (BuildTreeItem*)InItem;
+  buildLine = item->GetBuildLine();
+  if ( NULL == buildLine ) {
+    return;
+  }
+  type = buildLine->GetType();
+  if ( type == BuildLine::TypeCompile ) {
+    buildCompileLine = (BuildCompileLine*)buildLine;
+    filePath = buildCompileLine->GetFilePath();
+    sources = buildCompileLine->GetSources();
+    foreach (QString st, sources) {
+      fileName = filePath + QString("/") + st;
+      emit SignalBuildTreeItemSelected(buildLine, fileName);
+    }
+  }
+}
