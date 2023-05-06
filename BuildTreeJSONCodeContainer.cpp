@@ -24,6 +24,7 @@
 #include "trace.h"
 #include "BuildCompileLine.h"
 #include "JSONAST.h"
+#include "FileTreeFile.h"
 
 /*****************************************************************************!
  * Function : BuildTreeJSONCodeContainer
@@ -176,6 +177,22 @@ BuildTreeJSONCodeContainer::SlotTreeItemSelected
     }
   }
   emit SignalBuildLineProcessed(InBuildLine, InFilename);
+  FileTreeFile*                 f = InBuildLine->GetFileTreeElement();
+  FileContentsDiff              diffs = f->GetDiffs();
+  TranslationUnit               tu = InBuildLine->GetTranslationUnit();
+
+  for ( int i = 0; i < tu.count(); i++ ) {
+    TranslationUnitType*         t = tu[i];
+    QString st = t->GetName();
+    int sl = t->GetLineStart();  
+    int el = t->GetLineEnd();
+    QString dm = " ";
+    if ( t->HasTargetChangeLines(&diffs) ) {
+      dm = "*";
+    }
+    st = QString("%1 %2 %3 %4").arg(dm).arg(st).arg(sl).arg(el);
+    TRACE_FUNCTION_QSTRING(st);
+  }
 }
 
 /*****************************************************************************!
@@ -185,6 +202,7 @@ void
 BuildTreeJSONCodeContainer::ProcessInnerTranslationUnitArray
 (BuildLine* InBuildLine, QJsonArray InTUArray, QString InFilename)
 {
+  QString                               locationFilename;
   QSize                                 size2;
   QFont                                 font;
   QString                               fileName;
@@ -196,6 +214,8 @@ BuildTreeJSONCodeContainer::ProcessInnerTranslationUnitArray
   QTreeWidgetItem*                      treeItem1;
   QSize                                 size;
   QTreeWidgetItem*                      headerItem;
+  int                                   startLine;
+  int                                   endLine;
   
   jsonFileDisplay->clear();
   headerItem = new QTreeWidgetItem();
@@ -221,22 +241,18 @@ BuildTreeJSONCodeContainer::ProcessInnerTranslationUnitArray
   inTargetFile = false;
   for ( int i = 0 ; i < InTUArray.size() ; i++ ) {
     obj = InTUArray[i].toObject();
-    kind = obj["kind"].toString();
-    locObj = obj["loc"].toObject();
-    if ( locObj.isEmpty() ) {
-      continue;
-    }
-    fileName = locObj["file"].toString();
-    if ( fileName == InFilename ) {
-      inTargetFile = true;
+    JSONAST::GetTopLevelLinesNumbers(obj, startLine, endLine, locationFilename);
+    if ( !locationFilename.isEmpty() ) {
+      inTargetFile = locationFilename == InFilename;
     }
     if ( ! inTargetFile ) {
       continue;
     }
+    kind = obj["kind"].toString();
     name = obj["name"].toString();
     treeItem1 = new QTreeWidgetItem(QStringList(name));
     jsonFileDisplay->addTopLevelItem(treeItem1);
-    TranslationUnitType* tuType = new TranslationUnitType(name, 0, 0);
+    TranslationUnitType* tuType = new TranslationUnitType(name, startLine, endLine);
     InBuildLine->AddTranslationUnitType(tuType);
     ProcessValue(treeItem1, InTUArray[i]);
     FontifyTreeItem(treeItem1, obj, kind);

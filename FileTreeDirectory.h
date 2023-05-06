@@ -27,7 +27,7 @@
 /*****************************************************************************!
  * Exported Class : FileTreeDirectory
  *****************************************************************************/
-class FileTreeDirectory : public FileTreeElement , QList<FileTreeFile>
+class FileTreeDirectory : public FileTreeElement , public QList<FileTreeElement*>
 {
  //! Constructors
  public :
@@ -43,7 +43,8 @@ class FileTreeDirectory : public FileTreeElement , QList<FileTreeFile>
   void                 Read                             () override;
   int                  GetFileCount                     () override;
   QList<int>           GetChangeLinesCount              () override;
-
+  FileTreeElement*     FindTreeElementByName            (QString InFilename);
+  
  //! Public Data
  public :
 

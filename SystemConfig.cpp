@@ -140,6 +140,8 @@ SystemConfig::ReadPaths
 (QJsonObject& InObject)
 {
   SourceTrackPath = InObject["sourcepath"].toString();
+  SourceTrack1Path = InObject["track1path"].toString();
+  SourceTrack2Path = InObject["track2path"].toString();
 }
 
 /*****************************************************************************!
@@ -149,6 +151,24 @@ QString
 SystemConfig::GetSourceTrackPath(void)
 {
   return SourceTrackPath;
+}
+
+/*****************************************************************************!
+ * Function : GetSourceTrack1Path
+ *****************************************************************************/
+QString
+SystemConfig::GetSourceTrack1Path(void)
+{
+  return SourceTrack1Path;
+}
+
+/*****************************************************************************!
+ * Function : GetSourceTrack2Path
+ *****************************************************************************/
+QString
+SystemConfig::GetSourceTrack2Path(void)
+{
+  return SourceTrack2Path;
 }
 
 /*****************************************************************************!

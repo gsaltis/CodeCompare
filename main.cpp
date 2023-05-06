@@ -66,6 +66,7 @@ int
 main
 (int argc, char** argv)
 {
+  QString                               st;
   QPalette                              pal;
   QString                               systemConfigFileName;
   QString                               mainTrack1Directory;
@@ -81,8 +82,12 @@ main
   application->setOrganizationName("Greg Saltis");
   application->setOrganizationDomain("www.gsaltis.com");
 
+  mainSystemConfig = new SystemConfig();
+  mainSystemConfig->ReadJSON(MainConfigFilename);
+
+  mainTrack1Directory = mainSystemConfig->GetSourceTrack1Path();
+  mainTrack2Directory = mainSystemConfig->GetSourceTrack2Path();
   splashScreen = new QSplashScreen(splashPixmap);
-  splashScreen->setFont(QFont("", 12, QFont::Bold));
   pal = splashScreen->palette();
   pal.setBrush(QPalette::WindowText, QBrush(QColor(255, 255, 255)));
   splashScreen->setPalette(pal);
@@ -99,8 +104,8 @@ main
                                          QCoreApplication::translate("main", "Specifiy a codebase for seconde track <basepath>."),
                                          QCoreApplication::translate("main", "codepath"));
   QCommandLineOption SystemConfigOption(QStringList() << "s" << "system",
-                                         QCoreApplication::translate("main", "Specifiy a System Configuration file>."),
-                                         QCoreApplication::translate("main", "system"));
+                                        QCoreApplication::translate("main", "Specifiy a System Configuration file>."),
+                                        QCoreApplication::translate("main", "system"));
   QCommandLineOption StartAnalysisOption(QStringList() << "a" << "analysis",
                                          QCoreApplication::translate("main", "Start Analysis at start up."));
   commandLineParser.addOption(codeBase1NameOption);
@@ -109,16 +114,21 @@ main
   commandLineParser.addOption(StartAnalysisOption);
   commandLineParser.process(*application);
   mainCodeBase = commandLineParser.value(codeBase1NameOption);
-  mainTrack1Directory = commandLineParser.value(codeBase1NameOption);
-  mainTrack2Directory = commandLineParser.value(codeBase2NameOption);
+  st = commandLineParser.value(codeBase1NameOption);
+  if ( ! st.isEmpty() ) {
+    mainTrack1Directory = st;
+  }
+  st = commandLineParser.value(codeBase2NameOption);
+  if ( ! st.isEmpty() ) {
+    mainTrack2Directory = st;
+  }
+  
   systemConfigFileName = commandLineParser.value(SystemConfigOption);
   mainStartAnalysis = commandLineParser.isSet(StartAnalysisOption);
   
   if ( ! systemConfigFileName.isEmpty() ) {
     MainConfigFilename = systemConfigFileName;
   }
-  mainSystemConfig = new SystemConfig();
-  mainSystemConfig->ReadJSON(MainConfigFilename);
   w = new MainWindow(mainTrack1Directory, mainTrack2Directory, mainStartAnalysis);
   w->resize(mainSystemConfig->GetMainWindowSize());
   w->move(mainSystemConfig->GetMainWindowLocation());

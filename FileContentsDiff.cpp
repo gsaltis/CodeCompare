@@ -49,7 +49,7 @@ FileContentsDiff::ParseLines
     return;
   }
 
-  strings = InDiffString.split("\r\n");
+  strings = InDiffString.split("\r\n", Qt::SkipEmptyParts);
   strings.removeAll("\\ No newline at end of file");
   i = 0;
   while ( i < strings.count() ) {

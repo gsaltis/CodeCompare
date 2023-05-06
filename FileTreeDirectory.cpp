@@ -64,7 +64,7 @@ FileTreeDirectory::GetFileCount
   m = 0;
   for (i = 0; i < n; i++) {
     auto f = at(i);
-    m += f.GetFileCount();
+    m += f->GetFileCount();
   }
   return m;
 }
@@ -80,5 +80,32 @@ FileTreeDirectory::GetChangeLinesCount
 
   n << 0 << 0  << 0;
   return n;
+}
+
+/*****************************************************************************!
+ * Function : FindTreeElementByName
+ *****************************************************************************/
+FileTreeElement*
+FileTreeDirectory::FindTreeElementByName
+(QString InFilename)
+{
+  int                                   n;
+  n = count();
+  for ( int i = 0 ; i < n; i++ ) {
+    auto treeElement            = at(i);
+    if ( treeElement->GetIsDirectory() ) {
+      FileTreeDirectory* d = (FileTreeDirectory*)treeElement;
+      FileTreeElement* element = d->FindTreeElementByName(InFilename);
+      if ( element ) {
+        return element;
+      }
+      continue;
+    }
+    if ( treeElement->GetAbsoluteFileName1() == InFilename ||
+         treeElement->GetAbsoluteFileName2() == InFilename ) {
+      return treeElement;
+    }
+  }
+  return NULL;
 }
 

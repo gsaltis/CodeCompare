@@ -43,6 +43,8 @@ class SystemConfig : public QWidget
   QPoint                        GetMainWindowLocation   (void);
   QSize                         GetMainWindowSize       (void);
   QString                       GetSourceTrackPath      (void);
+  QString                       GetSourceTrack1Path     (void);
+  QString                       GetSourceTrack2Path     (void);
   QString                       GetMakeExeName          (void);
   QString                       GetMakeTarget           (void);
   QStringList                   GetMakeArgs             (void);
@@ -85,6 +87,8 @@ class SystemConfig : public QWidget
   int                           MainWindowWidth;
   int                           MainWindowHeight;
   QString                       SourceTrackPath;
+  QString                       SourceTrack1Path;
+  QString                       SourceTrack2Path;
   QString                       MakeExeName;
   QString                       MakeTarget;
   QStringList                   MakeArgs;

@@ -12,7 +12,6 @@
 #include <QtGui>
 #include <QWidget>
 
-#undef TRACE_USE
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
@@ -52,14 +51,11 @@ FileSectionDiff::ParseLine
   int                                   lineCount1, lineCount2;
   QStringList                           leftRangeLine, rightRangeLine;
 
-  TRACE_FUNCTION_INT(InLines.count());
   line = InLines[InCurrentLine];
   line = line.trimmed();
-  TRACE_FUNCTION_QSTRING(line);
   s = line.split(QRegularExpression("[a-z]"));
   n1 = s[0].length();
   command = line.sliced(n1, 1);
-  TRACE_FUNCTION_QSTRING(command);
   first1 = last1 = first2 = last2 = lineCount1 = lineCount2 = 0;
 
   //!
@@ -75,9 +71,7 @@ FileSectionDiff::ParseLine
 
   //!
   if ( command == "d" ) {
-    TRACE_FUNCTION_LOCATION();
     leftRangeLine = s[0].split(",");
-    TRACE_FUNCTION_INT(leftRangeLine.length());
     last1 = first1 = leftRangeLine[0].toInt();
     if ( leftRangeLine.length() == 2 ) {
       last1 = leftRangeLine[1].toInt();
@@ -103,14 +97,6 @@ FileSectionDiff::ParseLine
     lineCount2 = (last2 - first2) + 1;    
   }
 
-  TRACE_FUNCTION_QSTRING(command);
-  TRACE_FUNCTION_INT(first1);
-  TRACE_FUNCTION_INT(last1);
-  TRACE_FUNCTION_INT(first2);
-  TRACE_FUNCTION_INT(last2);
-  TRACE_FUNCTION_INT(lineCount1);
-  TRACE_FUNCTION_INT(lineCount2);
-
   sourceStartLine = first1;
   sourceEndLine = last1;
   targetStartLine = first2;
@@ -122,23 +108,18 @@ FileSectionDiff::ParseLine
     for ( int i = 0; i < lineCount1; i++ ) {
       line = InLines[InCurrentLine];
       line = line.trimmed();
-      TRACE_FUNCTION_QSTRING(line);
       sourceChangeLines << line;
       InCurrentLine++;
     }
     line = InLines[InCurrentLine];
     line = line.trimmed();
     InCurrentLine++;
-    TRACE_FUNCTION_QSTRING(line);
-    TRACE_FUNCTION_INT(InCurrentLine);
     for ( int i = 0; i < lineCount2; i++ ) {
       line = InLines[InCurrentLine];
       line = line.trimmed();
       targetChangeLines << line;
-      TRACE_FUNCTION_QSTRING(line);
       InCurrentLine++;
     }
-    TRACE_FUNCTION_INT(InCurrentLine);
     return;
   }
   if ( command == "d" ) {
@@ -146,11 +127,9 @@ FileSectionDiff::ParseLine
     for ( int i = 0; i < lineCount1; i++ ) {
       line = InLines[InCurrentLine];
       line = line.trimmed();
-      TRACE_FUNCTION_QSTRING(line);
       sourceChangeLines << line;
       InCurrentLine++;
     }
-    TRACE_FUNCTION_INT(InCurrentLine);
     return;
   }
   if ( command == "a" ) {
@@ -158,109 +137,11 @@ FileSectionDiff::ParseLine
     for ( int i = 0; i < lineCount2; i++ ) {
       line = InLines[InCurrentLine];
       line = line.trimmed();
-      TRACE_FUNCTION_QSTRING(line);
       targetChangeLines << line;
       InCurrentLine++;
     }
-    TRACE_FUNCTION_INT(InCurrentLine);
     return;
   }
-  TRACE_FUNCTION_QSTRING(line);
-  exit(0);
-#if 0
-  QChar                                 c2;
-  QChar                                 c;
-  int                                   start;
-  int                                   point;
-  QString                               line;
-  QString                               startPointString;
-  QString                               endPointString;
-  int                                   n;
-
-  
-  TRACE_FUNCTION_START();
-  TRACE_FUNCTION_INT(InLines.count());
-  TRACE_FUNCTION_INT(InCurrentLine);
-
-  line = line.trimmed();
-  TRACE_FUNCTION_QSTRING(line);
-  InCurrentLine++;
-  start = 0;
-  point = 0;
-
-  n = line.length();
-  do {
-    c = line[point];
-    if ( ! c.isDigit() ) {
-      break;
-    }
-    point++;
-    if ( point == n ) {
-      TRACE_FUNCTION_END();
-      return;
-    }
-  } while (true);
-
-  startPointString = line.sliced(start, point - start);
-  if ( point >= n ) {
-    TRACE_FUNCTION_END();
-    return;
-  }
-  startLine = startPointString.toInt();
-  endLine = startLine; 
-  c2 = line[point];
-  if ( c2 == ',' ) {
-    point++;
-    start = point;
-    
-    do {
-      c = line[point];
-      if ( ! c.isDigit() ) {
-        break;
-      }
-      point++;
-      if ( point == n ) {
-        break;
-      }
-    } while (true);
-    c2 = line[point];
-    endPointString = line.sliced(start, point - start);
-    endLine = endPointString.toInt();
-  }
-  switch (c2.toLatin1()) {
-    case 'c' :
-      type = Change;
-      break;
-    case 'd' :
-      type = Delete;
-      break;
-    case 'a' :
-      type = Add;
-      break;
-    default :
-      TRACE_FUNCTION_END();
-      return;
-  }
-  if ( type == Delete ) {
-    TRACE_FUNCTION_END();
-    return;
-  }
-  TRACE_FUNCTION_INT(startLine);
-  TRACE_FUNCTION_INT(endLine);
-  TRACE_FUNCTION_INT(InCurrentLine);
-  for ( int i = startLine; i <= endLine ; i++ ) {
-    TRACE_FUNCTION_QSTRING(InLines[InCurrentLine]);
-    changeLines << InLines[InCurrentLine];
-    InCurrentLine++;
-  }
-  if ( InLines[InCurrentLine] == "." ) {
-    TRACE_FUNCTION_LOCATION();
-    InCurrentLine++;
-  }
-  TRACE_FUNCTION_INT(InCurrentLine);
-  TRACE_FUNCTION_END();
-  return;
-#endif  
 }
 
 /*****************************************************************************!

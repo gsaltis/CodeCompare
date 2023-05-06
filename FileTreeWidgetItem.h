@@ -42,7 +42,7 @@ class FileTreeWidgetItem : public QTreeWidgetItem
  public :
   FileTreeWidgetItem            (QString InAbsoluteFileName, QTreeWidget* InParent, bool InIsDirectory, CodeTrack* InTrack1, CodeTrack* InTrack2);
   FileTreeWidgetItem            (QString InAbsoluteFileName1,  QString InAbsoluteFileName2, bool InIsDirectory, CodeTrack* InTrack1, CodeTrack* InTrack2);
-  FileTreeWidgetItem            (QString InAbsoluteFileName1,  QString InAbsoluteFileName2, QTreeWidgetItem* InParent, bool InIsDirectory, CodeTrack* InTrack1, CodeTrack* InTrack2);
+  FileTreeWidgetItem            (QString InAbsoluteFileName1,  QString InAbsoluteFileName2, FileTreeWidgetItem* InParent, bool InIsDirectory, CodeTrack* InTrack1, CodeTrack* InTrack2);
 
  //! Destructor
  public :
@@ -63,7 +63,7 @@ class FileTreeWidgetItem : public QTreeWidgetItem
   QString                       GetFileName1            ();
   QString                       GetFileName2            ();
   bool                          IsSourceFile            (void);
-    FileContentsDiff              GetDifferences          ();
+  FileContentsDiff              GetDifferences          ();
   bool                          ReadFileContents        (QString InFilename, QStringList& InFileLines);
   void                          ReadFiles               (void);
   QStringList                   GetFile1Lines           ();

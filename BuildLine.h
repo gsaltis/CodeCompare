@@ -25,6 +25,11 @@
  *****************************************************************************/
 
 /*****************************************************************************!
+ * Imported Classes
+ *****************************************************************************/
+class FileTreeFile;
+
+/*****************************************************************************!
  * Exported Class : BuildLine
  *****************************************************************************/
 class BuildLine : public QWidget
@@ -73,6 +78,8 @@ class BuildLine : public QWidget
   void                                  AddTranslationUnitType  (TranslationUnitType* InType);
 
   TranslationUnit                       GetTranslationUnit      ();
+  FileTreeFile*                         GetFileTreeElement      (void);
+  void                                  SetFileTreeElement      (FileTreeFile* InFileTreeElement);
   
  //! Public Data
  public :
@@ -93,6 +100,7 @@ class BuildLine : public QWidget
  private :
   
   QString                               filePath;
+  FileTreeFile*                         fileTreeElement;
 
  //! Public Slots
  public slots :

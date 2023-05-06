@@ -17,6 +17,7 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
+#include "FileContentsDiff.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -45,7 +46,11 @@ class TranslationUnitType : public QWidget
   
  //! Public Methods
  public :
-
+  bool                          HasTargetChangeLines    (FileContentsDiff* InDiffs);
+  QString                       GetName                 ();
+  int                           GetLineStart            (void);
+  int                           GetLineEnd              (void);
+  
  //! Public Data
  public :
 

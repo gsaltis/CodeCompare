@@ -88,3 +88,55 @@ JSONAST::FindCallExprName
   }
   return QString();
 }
+
+/*****************************************************************************!
+ * Function : GetTopLevelLinesNumbers
+ *****************************************************************************/
+void
+JSONAST::GetTopLevelLinesNumbers
+(QJsonObject InTUObject, int &InStartLine, int &InEndLine, QString &InFilename)
+{
+  QJsonObject                           endObject;
+  QJsonValue                            fileValue;
+  QJsonObject                           locObject;
+  QJsonObject                           rangeObject;
+  QJsonValue                            val;
+
+  InStartLine = 0;
+  InEndLine = 0;
+  
+  val = InTUObject["loc"];
+  if ( ! val.isObject() ) {
+    return;
+  }
+
+  locObject = val.toObject();
+  fileValue = locObject["file"];
+  if ( fileValue.isString() ) {
+    InFilename = fileValue.toString();
+  }
+  val = locObject["line"];
+  if ( ! val.isDouble() ) {
+    return;
+  }
+  InStartLine = val.toInt();
+  InEndLine = InStartLine;
+
+  val = InTUObject["range"];
+  if ( ! val.isObject() ) {
+    return;
+  }
+  rangeObject = val.toObject();
+
+  val = rangeObject["end"];
+  if ( ! val.isObject() ) {
+    return;
+  }
+  endObject = val.toObject();
+  val = endObject["line"];
+  if ( ! val.isDouble() ) {
+    return;
+  }
+  InEndLine = val.toInt();
+
+}

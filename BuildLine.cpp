@@ -16,6 +16,7 @@
  * Local Headers
  *****************************************************************************/
 #include "BuildLine.h"
+#include "FileTreeFile.h"
 
 /*****************************************************************************!
  * Function : BuildLine
@@ -23,6 +24,7 @@
 BuildLine::BuildLine
 () : QWidget()
 {
+  fileTreeElement = NULL;
   buildType = TypeNone;
 }
 
@@ -113,4 +115,23 @@ BuildLine::GetTranslationUnit
 ()
 {
   return translationUnit;
+}
+
+/*****************************************************************************!
+ * Function : GetFileTreeElement
+ *****************************************************************************/
+FileTreeFile*
+BuildLine::GetFileTreeElement(void)
+{
+  return fileTreeElement;  
+}
+
+/*****************************************************************************!
+ * Function : SetFileTreeElement
+ *****************************************************************************/
+void
+BuildLine::SetFileTreeElement
+(FileTreeFile* InFileTreeElement)
+{
+  fileTreeElement = InFileTreeElement;  
 }

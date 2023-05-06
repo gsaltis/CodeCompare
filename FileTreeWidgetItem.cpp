@@ -55,8 +55,9 @@ FileTreeWidgetItem::FileTreeWidgetItem
  * Function : FileTreeWidgetItem
  *****************************************************************************/
 FileTreeWidgetItem::FileTreeWidgetItem
-(QString InAbsoluteFileName1, QString InAbsoluteFileName2, QTreeWidgetItem* InParent, bool InIsDirectory, CodeTrack* InTrack1, CodeTrack* InTrack2) : QTreeWidgetItem()
+(QString InAbsoluteFileName1, QString InAbsoluteFileName2, FileTreeWidgetItem* InParent, bool InIsDirectory, CodeTrack* InTrack1, CodeTrack* InTrack2) : QTreeWidgetItem()
 {
+  FileTreeDirectory*                    te;
   initialize();
   if ( InIsDirectory )  {
     TreeElement = new FileTreeDirectory(InAbsoluteFileName1, InAbsoluteFileName2, InTrack1, InTrack2);
@@ -65,6 +66,8 @@ FileTreeWidgetItem::FileTreeWidgetItem
   }  
   SetAbsoluteFileNames();
   InParent->addChild(this);
+  te = (FileTreeDirectory*)InParent->GetTreeElement();
+  te->append(TreeElement);
 }
 
 /*****************************************************************************!

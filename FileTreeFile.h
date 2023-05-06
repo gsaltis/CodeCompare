@@ -18,6 +18,7 @@
  * Local Headers
  *****************************************************************************/
 #include "FileTreeElement.h"
+#include "BuildLine.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -54,7 +55,9 @@ class FileTreeFile : public FileTreeElement
   QStringList                   GetFileLines1Section    (int InStartLine, int InEndLine);
   QStringList                   GetFileLines2Section    (int InStartLine, int InEndLine);
   QStringList                   GetFileLinesSection    (QStringList InLines, int InStartLine, int InEndLine);
-  
+  BuildLine*                    GetBuildLine            (void);
+  void                          SetBuildLine            (BuildLine* InBuildLine);
+
  //! Public Data
  public :
 
@@ -77,7 +80,8 @@ class FileTreeFile : public FileTreeElement
   QStringList                   FileLines1;
   QStringList                   FileLines2;
   bool                          FilesDiffer;
-  
+  BuildLine*                    buildLine;
+
  //! Public Slots
  public slots :
 

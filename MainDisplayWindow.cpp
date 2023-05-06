@@ -736,23 +736,14 @@ MainDisplayWindow::FilesAreDifferent
   QStringList                           args;
   QString                               program = mainSystemConfig->GetDiff();
   QString                               fname, ffname;
-  
+
   fname = codeTrack1->RemoveLeadingBasePath(InFileName1);
   ffname = mainSystemConfig->GetBuildDirectoryName() + QString("\\") + fname;
-  TRACE_FUNCTION_QSTRING(ffname);
-  QDir                                  d;
-  if ( fileInfo1.size() != fileInfo2.size() ) {
-    bool b = d.mkdir(ffname);
-    TRACE_FUNCTION_BOOL(b);
-    return true;
-  }
   args << "-q" << InFileName1 << InFileName2;
   diffProcess.start(program, args);
   diffProcess.waitForFinished();
   stdOutput = QString(diffProcess.readAllStandardOutput().trimmed());
   errorOutput = QString(diffProcess.readAllStandardError().trimmed());
-  bool b = d.mkdir(ffname);
-  TRACE_FUNCTION_BOOL(b);
   
   if ( ! stdOutput.isEmpty() ) {
     return true;
@@ -1243,6 +1234,35 @@ void
 MainDisplayWindow::SlotBuildLineProcessed
 (BuildLine* InBuildLine, QString InFilename)
 {
-  TRACE_FUNCTION_QSTRING(InFilename);
-  TRACE_FUNCTION_INT(InBuildLine->GetTranslationUnit().count());
+  FileTreeElement*                      t;
+  FileTreeWidgetItem*                   treeItem;
+  FileTreeDirectory*                    treeElement;
+  TranslationUnit                       tuType;
+  int                                   n;
+  TRACE_FUNCTION_START();
+  treeItem = (FileTreeWidgetItem*)sourceFileCompareTree->topLevelItem(0);
+  treeElement = (FileTreeDirectory*)treeItem->GetTreeElement();
+  t = treeElement->FindTreeElementByName(InFilename);
+  n = tuType.count();
+  TRACE_FUNCTION_INT(n);
+  for ( int i = 0 ; i < n; i++ ) {
+    TranslationUnitType* tue = tuType[i];
+    QString name = tue->GetName();
+    TRACE_FUNCTION_QSTRING(name);
+  }
+  
+  if ( NULL == t ) {
+    TRACE_FUNCTION_END();
+    return;
+  }
+  if ( t->GetIsDirectory() ) {
+    TRACE_FUNCTION_END();
+    return;
+  }
+  FileTreeFile*                         fileElement;
+
+  fileElement = (FileTreeFile*)t;
+  fileElement->SetBuildLine(InBuildLine);
+  InBuildLine->SetFileTreeElement(fileElement);
+  TRACE_FUNCTION_END();
 }

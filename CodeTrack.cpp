@@ -72,8 +72,12 @@ bool
 CodeTrack::PathBeginsWithBasePath
 (QString InPath)
 {
+  int                                   n;
   QString                               s;
-  
+  n = InPath.length();
+  if ( n < basePathLen ) {
+    return false;
+  }
   s = QDir::toNativeSeparators(InPath.sliced(0, basePathLen));
   return s == basePath;
 }
@@ -85,11 +89,16 @@ QString
 CodeTrack::RemoveLeadingBasePath
 (QString InPath)
 {
+  int                                   n;
   QString                               st1;
   QString                               st2;
-
+  
   st1 = QDir::toNativeSeparators(InPath);
   if ( !PathBeginsWithBasePath(st1) ) {
+    return InPath;
+  }
+  n = InPath.length();
+  if ( n < basePathLen ) {
     return InPath;
   }
   st2 = InPath.sliced(basePathLen);

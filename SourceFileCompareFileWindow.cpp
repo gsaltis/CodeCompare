@@ -189,7 +189,8 @@ SourceFileCompareFileWindow::SetFileTreeItemNames
     return;
   }
   fileLabel1->setText(InItem->GetCodeTrack1()->RemoveLeadingBasePath(fileItem->GetAbsoluteFileName1()));
-  fileLabel2->setText(InItem->GetCodeTrack2()->RemoveLeadingBasePath(fileItem->GetAbsoluteFileName2()));
+  QString st = fileItem->GetAbsoluteFileName2();
+  fileLabel2->setText(InItem->GetCodeTrack2()->RemoveLeadingBasePath(st));
   SetCounts(fileItem->GetChangeLinesCount());
 }
 

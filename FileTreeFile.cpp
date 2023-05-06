@@ -47,6 +47,7 @@ void
 FileTreeFile::Initialize
 ()
 {
+  buildLine = NULL;
   IsDirectory = false;
   FilesHaveBeenRead = false;
 }
@@ -193,16 +194,17 @@ FileTreeFile::DiffFiles
 
   args << AbsoluteFileName1 << AbsoluteFileName2;
   buildPathName = QDir::toNativeSeparators(mainSystemConfig->GetBuildDirectoryName() + "\\" + GetCodeTrack1()->RemoveLeadingBasePath(AbsoluteFileName1));
-
   QDir d;
   if ( !d.exists(buildPathName) )  {
     d.mkpath(buildPathName);
   }
   
   diffFilename = buildPathName + "\\diffs.txt";
-  diffProcess.setStandardOutputFile(diffFilename);
-  diffProcess.start(program, args);
-  diffProcess.waitForFinished();
+  if ( !d.exists(diffFilename) ) {
+    diffProcess.setStandardOutputFile(diffFilename);
+    diffProcess.start(program, args);
+    diffProcess.waitForFinished();
+  }
   QFile                                 file(diffFilename);
   file.open(QIODeviceBase::ReadOnly);
   stdOutput = QString(file.readAll());
@@ -286,3 +288,21 @@ FileTreeFile::GetChangeLinesCount
   return Diffs.GetCounts();
 }
 
+/*****************************************************************************!
+ * Function : GetBuildLine
+ *****************************************************************************/
+BuildLine*
+FileTreeFile::GetBuildLine(void)
+{
+  return buildLine;  
+}
+
+/*****************************************************************************!
+ * Function : SetBuildLine
+ *****************************************************************************/
+void
+FileTreeFile::SetBuildLine
+(BuildLine* InBuildLine)
+{
+  buildLine = InBuildLine;  
+}

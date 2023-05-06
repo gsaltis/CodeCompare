@@ -217,7 +217,7 @@
     t = (time_t)tv.tv_sec;                                                                      \
     t2 = localtime(&t);                                                                         \
     f = QString(__FILE__) + QString(":") + QString(__FUNCTION__);                               \
-    printf("QSIZE : %*s : %04d %02d:%02d:%02d.%06d : %35s : %s\n",                              \
+    printf("QSTRING : %*s : %04d %02d:%02d:%02d.%06d : %35s : %s\n",                            \
            (TRACE_FUNCTION_NAME_LENGTH - 2) - TraceIndent,                                      \
            f.toStdString().c_str(),                                                             \
            __LINE__,                                                                            \
@@ -243,7 +243,7 @@
     t = (time_t)tv.tv_sec;                                                                      \
     t2 = localtime(&t);                                                                         \
     f = QString(__FILE__) + QString(":") + QString(__FUNCTION__);                               \
-    printf("INT   : %*s : %04d %02d:%02d:%02d.%06d : %35s : %d\n",                              \
+    printf("    INT : %*s : %04d %02d:%02d:%02d.%06d : %35s : %d\n",                            \
            (TRACE_FUNCTION_NAME_LENGTH - 2) - TraceIndent,                                      \
            f.toStdString().c_str(),                                                             \
            __LINE__,                                                                            \
