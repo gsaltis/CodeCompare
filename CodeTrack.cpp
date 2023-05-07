@@ -22,8 +22,9 @@
  * Function : CodeTrack
  *****************************************************************************/
 CodeTrack::CodeTrack
-(QString InBasePath) : QWidget()
+(QString InBasePath, int InIndex) : QWidget()
 {
+  index = InIndex;
   basePath = QDir::toNativeSeparators(InBasePath);
   basePathLen = InBasePath.length();
 }
@@ -106,4 +107,25 @@ CodeTrack::RemoveLeadingBasePath
     st2 = st2.sliced(1);
   }
   return st2;
+}
+
+/*****************************************************************************!
+ * Function : GetIndex
+ *****************************************************************************/
+int
+CodeTrack::GetIndex(void)
+{
+  
+  return index;
+}
+
+/*****************************************************************************!
+ * Function : SetIndex
+ *****************************************************************************/
+void
+CodeTrack::SetIndex
+(int InIndex)
+{
+  
+  index = InIndex;
 }

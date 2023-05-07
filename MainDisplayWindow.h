@@ -153,6 +153,7 @@ class MainDisplayWindow : public QWidget
   void                          SlotDisplayJSONErrorOutput (QString InErrorOutput);
   void                          SlotCurrentAnalysisFileNameChanged (QString InFilename);
   void                          SlotBuildLineProcessed  (BuildLine* InBuildLine, QString InFilename);
+  void                          SlotSendDisplayMessage  (QString InMessage);
 
  //! Public Signals
  signals :

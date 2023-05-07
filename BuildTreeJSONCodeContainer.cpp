@@ -14,6 +14,10 @@
 #include <QJsonDocument>
 #include <QTreeWidgetItem>
 #include <QHeaderView>
+#include <sys/stat.h>
+#include <ctype.h>
+#include <errno.h>
+#include <string.h>
 
 /*****************************************************************************!
  * Local Headers
@@ -111,6 +115,8 @@ void
 BuildTreeJSONCodeContainer::SlotTreeItemSelected
 (BuildLine* InBuildLine, QString InFilename)
 {
+  TRACE_FUNCTION_START();
+  QString                               jsonFilename;
   QStringList                           topKeys;
   QJsonObject                           topObject;
   QString                               allLines;
@@ -132,32 +138,77 @@ BuildTreeJSONCodeContainer::SlotTreeItemSelected
   QString                               st;
   QJsonDocument                         jsonCodeDoc;
   QStringList                           lineArgs;
+  QString                               buildPath;
+  QDir                                  d;
+  QJsonParseError                       jsonError;
   
-  clangExe = mainSystemConfig->GetClangExecutable();
-  clangOptions = mainSystemConfig->GetClangOptions();
-  clangIncludePaths = mainSystemConfig->GetClangIncludePaths();
-  clangCodeGatherOptions = mainSystemConfig->GetClangCodeGatherOptions();
-  excludeLines = mainSystemConfig->GetClangHeaderExcludePaths();
-
-  lineArgs = ((BuildCompileLine*)InBuildLine)->GetFlags();
-  args << clangOptions;
-  args << clangIncludePaths;
-  args << clangHeaderOptions;
-  args << clangCodeGatherOptions;
-  args << lineArgs;
-  args << InFilename;
-
-  st = args.join(" ");
-  process.start(clangExe, args);
-  process.waitForFinished();
+  buildPath = mainSystemConfig->GetBuildDirectoryName() + QString("/") + codeTrack->RemoveLeadingBasePath(InFilename);
+  jsonFilename = QString("%1/AST-%2.json").arg(buildPath).arg(codeTrack->GetIndex());
+  jsonFilename = QDir::toNativeSeparators(jsonFilename);
   
-  outputString = QString(process.readAllStandardOutput());
+  if (! d.exists(jsonFilename) ) {
+    clangExe = mainSystemConfig->GetClangExecutable();
+    clangOptions = mainSystemConfig->GetClangOptions();
+    clangIncludePaths = mainSystemConfig->GetClangIncludePaths();
+    clangCodeGatherOptions = mainSystemConfig->GetClangCodeGatherOptions();
+    excludeLines = mainSystemConfig->GetClangHeaderExcludePaths();
+    
+    lineArgs = ((BuildCompileLine*)InBuildLine)->GetFlags();
+    args << clangOptions;
+    args << clangIncludePaths;
+    args << clangHeaderOptions;
+    args << clangCodeGatherOptions;
+    args << lineArgs;
+    args << InFilename;
+    process.setStandardOutputFile(jsonFilename);
+    process.start(clangExe, args);
+    process.waitForFinished();
+  }
+
+  {
+    FILE*                               file;
+    char*                               buffer;
+    struct stat                         statbuf;
+    int                                 filesize;
+    int                                 bytesread;
+    char*                               filename;
+
+    filename = (char*)jsonFilename.toStdString().c_str();
+    
+    file = fopen(filename, "rb");
+    if ( NULL == file ) {
+      QString                           s;
+      s = QString("Could not open %1 - %2").arg(jsonFilename).arg(strerror(errno));
+      emit SignalSendDisplayMessage(s);
+      return;
+    }
+    
+    stat(filename, &statbuf);
+    filesize = statbuf.st_size;
+    buffer = (char*)malloc(filesize + 1);
+    bytesread = fread(buffer, 1, filesize, file);
+    if ( bytesread != filesize ) {
+      free(buffer);
+      fclose(file);
+      return;
+    }
+    buffer[filesize] = 0x00;
+    for ( int i = 0 ; i < filesize; i++ ) {
+      if ( !isprint(buffer[i]) ) {
+        buffer[i] = ' ';
+      }
+    }
+    outputString = QString(buffer);
+    free(buffer);
+    fclose(file);
+  }
+  
   errorOutputString = QString(process.readAllStandardError());
   emit SignalBuildTreeJSONErrorOutput(errorOutputString);
-  jsonCodeDoc = QJsonDocument::fromJson(outputString.toLatin1());
+  jsonCodeDoc = QJsonDocument::fromJson(outputString.toLatin1(), &jsonError);
+  st = jsonError.errorString();
   topObject = jsonCodeDoc.object();
   topKeys = topObject.keys();
-
   foreach (st, topKeys) {
     QJsonValue                          value = topObject[st];
     if ( value.isObject() ) {
@@ -181,6 +232,7 @@ BuildTreeJSONCodeContainer::SlotTreeItemSelected
   FileContentsDiff              diffs = f->GetDiffs();
   TranslationUnit               tu = InBuildLine->GetTranslationUnit();
 
+  TRACE_FUNCTION_INT(tu.count());
   for ( int i = 0; i < tu.count(); i++ ) {
     TranslationUnitType*         t = tu[i];
     QString st = t->GetName();
@@ -193,6 +245,7 @@ BuildTreeJSONCodeContainer::SlotTreeItemSelected
     st = QString("%1 %2 %3 %4").arg(dm).arg(st).arg(sl).arg(el);
     TRACE_FUNCTION_QSTRING(st);
   }
+  TRACE_FUNCTION_END();
 }
 
 /*****************************************************************************!
@@ -271,6 +324,11 @@ BuildTreeJSONCodeContainer::FontifyTreeItem
   font.setBold(true);
   if ( InKind == "VarDecl" ) {
     InTreeItem->setForeground(0, QBrush(QColor(0, 0, 128)));
+    InTreeItem->setFont(0, font);
+    return;
+  }
+  if ( InKind == "RecordDecl" ) {
+    InTreeItem->setForeground(0, QBrush(QColor(128, 0, 128)));
     InTreeItem->setFont(0, font);
     return;
   }

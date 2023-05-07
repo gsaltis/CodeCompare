@@ -88,6 +88,7 @@ class BuildTreeJSONCodeContainer : public QWidget
  signals :
   void                          SignalBuildTreeJSONErrorOutput (QString InErrorOutput);
   void                          SignalBuildLineProcessed (BuildLine* InBuildLine, QString InFilename);
+  void                          SignalSendDisplayMessage (QString InString);
 
  //! Public Actions
  public :

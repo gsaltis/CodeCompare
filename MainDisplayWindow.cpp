@@ -79,8 +79,8 @@ MainDisplayWindow::~MainDisplayWindow
 void
 MainDisplayWindow::Initialize()
 {
-  codeTrack1 = new CodeTrack(Track1DirectoryName);
-  codeTrack2 = new CodeTrack(Track2DirectoryName);
+  codeTrack1 = new CodeTrack(Track1DirectoryName, 1);
+  codeTrack2 = new CodeTrack(Track2DirectoryName, 2);
   
   CreateActions();
   InitializeSubWindows();  
@@ -168,7 +168,10 @@ MainDisplayWindow::CreateSubWindows()
           SIGNAL(SignalBuildLineProcessed(BuildLine*, QString)),
           this,
           SLOT(SlotBuildLineProcessed(BuildLine*, QString)));
-  
+  connect(jsonCode1,
+          SIGNAL(SignalSendDisplayMessage(QString)),
+          this,
+          SLOT(SlotSendDisplayMessage(QString)));
   jsonCode2 = new BuildTreeJSONCodeContainer(codeTrack2);
   sourceFileCompareTree = new QTreeWidget(this);
 
@@ -176,6 +179,10 @@ MainDisplayWindow::CreateSubWindows()
           SIGNAL(SignalBuildTreeItemSelected(BuildLine*, QString)),
           jsonCode1,
           SLOT(SlotTreeItemSelected(BuildLine*, QString)));
+  connect(jsonCode2,
+          SIGNAL(SignalSendDisplayMessage(QString)),
+          this,
+          SLOT(SlotSendDisplayMessage(QString)));
   
   clangErrorWindow = new QTextEdit();
   pal = clangErrorWindow->palette();
@@ -1243,6 +1250,7 @@ MainDisplayWindow::SlotBuildLineProcessed
   treeItem = (FileTreeWidgetItem*)sourceFileCompareTree->topLevelItem(0);
   treeElement = (FileTreeDirectory*)treeItem->GetTreeElement();
   t = treeElement->FindTreeElementByName(InFilename);
+  tuType = InBuildLine->GetTranslationUnit();
   n = tuType.count();
   TRACE_FUNCTION_INT(n);
   for ( int i = 0 ; i < n; i++ ) {
@@ -1265,4 +1273,14 @@ MainDisplayWindow::SlotBuildLineProcessed
   fileElement->SetBuildLine(InBuildLine);
   InBuildLine->SetFileTreeElement(fileElement);
   TRACE_FUNCTION_END();
+}
+
+/*****************************************************************************!
+ * Function : SlotSendDisplayMessage
+ *****************************************************************************/
+void
+MainDisplayWindow::SlotSendDisplayMessage
+(QString InMessage)
+{
+  emit SignalSendDisplayMessage(InMessage);
 }

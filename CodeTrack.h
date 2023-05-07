@@ -31,7 +31,7 @@ class CodeTrack : public QWidget
 
  //! Constructors
  public :
-  CodeTrack                     (QString InBasePath);
+  CodeTrack                     (QString InBasePath, int InIndex);
 
  //! Destructor
  public :
@@ -44,6 +44,8 @@ class CodeTrack : public QWidget
   int                           GetBasePathLen          (void);
   bool                          PathBeginsWithBasePath  (QString InPath);
   QString                       RemoveLeadingBasePath   (QString InPath);
+  int                           GetIndex                (void);
+  void                          SetIndex                (int InIndex);
 
  //! Public Data
  public :
@@ -61,6 +63,7 @@ class CodeTrack : public QWidget
  private :
   QString                       basePath;
   int                           basePathLen;
+  int                           index;
 
  //! Public Slots
  public slots :
