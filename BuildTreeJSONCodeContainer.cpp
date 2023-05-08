@@ -115,7 +115,7 @@ void
 BuildTreeJSONCodeContainer::SlotTreeItemSelected
 (BuildLine* InBuildLine, QString InFilename)
 {
-  TRACE_FUNCTION_START();
+  BuildCompileLine*                     compileLine;
   QString                               jsonFilename;
   QStringList                           topKeys;
   QJsonObject                           topObject;
@@ -145,7 +145,13 @@ BuildTreeJSONCodeContainer::SlotTreeItemSelected
   buildPath = mainSystemConfig->GetBuildDirectoryName() + QString("/") + codeTrack->RemoveLeadingBasePath(InFilename);
   jsonFilename = QString("%1/AST-%2.json").arg(buildPath).arg(codeTrack->GetIndex());
   jsonFilename = QDir::toNativeSeparators(jsonFilename);
-  
+  if ( InBuildLine->GetType() != BuildLine::TypeCompile ) {
+    return;
+  }
+  compileLine = (BuildCompileLine*)InBuildLine;
+  if ( ! compileLine->GetIsTargetObject() ) {
+    return;
+  }
   if (! d.exists(jsonFilename) ) {
     clangExe = mainSystemConfig->GetClangExecutable();
     clangOptions = mainSystemConfig->GetClangOptions();
@@ -228,6 +234,7 @@ BuildTreeJSONCodeContainer::SlotTreeItemSelected
     }
   }
   emit SignalBuildLineProcessed(InBuildLine, InFilename);
+#if 0
   FileTreeFile*                 f = InBuildLine->GetFileTreeElement();
   FileContentsDiff              diffs = f->GetDiffs();
   TranslationUnit               tu = InBuildLine->GetTranslationUnit();
@@ -245,7 +252,7 @@ BuildTreeJSONCodeContainer::SlotTreeItemSelected
     st = QString("%1 %2 %3 %4").arg(dm).arg(st).arg(sl).arg(el);
     TRACE_FUNCTION_QSTRING(st);
   }
-  TRACE_FUNCTION_END();
+#endif  
 }
 
 /*****************************************************************************!

@@ -55,8 +55,10 @@ class BuildLine : public QWidget
     TypeUnknown
   };
   
- //! Public Methods
+//! Public Methods
  public :
+
+
   Type
   GetType
   ();
@@ -69,10 +71,15 @@ class BuildLine : public QWidget
   GetText
   (void);
 
+  static QString
+  GetTypeString
+  (BuildLine::Type InType);
+
   static QStringList
   GetLineElements
   (QString InBuildLine);
-  void                                  Dump                    (void);
+
+  virtual void                          Dump                    (void);
   QString                               GetFilePath             (void);
   void                                  SetFilePath             (QString InFilePath);
   void                                  AddTranslationUnitType  (TranslationUnitType* InType);
@@ -91,16 +98,15 @@ class BuildLine : public QWidget
  protected :
   Type                                  buildType;
   QString                               lineText;
-  TranslationUnit                       translationUnit;
+  TranslationUnit                       translationUnit;  
+  QString                               filePath;
+  FileTreeFile*                         fileTreeElement;
   
  //! Private Methods
  private :
 
  //! Private Data
  private :
-  
-  QString                               filePath;
-  FileTreeFile*                         fileTreeElement;
 
  //! Public Slots
  public slots :

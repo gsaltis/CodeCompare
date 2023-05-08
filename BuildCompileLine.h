@@ -18,6 +18,7 @@
  * Local Headers
  *****************************************************************************/
 #include "BuildLine.h"
+#include "CodeTrack.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -48,7 +49,11 @@ class BuildCompileLine : public BuildLine
   QStringList                   GetLibraries            (void);
   QStringList                   GetLibraryPaths         (void);
   QStringList                   GetFlags                (void);
+  bool                          GetIsTargetObject       (void);
+  virtual void                  Dump                    (void);
+  void                          BuildAST                (CodeTrack* InCodeTrack);
   
+
  //! Public Data
  public :
 

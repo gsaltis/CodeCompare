@@ -11,11 +11,14 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
+#include <QProcess>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
 #include "BuildCompileLine.h"
+#include "main.h"
+#include "trace.h"
 
 /*****************************************************************************!
  * Function : BuildCompileLine
@@ -167,3 +170,89 @@ BuildCompileLine::GetFlags
   return flags;
 }
 
+/*****************************************************************************!
+ * Function : Dump
+ *****************************************************************************/
+void
+BuildCompileLine::Dump(void)
+{
+  printf("%7s(%2d) %s %s ",
+         BuildLine::GetTypeString(buildType).toStdString().c_str(),
+         buildType,
+         filePath.toStdString().c_str(),
+         target.toStdString().c_str());
+  for ( int i = 0 ; i < sources.count(); i++ ) {
+    QDir                d;
+    QString             st = d.toNativeSeparators(filePath + QString("/") + sources[i]);
+    QFileInfo           f(st);
+    printf(" %s", f.canonicalFilePath().toStdString().c_str());
+  }
+  printf("\n");
+}
+
+/*****************************************************************************!
+ * Function : GetIsTargetObject
+ *****************************************************************************/
+bool
+BuildCompileLine::GetIsTargetObject
+(void)
+{
+  if ( target.endsWith(".o") ) {
+    return true;
+  }
+  return false;
+}
+
+
+/*****************************************************************************!
+ * Function : BuildAST
+ *****************************************************************************/
+void
+BuildCompileLine::BuildAST
+(CodeTrack* InCodeTrack)
+{
+  QString                               clangExe;
+  QStringList                           clangHeaderOptions;
+  QStringList                           clangOptions;
+  QStringList                           clangCodeGatherOptions;
+  QStringList                           clangIncludePaths;
+  QString                               excludeLine;
+  QStringList                           excludeLines;
+  QDir                                  d;
+  QStringList                           lineArgs;
+  QStringList                           args;
+  QString                               st = d.toNativeSeparators(filePath + QString("/") + sources[0]);
+  QFileInfo                             f(st);
+  QString                               filename = d.toNativeSeparators(f.canonicalFilePath());
+  QProcess                              process;
+  QString                               buildPath;
+  QString                               jsonFilename;
+
+  buildPath = mainSystemConfig->GetBuildDirectoryName() + QString("/") + InCodeTrack->RemoveLeadingBasePath(filename);
+  jsonFilename = QString("%1/AST-%2.json").arg(buildPath).arg(InCodeTrack->GetIndex());
+
+  if ( filename.isEmpty() ) {
+    return;
+  }
+  TRACE_FUNCTION_QSTRING(filename);
+#if 1
+  if (! d.exists(jsonFilename) ) {
+    clangExe = mainSystemConfig->GetClangExecutable();
+    clangOptions = mainSystemConfig->GetClangOptions();
+    clangIncludePaths = mainSystemConfig->GetClangIncludePaths();
+    clangCodeGatherOptions = mainSystemConfig->GetClangCodeGatherOptions();
+    excludeLines = mainSystemConfig->GetClangHeaderExcludePaths();
+    
+    lineArgs = GetFlags();
+    args << clangOptions;
+    args << clangIncludePaths;
+    args << clangHeaderOptions;
+    args << clangCodeGatherOptions;
+    args << lineArgs;
+    args << filename;
+    process.setStandardOutputFile(jsonFilename);
+    process.start(clangExe, args);
+    process.waitForFinished();
+  }
+#endif
+}

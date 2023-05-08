@@ -75,7 +75,10 @@ BuildLine::GetLineElements
 void
 BuildLine::Dump(void)
 {
-  printf("%2d %s\n", buildType, lineText.toStdString().c_str());
+  printf("%7s(%2d) %s\n",
+         BuildLine::GetTypeString(buildType).toStdString().c_str(),
+         buildType,
+         filePath.toStdString().c_str());
 }
 
 /*****************************************************************************!
@@ -135,3 +138,32 @@ BuildLine::SetFileTreeElement
 {
   fileTreeElement = InFileTreeElement;  
 }
+
+/*****************************************************************************!
+ * Function : GetTypeString
+ *****************************************************************************/
+QString
+BuildLine::GetTypeString
+(BuildLine::Type InType)
+{
+  switch (InType) {
+    case TypeNone :
+      return QString("None");
+    case TypeCompile :
+      return QString("Compile");
+    case TypeLN :
+      return QString("LN");
+    case TypeAR :
+      return QString("AR");
+    case TypeRanlib :
+      return QString("Ranlib");
+    case TypeFor :
+      return QString("For");
+    case TypeEcho :
+      return QString("Echo");
+    case TypeUnknown :
+      return QString("Unknown");
+  }
+  return QString("Unknown");
+}
+    

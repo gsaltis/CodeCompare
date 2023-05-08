@@ -73,7 +73,8 @@ class FileTreeWidgetItem : public QTreeWidgetItem
   FileTreeElement*              GetTreeElement          ();
   void                          DiffFiles               (int &InLinesDifferCount);
   int                           GetFileCount            ();
-
+  FileTreeWidgetItem*           FindChildByFileName     (QString InFilename);
+  
  //! Public Data
  public :
 

@@ -231,13 +231,17 @@ MainDisplayWindow::CreateSubWindows()
   buildTreeWindow = new BuildTreeWindow(codeTrack1, codeTrack2);
   buildTreeWindow->setParent(this);
   buildTreeWindow->hide();
-  
+
+  //!
   stack1->addWidget(codeWindow1);
   stack1->addWidget(jsonCode1);
+  
   stack2->addWidget(codeWindow2);
   stack2->addWidget(jsonCode2);
+
   stack3->addWidget(sourceDiffWindow);
   stack3->addWidget(clangErrorWindow);
+
   stack4->addWidget(sourceFileCompareTree);
   stack4->addWidget(buildSystemTree);
   
@@ -870,6 +874,8 @@ MainDisplayWindow::SlotAnalyzeDifferences(void)
   compareContainer->SetFileTreeItem(NULL);
   ActionSaveSummaryFile->setEnabled(true);
   buildSystemTree->SetBuildSystem(buildSystem);
+
+  buildLines->BuildAST(codeTrack1);
   emit SignalAnalysisDone();
 }
 
@@ -1241,38 +1247,48 @@ void
 MainDisplayWindow::SlotBuildLineProcessed
 (BuildLine* InBuildLine, QString InFilename)
 {
+  QTreeWidgetItem*                      p;
+  FileTreeWidgetItem*                   tw;
   FileTreeElement*                      t;
   FileTreeWidgetItem*                   treeItem;
   FileTreeDirectory*                    treeElement;
   TranslationUnit                       tuType;
   int                                   n;
-  TRACE_FUNCTION_START();
+  FileContentsDiff                      diffs;
+  
   treeItem = (FileTreeWidgetItem*)sourceFileCompareTree->topLevelItem(0);
   treeElement = (FileTreeDirectory*)treeItem->GetTreeElement();
   t = treeElement->FindTreeElementByName(InFilename);
+  tw = treeItem->FindChildByFileName(InFilename);
+  sourceFileCompareTree->expandItem(tw);
+  p = tw->parent();
+  do {
+    sourceFileCompareTree->expandItem(p);
+    p = p->parent();
+  } while (p);
   tuType = InBuildLine->GetTranslationUnit();
   n = tuType.count();
-  TRACE_FUNCTION_INT(n);
+  diffs = tw->GetDifferences();
   for ( int i = 0 ; i < n; i++ ) {
     TranslationUnitType* tue = tuType[i];
     QString name = tue->GetName();
-    TRACE_FUNCTION_QSTRING(name);
+    if ( tue->HasTargetChangeLines(&diffs) ) {
+      tw->addChild(new QTreeWidgetItem(QStringList(name)));
+    }
   }
   
   if ( NULL == t ) {
-    TRACE_FUNCTION_END();
     return;
   }
   if ( t->GetIsDirectory() ) {
-    TRACE_FUNCTION_END();
     return;
   }
   FileTreeFile*                         fileElement;
 
   fileElement = (FileTreeFile*)t;
   fileElement->SetBuildLine(InBuildLine);
+  
   InBuildLine->SetFileTreeElement(fileElement);
-  TRACE_FUNCTION_END();
 }
 
 /*****************************************************************************!

@@ -18,6 +18,7 @@
  * Local Headers
  *****************************************************************************/
 #include "BuildLine.h"
+#include "CodeTrack.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -52,6 +53,10 @@ class BuildLineSet : public QWidget
   AppendLine
   (BuildLine* InLine);
   void                          Dump                    (void);
+
+  void
+  BuildAST
+  (CodeTrack* InCodeTrack);
   
  //! Public Data
  public :

@@ -399,3 +399,36 @@ FileTreeWidgetItem::GetFileCount
   return 1;
 }
 
+/*****************************************************************************!
+ * Function : FindChildByFileName
+ *****************************************************************************/
+FileTreeWidgetItem*
+FileTreeWidgetItem::FindChildByFileName
+(QString InFilename)
+{
+  FileTreeWidgetItem*                   t2;
+  QString                               st;
+  FileTreeWidgetItem*                   t;
+  int                                   n, i;
+
+  n = childCount();
+
+  for (i = 0; i < n; i++) {
+    t = (FileTreeWidgetItem*)child(i);
+    if ( t->GetIsDirectory() ) {
+      t2 = t->FindChildByFileName(InFilename);
+      if ( t2 ) {
+        return t2;
+      }
+    }
+    st = t->GetAbsoluteFileName1();
+    if ( st == InFilename ) {
+      return t;
+    }
+    st = t->GetAbsoluteFileName2();
+    if ( st == InFilename ) {
+      return t;
+    }
+  }
+  return NULL;
+}
