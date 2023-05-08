@@ -52,7 +52,8 @@ class BuildCompileLine : public BuildLine
   bool                          GetIsTargetObject       (void);
   virtual void                  Dump                    (void);
   void                          BuildAST                (CodeTrack* InCodeTrack);
-  
+  void                          GenerateAST             (CodeTrack* InCodeTrack, FILE* InFile);
+  void                          ProcessInnerTranslationUnitArray(QJsonArray InTUArray, QString InFilename, FILE* InFile);
 
  //! Public Data
  public :

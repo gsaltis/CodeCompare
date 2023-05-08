@@ -130,6 +130,10 @@ MainDisplayWindow::CreateActions()
   connect(ActionSaveSummaryFile, SIGNAL(triggered()), this, SLOT(SlotSaveSummaryFile()));
   ActionSaveSummaryFile->setEnabled(false);
 
+  ActionSaveASTSummaryFile = new QAction(QIcon(QPixmap(":/images/PencilAST.png")),
+                                      "Save ASTSummary File", this);
+  connect(ActionSaveASTSummaryFile, SIGNAL(triggered()), this, SLOT(SlotSaveASTSummaryFile()));
+  ActionSaveASTSummaryFile->setEnabled(true);
 }
 
 /*****************************************************************************!
@@ -282,6 +286,7 @@ MainDisplayWindow::CreateSubWindows()
   sourceFileCompareToolBar->addAction(ActionFilesDifferInformation);
   sourceFileCompareToolBar->addAction(ActionAnalyzeDifferences);
   sourceFileCompareToolBar->addAction(ActionSaveSummaryFile);
+  sourceFileCompareToolBar->addAction(ActionSaveASTSummaryFile);
 
 
   stack1->setCurrentIndex(0);
@@ -1161,6 +1166,83 @@ MainDisplayWindow::CreateComparisonSummaryItems
       InFile->write(outputLine.toLatin1());
     }            
   }
+}
+
+/*****************************************************************************!
+ * Function : SlotSaveASTSummaryFile
+ *****************************************************************************/
+void
+MainDisplayWindow::SlotSaveASTSummaryFile(void)
+{
+  QString                               st;
+  QString                               fullFilePath;
+  QString                               source;
+  QString                               target;
+  QString                               filePath;
+  BuildCompileLine*                     compileLine;
+  BuildLine*                            line;
+  int                                   i, n;
+  QStringList                           sources;
+  int                                   m, p;
+  QDir                                  d;
+  int                                   compileLines;
+  FileTreeWidgetItem*                   treeItem;
+  FileTreeFile*                         t;
+  FileTreeDirectory*                    treeElement;
+  FILE*                                 file;
+  QString                               s;
+  
+  treeItem = (FileTreeWidgetItem*)sourceFileCompareTree->topLevelItem(0);
+  treeElement = (FileTreeDirectory*)treeItem->GetTreeElement();
+
+  file = fopen("Changes.csv", "wb");
+  m = 0;
+  p = 0;
+  compileLines = 0;
+  n = buildLines->GetLineCount();
+  for (i = 0; i < n; i++) {
+    line = buildLines->GetLineByIndex(i);
+    if ( line->GetType() != BuildLine::TypeCompile ) {
+      continue;
+    }
+    compileLines++;
+    compileLine = (BuildCompileLine*)line;
+    if ( ! compileLine->GetIsTargetObject() ) {
+      continue;
+    }
+    target = compileLine->GetTarget();
+    sources = compileLine->GetSources();
+    
+    if ( ! target.endsWith(".o") ) {
+      continue;
+    }
+    p++;
+    filePath = compileLine->GetFilePath();
+    source = sources[0];
+    fullFilePath = filePath + QString("/") + source;
+    fullFilePath = d.toNativeSeparators(fullFilePath);
+    TRACE_FUNCTION_QSTRING(fullFilePath);
+    QFileInfo                           f(fullFilePath);
+    fullFilePath = f.canonicalFilePath();
+    if ( ! d.exists() ) {
+      TRACE_FUNCTION_QSTRING(fullFilePath);
+      continue;
+    }
+    if ( fullFilePath.isEmpty() ) {
+      continue;
+    }
+    m++;
+    t = (FileTreeFile*)treeElement->FindTreeElementByName(fullFilePath);
+    compileLine->SetFileTreeElement(t);
+    fprintf(file, "%d,%s\n", m, st.toStdString().c_str());
+    compileLine->GenerateAST(codeTrack1, file);
+    st = codeTrack1->RemoveLeadingBasePath(fullFilePath);
+    s = QString("%1 : %2 processed").arg(m).arg(st);
+    SlotSendDisplayMessage(s);
+    application->processEvents();
+  }
+  SlotSendDisplayMessage(QString("Changes.csv created"));
+  fclose(file);
 }
 
 /*****************************************************************************!

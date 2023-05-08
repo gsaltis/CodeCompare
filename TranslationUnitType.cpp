@@ -28,6 +28,20 @@ TranslationUnitType::TranslationUnitType
   lineStart = InLineStart;
   lineEnd = InLineEnd;
   type = None;
+  hasChanged = false;
+}
+
+/*****************************************************************************!
+ * Function : TranslationUnitType
+ *****************************************************************************/
+TranslationUnitType::TranslationUnitType
+(TranslationUnitType::Type InType, QString InName, int InLineStart, int InLineEnd) : QWidget()
+{
+  name = InName;
+  lineStart = InLineStart;
+  lineEnd = InLineEnd;
+  type = InType;
+  hasChanged = false;
 }
 
 /*****************************************************************************!
@@ -97,4 +111,69 @@ int
 TranslationUnitType::GetLineEnd(void)
 {
   return lineEnd;
+}
+
+/*****************************************************************************!
+ * Function : Write
+ *****************************************************************************/
+void
+TranslationUnitType::Write
+(QFile *InFile, bool InLastItem)
+{
+  QString                               st;
+
+  st =
+    QString("  { \"name\" : \"%1\", \"type\" : %2, \"linestart\" : %3, \"lineend\" : %4, \"changed\" : %5 }").
+    arg(name).
+    arg(type).
+    arg(lineStart).
+    arg(lineEnd).
+    arg(hasChanged ? "true" : "false");
+
+  if ( !InLastItem ) {
+    st += QString(",");
+  }
+  st += QString("\n");
+  InFile->write(st.toLatin1());
+}
+
+/*****************************************************************************!
+ * Function : GetHasChanged
+ *****************************************************************************/
+bool
+TranslationUnitType::GetHasChanged(void)
+{
+  return hasChanged;  
+}
+
+/*****************************************************************************!
+ * Function : SetHasChanged
+ *****************************************************************************/
+void
+TranslationUnitType::SetHasChanged
+(bool InHasChanged)
+{
+  hasChanged = InHasChanged;  
+}
+
+/*****************************************************************************!
+ * Function : KindToTUType
+ *****************************************************************************/
+TranslationUnitType::Type
+TranslationUnitType::KindToTUType
+(QString InKind)
+{
+  if ( InKind == "VarDecl" ) {
+    return TranslationUnitType::Variable;
+  }
+  if ( InKind == "RecordDecl" ) {
+    return TranslationUnitType::Record;
+  }
+  if ( InKind == "TypedefDecl" ) {
+    return TranslationUnitType::TypeDef;
+  }
+  if ( InKind == "FunctionDecl" ) {
+    return TranslationUnitType::Function;
+  }
+  return TranslationUnitType::None;
 }

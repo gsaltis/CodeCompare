@@ -135,25 +135,26 @@ class MainDisplayWindow : public QWidget
   
  //! Public Slots
  public slots :
-  void                          SlotCreateDependencyTree (void);
-  void                          SlotDependencyWindowClose (void);
-  void                          SlotBuildTreeWindowOpen (void);
-  void                          SlotBuildTreeWindowClosed (void);
-  void                          SlotBuildSystemSelected (BuildSystem* InSystem);
-  void                          SlotOnlyDifferences     (void);
-  void                          SlotCollapseSourceCompareTree (void);
-  void                          SlotTreeWidgetItemSelected (QTreeWidgetItem* InItem, int InIndex);
-  void                          SlotFileDifferInformation (void);
-  void                          SlotAnalyzeDifferences  (void);
-  void                          SlotSaveSummaryFile     (void);
-  void                          SlotTrack1CodeLineChanged (int InStartLine);
-  void                          SlotTrack2CodeLineChanged (int InStartLine);
-  void                          SlotCodeViewSelected    (void);
-  void                          SlotFunctionViewSelected (void);
-  void                          SlotDisplayJSONErrorOutput (QString InErrorOutput);
-  void                          SlotCurrentAnalysisFileNameChanged (QString InFilename);
-  void                          SlotBuildLineProcessed  (BuildLine* InBuildLine, QString InFilename);
-  void                          SlotSendDisplayMessage  (QString InMessage);
+  void                          SlotCreateDependencyTree                (void);
+  void                          SlotDependencyWindowClose               (void);
+  void                          SlotBuildTreeWindowOpen                 (void);
+  void                          SlotBuildTreeWindowClosed               (void);
+  void                          SlotBuildSystemSelected                 (BuildSystem* InSystem);
+  void                          SlotOnlyDifferences                     (void);
+  void                          SlotCollapseSourceCompareTree           (void);
+  void                          SlotTreeWidgetItemSelected              (QTreeWidgetItem* InItem, int InIndex);
+  void                          SlotFileDifferInformation               (void);
+  void                          SlotAnalyzeDifferences                  (void);
+  void                          SlotSaveSummaryFile                     (void);
+  void                          SlotSaveASTSummaryFile                  (void);
+  void                          SlotTrack1CodeLineChanged               (int InStartLine);
+  void                          SlotTrack2CodeLineChanged               (int InStartLine);
+  void                          SlotCodeViewSelected                    (void);
+  void                          SlotFunctionViewSelected                (void);
+  void                          SlotDisplayJSONErrorOutput              (QString InErrorOutput);
+  void                          SlotCurrentAnalysisFileNameChanged      (QString InFilename);
+  void                          SlotBuildLineProcessed                  (BuildLine* InBuildLine, QString InFilename);
+  void                          SlotSendDisplayMessage                  (QString InMessage);
 
  //! Public Signals
  signals :
@@ -163,6 +164,7 @@ class MainDisplayWindow : public QWidget
   void                          SignalTreeItemSelected          (FileTreeWidgetItem* InItem);
   void                          SignalFileItemSelected          (FileTreeFile* InFileItem);
   void                          SignalAnalysisDone              (void);
+  void                          SignalSaveASTSummaryFile (void);
   
  //! Public Actions
  public :
@@ -171,6 +173,7 @@ class MainDisplayWindow : public QWidget
   QAction*                      ActionFilesDifferInformation;
   QAction*                      ActionAnalyzeDifferences;
   QAction*                      ActionSaveSummaryFile;
+  QAction*                      ActionSaveASTSummaryFile;
 
 };
 

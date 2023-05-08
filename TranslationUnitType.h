@@ -28,28 +28,35 @@
  *****************************************************************************/
 class TranslationUnitType : public QWidget
 {
-
+ public :
+ //! Public Types
+  enum Type {
+    None,
+    Function,
+    Record,
+    TypeDef,
+    Variable
+  };
+  
  //! Constructors
  public :
   TranslationUnitType           (QString InName, int InLineStart, int InLineEnd);
+  TranslationUnitType           (TranslationUnitType::Type InType, QString InName, int InLineStart, int InLineEnd);
 
  //! Destructor
  public :
   ~TranslationUnitType          ();
 
- //! Public Types
-  enum Type {
-    None,
-    Function,
-    Variable
-  };
-  
  //! Public Methods
  public :
   bool                          HasTargetChangeLines    (FileContentsDiff* InDiffs);
   QString                       GetName                 ();
   int                           GetLineStart            (void);
   int                           GetLineEnd              (void);
+  void                          Write                   (QFile *InFile, bool InLastItem);
+  bool                          GetHasChanged           (void);
+  void                          SetHasChanged           (bool InHasChanged);
+  static Type                   KindToTUType            (QString InKind);
   
  //! Public Data
  public :
@@ -69,6 +76,7 @@ class TranslationUnitType : public QWidget
 
  //! Private Data
  private :
+  bool                          hasChanged;
 
  //! Public Slots
  public slots :

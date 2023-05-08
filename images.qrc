@@ -19,5 +19,6 @@
     <file>images/Info.png</file>
     <file>images/Pinion.png</file>
     <file>images/Pencil.png</file>
+    <file>images/PencilAST.png</file>
   </qresource>
 </RCC>

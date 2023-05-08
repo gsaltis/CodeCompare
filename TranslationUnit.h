@@ -38,6 +38,7 @@ class TranslationUnit : public QList<TranslationUnitType*>
   
  //! Public Methods
  public :
+  void                          Write                   (QString InFilename);
 
  //! Public Data
  public :
