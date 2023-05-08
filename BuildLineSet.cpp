@@ -114,7 +114,7 @@ BuildLineSet::BuildAST
       if ( ! compileLine->GetIsTargetObject() ) {
         continue;
       }
-      printf("%4d of %4d : ", i, n);
+      // printf("%4d of %4d : ", i, n);
       i++;
       compileLine->BuildAST(InCodeTrack);
     }

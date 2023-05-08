@@ -133,8 +133,8 @@ MainWindow::CreateMenus()
 {
   menubar = menuBar();  
   fileMenu = menubar->addMenu("&File");
-  fileMenu->addAction(ActionExit);
   fileMenu->addAction(ActionOpen);
+  fileMenu->addAction(ActionExit);
 
   actionMenu = menubar->addMenu("&Action");
   actionMenu->addAction(ActionCreateDependencyTree);

@@ -1255,11 +1255,14 @@ MainDisplayWindow::SlotBuildLineProcessed
   TranslationUnit                       tuType;
   int                                   n;
   FileContentsDiff                      diffs;
+  QString                               filename;
+  QFileInfo                             f(InFilename);
+  filename = f.canonicalFilePath();
   
   treeItem = (FileTreeWidgetItem*)sourceFileCompareTree->topLevelItem(0);
   treeElement = (FileTreeDirectory*)treeItem->GetTreeElement();
   t = treeElement->FindTreeElementByName(InFilename);
-  tw = treeItem->FindChildByFileName(InFilename);
+  tw = treeItem->FindChildByFileName(filename);
   sourceFileCompareTree->expandItem(tw);
   p = tw->parent();
   do {

@@ -141,10 +141,12 @@ BuildTreeJSONCodeContainer::SlotTreeItemSelected
   QString                               buildPath;
   QDir                                  d;
   QJsonParseError                       jsonError;
-  
+
   buildPath = mainSystemConfig->GetBuildDirectoryName() + QString("/") + codeTrack->RemoveLeadingBasePath(InFilename);
   jsonFilename = QString("%1/AST-%2.json").arg(buildPath).arg(codeTrack->GetIndex());
   jsonFilename = QDir::toNativeSeparators(jsonFilename);
+  QFileInfo                             f(jsonFilename);
+  jsonFilename = f.canonicalFilePath();
   if ( InBuildLine->GetType() != BuildLine::TypeCompile ) {
     return;
   }
@@ -180,7 +182,6 @@ BuildTreeJSONCodeContainer::SlotTreeItemSelected
     char*                               filename;
 
     filename = (char*)jsonFilename.toStdString().c_str();
-    
     file = fopen(filename, "rb");
     if ( NULL == file ) {
       QString                           s;
@@ -234,25 +235,6 @@ BuildTreeJSONCodeContainer::SlotTreeItemSelected
     }
   }
   emit SignalBuildLineProcessed(InBuildLine, InFilename);
-#if 0
-  FileTreeFile*                 f = InBuildLine->GetFileTreeElement();
-  FileContentsDiff              diffs = f->GetDiffs();
-  TranslationUnit               tu = InBuildLine->GetTranslationUnit();
-
-  TRACE_FUNCTION_INT(tu.count());
-  for ( int i = 0; i < tu.count(); i++ ) {
-    TranslationUnitType*         t = tu[i];
-    QString st = t->GetName();
-    int sl = t->GetLineStart();  
-    int el = t->GetLineEnd();
-    QString dm = " ";
-    if ( t->HasTargetChangeLines(&diffs) ) {
-      dm = "*";
-    }
-    st = QString("%1 %2 %3 %4").arg(dm).arg(st).arg(sl).arg(el);
-    TRACE_FUNCTION_QSTRING(st);
-  }
-#endif  
 }
 
 /*****************************************************************************!
@@ -276,7 +258,7 @@ BuildTreeJSONCodeContainer::ProcessInnerTranslationUnitArray
   QTreeWidgetItem*                      headerItem;
   int                                   startLine;
   int                                   endLine;
-  
+
   jsonFileDisplay->clear();
   headerItem = new QTreeWidgetItem();
   size = headerItem->sizeHint(0);
@@ -301,15 +283,15 @@ BuildTreeJSONCodeContainer::ProcessInnerTranslationUnitArray
   inTargetFile = false;
   for ( int i = 0 ; i < InTUArray.size() ; i++ ) {
     obj = InTUArray[i].toObject();
+    kind = obj["kind"].toString();
+    name = obj["name"].toString();
     JSONAST::GetTopLevelLinesNumbers(obj, startLine, endLine, locationFilename);
     if ( !locationFilename.isEmpty() ) {
-      inTargetFile = locationFilename == InFilename;
+      inTargetFile = AreFileNamesEqual(locationFilename, InFilename);
     }
     if ( ! inTargetFile ) {
       continue;
     }
-    kind = obj["kind"].toString();
-    name = obj["name"].toString();
     treeItem1 = new QTreeWidgetItem(QStringList(name));
     jsonFileDisplay->addTopLevelItem(treeItem1);
     TranslationUnitType* tuType = new TranslationUnitType(name, startLine, endLine);
@@ -627,3 +609,16 @@ BuildTreeJSONCodeContainer::FindElementInInnerObject
 
 
   
+
+/*****************************************************************************!
+ * Function : AreFileNamesEqual
+ *****************************************************************************/
+bool
+BuildTreeJSONCodeContainer::AreFileNamesEqual
+(QString InFilename1, QString InFilename2)
+{
+  QFileInfo                             f1(InFilename1);
+  QFileInfo                             f2(InFilename2);
+
+  return f1.canonicalFilePath() == f2.canonicalFilePath();
+}

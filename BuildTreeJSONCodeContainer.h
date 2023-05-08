@@ -74,6 +74,7 @@ class BuildTreeJSONCodeContainer : public QWidget
   void                          ProcessRangeObject                      (QTreeWidgetItem* InTreeItem, QJsonValue InValue);
   void                          ProcessValue                            (QTreeWidgetItem* InTreeItem, QJsonValue InValue);
   QJsonObject                   FindElementInInnerObject                (QJsonArray InInnerObject, QString InName);
+  bool                          AreFileNamesEqual       (QString InFilename1, QString InFilename2);
 
  //! Private Data
  private :

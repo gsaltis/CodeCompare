@@ -234,7 +234,6 @@ BuildCompileLine::BuildAST
   if ( filename.isEmpty() ) {
     return;
   }
-  TRACE_FUNCTION_QSTRING(filename);
 #if 1
   if (! d.exists(jsonFilename) ) {
     clangExe = mainSystemConfig->GetClangExecutable();
