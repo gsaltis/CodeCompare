@@ -27,13 +27,14 @@
     "clang"                             : "c:\\Program Files (x86)\\Clang\\bin\\clang.exe",
     "includepaths"                      : [
       { "option" : "-isystem ",
-        "path" : "d:/Source/NCUCodeMerge/arm926/host-cross/arm-wrs-linux-gnueabi/sysroot/usr/include"
+        "path" : "stdinclude"
       },
       { "option" : "-I",
         "path" : "D:/Source/NCUCodeMerge/Track2_NCU_CODE/src/include"
       }
     ],
     "options" : [
+      "-nostdinc",
       "-ferror-limit=9999"
     ],
     "headergather" : {
