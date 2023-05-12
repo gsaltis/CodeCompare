@@ -1,0 +1,57 @@
+{
+  "MainWindowGeometry" : {
+    "x"                                 : 500,
+    "y"                                 : 0,
+    "width"                             : 1420,
+    "height"                            : 1020
+  },
+  "Paths" : {
+    "sourcepath"                        : "D:/Source/NCUCodeMerge/Track2_NCU_Code/src",
+    "track1path"                        : "D:\\Source\\NCUCodeMerge\\Track3_NCU_Code\\G3\\src",
+    "track2path"                        : "D:\\Source\\NCUCodeMerge\\Track2_NCU_Code\\src"
+  },
+  "Diff" : {
+    "diff"                              : "C:\\Program Files (x86)\\Vim\\vim82\\diff.exe",
+    "missing"                           : false
+  },
+  "Make" : {
+    "make"                              : "C:\\Qt\\Tools\\mingw1120_64\\bin\\make.exe",
+    "args"                              : [ "-n", "-B" ],
+    "target"                            : "all",
+    "needlibdl"                         : true
+  },
+  "Build" : {
+    "builddir"                        : "D:\\Source\\NCUCodeMerge\\CodeCompare\\BuildDir"
+  },
+  "Clang" : {
+    "clang"                             : "c:\\Program Files (x86)\\Clang\\bin\\clang.exe",
+    "includepaths"                      : [
+      { "option" : "-isystem ",
+        "path" : "stdinclude"
+      },
+      { "option" : "-I",
+        "path" : "D:/Source/NCUCodeMerge/Track2_NCU_CODE/src/include"
+      }
+    ],
+    "options" : [
+      "-nostdinc",
+      "-ferror-limit=9999"
+    ],
+    "headergather" : {
+      "options" : [
+        "-H"
+      ]
+    },
+    "headerexcludepaths" : [
+      "C:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32",
+      "c:/Program Files (x86)/Clang"
+    ],
+    "codegather" : {
+      "options" : [
+        "-c",
+        "-Xclang",
+        "-ast-dump=json"
+      ]
+    }
+  }
+}
