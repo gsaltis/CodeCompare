@@ -29,12 +29,18 @@ QT                              += core gui widgets
 DEFINES                         += \
 
 SOURCES                         += \
-				   JSONAST.cpp                                  \
+                                   DirTree.cpp                                  \
+                                   DirTreeItem.cpp                              \
+                                   DirTreeItemDir.cpp                           \
+                                   DirTreeItemFile.cpp                          \
+                                   JSONAST.cpp                                  \
 				   MainDisplayWindow.cpp                        \
 				   MainWindow.cpp                               \
 				   SystemConfig.cpp                             \
 				   TUTreeElement.cpp                            \
 				   TUTree.cpp                                   \
+				   TUTreeContainer.cpp                          \
+				   TUTreeContainerSplitter.cpp                  \
 				   TitledWindow.cpp                             \
 				   TopTranslationUnitElement.cpp                \
 				   WindowHeader.cpp                             \
@@ -42,11 +48,17 @@ SOURCES                         += \
 				   trace.cpp                                    \
 
 HEADERS                         += \
+                                   DirTree.h                                    \
+                                   DirTreeItem.h                                \
+                                   DirTreeItemDir.h                             \
+                                   DirTreeItemFile.h                            \
 				   JSONAST.h                                    \
 				   MainDisplayWindow.h                          \
 				   MainWindow.h                                 \
 				   SystemConfig.h                               \
 				   TUTree.h                                     \
+				   TUTreeContainer.h                            \
+				   TUTreeContainerSplitter.h                    \
 				   TUTreeElement.h                              \
 				   TitledWindow.h                               \
 				   TopTranslationUnitElement.h                  \

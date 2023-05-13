@@ -26,6 +26,8 @@
 #include "TopTranslationUnitElement.h"
 #include "TUTreeElement.h"
 #include "TUTree.h"
+#include "DirTree.h"
+#include "TUTreeContainer.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -80,9 +82,12 @@ class MainDisplayWindow : public QWidget
   TitledWindow*                 fileWindow2;
   TUTree*                       jsonTree1;
   TUTree*                       jsonTree2;
+  TUTreeContainer*              jsonTreeContainer1;
+  TUTreeContainer*              jsonTreeContainer2;
   QString                       filename1;
   QString                       filename2;
   QApplication*                 application;
+  DirTree*                      dirTree;
   
  //! Public Slots
  public slots :
@@ -92,6 +97,7 @@ class MainDisplayWindow : public QWidget
   void                          SlotJSON2TreeClicked            (QTreeWidgetItem* InItem, int InColumn);
   void                          SlotJSON2TreeExpanded           (QTreeWidgetItem* InItem);
   void                          SlotJSON2TreeCollapsed          (QTreeWidgetItem* InItem);
+  void                          SlotSetErrorWindowHeight2       (int InPosition);
 
  //! Public Signals
  signals :

@@ -101,7 +101,9 @@ MainDisplayWindow::CreateSubWindows()
   TUTreeElement*                                item;
   QTreeWidgetItem*                              headerItem;
   QHeaderView*                                  headerView;
-
+  QString                                       jsonFilename1;
+  QString                                       jsonFilename2;
+  
   splitter = new QSplitter(this);
 
   //!
@@ -118,6 +120,8 @@ MainDisplayWindow::CreateSubWindows()
           SIGNAL(itemCollapsed(QTreeWidgetItem*)),
           this,
           SLOT(SlotJSON1TreeCollapsed(QTreeWidgetItem*)));
+
+  dirTree = new DirTree("../BuildDir/Track2", "../BuildDir/Track3");
   
   jsonTree1->setColumnCount(2);
   item = new TUTreeElement(TUTreeElement::TopLevel, "Source", "");
@@ -155,13 +159,21 @@ MainDisplayWindow::CreateSubWindows()
   jsonTree2->addTopLevelItem(item);
   jsonTree2->expandItem(item);
   jsonTree2->setHeaderItem(headerItem);
-  
-  fileWindow1 = new TitledWindow(jsonTree1, filename1);
-  fileWindow2 = new TitledWindow(jsonTree2, filename2);
+
+  jsonTreeContainer1 = new TUTreeContainer(jsonTree1, filename1 + QString(".errors"));
+  jsonTreeContainer2 = new TUTreeContainer(jsonTree2, filename2 + QString(".errors"));
+  connect(jsonTreeContainer1, TUTreeContainer::SignalSplitterMoved, this, MainDisplayWindow::SlotSetErrorWindowHeight2);
+  // connect(jsonTreeContainer2, TUTreeContainer::SignalSplitterMoved, jsonTreeContainer1, TUTreeContainer::SlotSetErrorWindowHeight);
+
+  jsonFilename1 = filename1 + QString(".json");
+  jsonFilename2 = filename2 + QString(".json");
+  fileWindow1 = new TitledWindow(jsonTreeContainer1, filename1);
+  fileWindow2 = new TitledWindow(jsonTreeContainer2, filename2);
+  splitter->addWidget(dirTree);
   splitter->addWidget(fileWindow1);
   splitter->addWidget(fileWindow2);
-  PopulateASTTree(jsonTree1, filename1);
-  PopulateASTTree(jsonTree2, filename2);
+  PopulateASTTree(jsonTree1, jsonFilename1);
+  PopulateASTTree(jsonTree2, jsonFilename2);
 }
 
 /*****************************************************************************!
@@ -577,3 +589,12 @@ MainDisplayWindow::SlotJSON2TreeCollapsed
 {
 }
 
+/*****************************************************************************!
+ * Function : SlotSetErrorWindowHeight2
+ *****************************************************************************/
+void
+MainDisplayWindow::SlotSetErrorWindowHeight2
+(int InPosition )
+{
+  jsonTreeContainer2->SlotSetErrorWindowHeight(InPosition);
+}
