@@ -31,7 +31,7 @@ class DirTreeItemFile : public DirTreeItem
 {
  //! Constructors
  public :
-  DirTreeItemFile               ();
+  DirTreeItemFile               (QString InLabel, QString InFilename);
 
  //! Destructor
  public :
@@ -39,7 +39,8 @@ class DirTreeItemFile : public DirTreeItem
 
  //! Public Methods
  public :
-
+  QString                       GetFilename             ();
+  
  //! Public Data
  public :
 
@@ -55,7 +56,8 @@ class DirTreeItemFile : public DirTreeItem
 
  //! Private Data
  private :
-
+  QString                       filename;
+  
  //! Public Slots
  public slots :
 

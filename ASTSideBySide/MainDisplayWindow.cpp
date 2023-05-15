@@ -16,6 +16,7 @@
 #include <QHeaderView>
 
 #define TRACE_USE
+
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
@@ -25,6 +26,7 @@
 #include "trace.h"
 #include "TUTreeElement.h"
 #include "TopTranslationUnitElement.h"
+#include "main.h"
 
 /*****************************************************************************!
  * 
@@ -98,7 +100,6 @@ MainDisplayWindow::InitializeSubWindows()
 void
 MainDisplayWindow::CreateSubWindows()
 {
-  TUTreeElement*                                item;
   QTreeWidgetItem*                              headerItem;
   QHeaderView*                                  headerView;
   QString                                       jsonFilename1;
@@ -121,17 +122,16 @@ MainDisplayWindow::CreateSubWindows()
           this,
           SLOT(SlotJSON1TreeCollapsed(QTreeWidgetItem*)));
 
-  dirTree = new DirTree("../BuildDir/Track2", "../BuildDir/Track3");
-  
+  dirTree = new DirTree(mainSystemConfig->GetSourceASTTrack1Path(),
+                        mainSystemConfig->GetSourceASTTrack2Path());
+  connect(dirTree, DirTree::SignalFileSelected, this, MainDisplayWindow::SlotDirFileSelected);
+    
   jsonTree1->setColumnCount(2);
-  item = new TUTreeElement(TUTreeElement::TopLevel, "Source", "");
   headerView = jsonTree1->header();
   headerItem = new QTreeWidgetItem();
   headerItem->setText(0, "Name");
   headerItem->setText(1, "Value");
   headerView->resizeSection(0, 300);
-  jsonTree1->addTopLevelItem(item);
-  jsonTree1->expandItem(item);
   jsonTree1->setHeaderItem(headerItem);
 
   //!
@@ -155,9 +155,6 @@ MainDisplayWindow::CreateSubWindows()
   headerItem->setText(0, "Name");
   headerItem->setText(1, "Value");
   headerView->resizeSection(0, 300);
-  item = new TUTreeElement(TUTreeElement::TopLevel, "Source", "");
-  jsonTree2->addTopLevelItem(item);
-  jsonTree2->expandItem(item);
   jsonTree2->setHeaderItem(headerItem);
 
   jsonTreeContainer1 = new TUTreeContainer(jsonTree1, filename1 + QString(".errors"));
@@ -299,9 +296,13 @@ MainDisplayWindow::PopulateASTTree
   QString                               filename;
   QFileInfo                             fileinfo(InFilename);
 
+  InTree->clear();
+  
+  item = new TUTreeElement(TUTreeElement::TopLevel, "Source", "");
+  InTree->addTopLevelItem(item);
+  InTree->expandItem(item);
   
   filename = fileinfo.completeBaseName();
-  item = (TUTreeElement*)InTree->topLevelItem(0);
   file.open(QIODeviceBase::ReadOnly);
   doc = QJsonDocument::fromJson(file.readAll());
   file.close();
@@ -597,4 +598,40 @@ MainDisplayWindow::SlotSetErrorWindowHeight2
 (int InPosition )
 {
   jsonTreeContainer2->SlotSetErrorWindowHeight(InPosition);
+}
+
+/*****************************************************************************!
+ * Function : SlotDirFileSelected
+ *****************************************************************************/
+void
+MainDisplayWindow::SlotDirFileSelected
+(QString InFilename)
+{
+  QString                               basename1;
+  QString                               basename2;
+  QDir                                  d;
+  QString                               jsonFilename1;
+  QString                               jsonFilename2;
+  QString                               errorFilename1;
+  QString                               errorFilename2;
+  
+  basename1 = mainSystemConfig->GetSourceASTTrack1Path() + QString("/") + InFilename;
+  basename1 = d.toNativeSeparators(basename1);
+  
+  basename2 = mainSystemConfig->GetSourceASTTrack2Path() + QString("/") + InFilename;
+  basename2 = d.toNativeSeparators(basename2);
+
+  filename1 = basename1;
+  filename2 = basename2;
+
+  jsonFilename1 = filename1 + ".json";
+  jsonFilename2 = filename2 + ".json";
+  errorFilename1 = filename1 + ".errors";
+  errorFilename2 = filename2 + ".errors";
+  
+  PopulateASTTree(jsonTree1, jsonFilename1);
+  PopulateASTTree(jsonTree2, jsonFilename2);
+  jsonTreeContainer1->SetErrorFilename(errorFilename1);
+  jsonTreeContainer2->SetErrorFilename(errorFilename2);
+  
 }

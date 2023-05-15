@@ -45,6 +45,8 @@ class SystemConfig : public QWidget
   QString                       GetSourceTrackPath      (void);
   QString                       GetSourceTrack1Path     (void);
   QString                       GetSourceTrack2Path     (void);
+  QString                       GetSourceASTTrack1Path  (void);
+  QString                       GetSourceASTTrack2Path  (void);
   QString                       GetMakeExeName          (void);
   QString                       GetMakeTarget           (void);
   QStringList                   GetMakeArgs             (void);
@@ -89,6 +91,8 @@ class SystemConfig : public QWidget
   QString                       SourceTrackPath;
   QString                       SourceTrack1Path;
   QString                       SourceTrack2Path;
+  QString                       SourceASTTrack1Path;
+  QString                       SourceASTTrack2Path;
   QString                       MakeExeName;
   QString                       MakeTarget;
   QStringList                   MakeArgs;

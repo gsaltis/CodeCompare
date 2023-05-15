@@ -23,6 +23,7 @@
 DirTreeItemDir::DirTreeItemDir
 () : DirTreeItem()
 {
+  type = Dir;
   initialize();
 }
 

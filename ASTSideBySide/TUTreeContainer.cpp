@@ -133,7 +133,6 @@ TUTreeContainer::SetErrorText
   QFile                                 file(errorFilename);
   QString                               st;
 
-  TRACE_FUNCTION_QSTRING(errorFilename);
   errorWindow->setText("");
   file.open(QIODeviceBase::ReadOnly);
   
@@ -141,4 +140,15 @@ TUTreeContainer::SetErrorText
 
   file.close();
   errorWindow->setText(st);
+}
+
+/*****************************************************************************!
+ * Function : SetErrorFilename
+ *****************************************************************************/
+void
+TUTreeContainer::SetErrorFilename
+(QString InErrorFilename)
+{
+  errorFilename = InErrorFilename;
+  SetErrorText();
 }

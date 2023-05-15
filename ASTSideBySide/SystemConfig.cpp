@@ -142,6 +142,8 @@ SystemConfig::ReadPaths
   SourceTrackPath = InObject["sourcepath"].toString();
   SourceTrack1Path = InObject["track1path"].toString();
   SourceTrack2Path = InObject["track2path"].toString();
+  SourceASTTrack1Path = InObject["track1astpath"].toString();
+  SourceASTTrack2Path = InObject["track2astpath"].toString();
 }
 
 /*****************************************************************************!
@@ -169,6 +171,24 @@ QString
 SystemConfig::GetSourceTrack2Path(void)
 {
   return SourceTrack2Path;
+}
+
+/*****************************************************************************!
+ * Function : GetSourceASTTrack1Path
+ *****************************************************************************/
+QString
+SystemConfig::GetSourceASTTrack1Path(void)
+{
+  return SourceASTTrack1Path;
+}
+
+/*****************************************************************************!
+ * Function : GetSourceASTTrack2Path
+ *****************************************************************************/
+QString
+SystemConfig::GetSourceASTTrack2Path(void)
+{
+  return SourceASTTrack2Path;
 }
 
 /*****************************************************************************!

@@ -41,6 +41,7 @@ typedef long int                        LONG;
 typedef char                            CHAR;
 typedef unsigned short                  wchar_t;
 typedef unsigned int                    __pid_t;
+typedef unsigned int                    __uid_t;
 typedef unsigned short                  wchar_t;
 typedef unsigned int                    pid_t;
 typedef unsigned int                    uid_t;

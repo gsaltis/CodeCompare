@@ -46,6 +46,12 @@ mainFilename1;
 QString
 mainFilename2;
 
+QString
+mainSource1ASTPath;
+
+QString
+mainSource2ASTPath;
+
 /*****************************************************************************!
  * Function : main
  *****************************************************************************/
@@ -56,6 +62,7 @@ main
   QApplication                          application(argc, argv);
   MainWindow*                           w;
   QCommandLineParser                    commandLineParser;
+  QString                               mainFilename;
   
   application.setApplicationName("ASTSByS");
   application.setApplicationVersion("0.0.0");
@@ -65,30 +72,27 @@ main
   mainSystemConfig = new SystemConfig();
   mainSystemConfig->ReadJSON(MainConfigFilename);
 
+  mainSource1ASTPath = mainSystemConfig->GetSourceASTTrack1Path();
+  mainSource2ASTPath = mainSystemConfig->GetSourceASTTrack2Path();
+  
   commandLineParser.setApplicationDescription("CodeCompare");
   commandLineParser.addHelpOption();
   commandLineParser.addVersionOption();
-  QCommandLineOption codeBase1NameOption(QStringList() << "1" << "file1",
-                                         QCoreApplication::translate("main", "Specifiy a file for first track."),
+  QCommandLineOption codeBaseNameOption(QStringList() << "f" << "file",
+                                         QCoreApplication::translate("main", "Specifiy a file name."),
                                          QCoreApplication::translate("main", "filename"));
-  QCommandLineOption codeBase2NameOption(QStringList() << "2" << "file2",
-                                         QCoreApplication::translate("main", "Specifiy a file for second track."),
-                                         QCoreApplication::translate("main", "filename"));
-  commandLineParser.addOption(codeBase1NameOption);
-  commandLineParser.addOption(codeBase2NameOption);
+  commandLineParser.addOption(codeBaseNameOption);
   commandLineParser.process(application);
+  mainFilename = commandLineParser.value(codeBaseNameOption);
 
-  mainFilename1 = commandLineParser.value(codeBase1NameOption);
-  mainFilename2 = commandLineParser.value(codeBase2NameOption);
-
-  if ( mainFilename1.isEmpty() ) {
-    QMessageBox::critical(NULL, "Missing File", "Missing file 1");
+  if ( mainFilename.isEmpty() ) {
+    QMessageBox::critical(NULL, "Missing File", "Missing file");
     exit(EXIT_FAILURE);
   }    
-  if ( mainFilename1.isEmpty() ) {
-    QMessageBox::critical(NULL, "Missing File", "Missing file 2");
-    exit(EXIT_FAILURE);
-  }    
+
+  mainFilename1 = mainSource1ASTPath + QString("/") +  mainFilename;
+  mainFilename2 = mainSource2ASTPath + QString("/") +  mainFilename;
+                                               
   w = new MainWindow(NULL, mainFilename1, mainFilename2, &application);
   w->resize(mainSystemConfig->GetMainWindowSize());
   w->move(mainSystemConfig->GetMainWindowLocation());

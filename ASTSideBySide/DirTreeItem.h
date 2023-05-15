@@ -32,6 +32,13 @@
  *****************************************************************************/
 class DirTreeItem : public QTreeWidgetItem
 {
+ public:
+  enum Type
+  {
+    File,
+    Dir
+  };
+  
  //! Constructors
  public :
   DirTreeItem                   ();
@@ -42,7 +49,8 @@ class DirTreeItem : public QTreeWidgetItem
 
  //! Public Methods
  public :
-
+  Type                          GetType                 ();
+  
  //! Public Data
  public :
 
@@ -51,11 +59,12 @@ class DirTreeItem : public QTreeWidgetItem
 
  //! Protected Data
  protected :
-
+  Type                          type;
+  
  //! Private Methods
  private :
   void                          initialize              ();
-
+  
  //! Private Data
  private :
 

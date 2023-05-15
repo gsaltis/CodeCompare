@@ -21,8 +21,11 @@
  * Function : DirTreeItem
  *****************************************************************************/
 DirTreeItemFile::DirTreeItemFile
-() : DirTreeItem()
+(QString InLabel, QString InFilename) : DirTreeItem()
 {
+  type = File;
+  setText(0, InLabel);
+  filename = InFilename;
   initialize();
 }
 
@@ -47,3 +50,12 @@ DirTreeItemFile::initialize()
   setForeground(0, QBrush(QColor(87, 114, 174)));
 }
 
+/*****************************************************************************!
+ * Function : GetFilename
+ *****************************************************************************/
+QString
+DirTreeItemFile::GetFilename
+()
+{
+  return filename;
+}

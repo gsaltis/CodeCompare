@@ -60,7 +60,7 @@ class DirTree : public QTreeWidget
  private :
   void                          initialize              ();
   void                          PopulateTree            (void);
-  void                          PopulateTreeDir         (DirTreeItemDir* InItem, QFileInfo InFileInfo);
+  void                          PopulateTreeDir         (DirTreeItemDir* InItem, QString InFilePath, QFileInfo InFileInfo);
 
  //! Private Data
  private :
@@ -69,9 +69,11 @@ class DirTree : public QTreeWidget
   
  //! Public Slots
  public slots :
+  void                          SlotFileSelected        (QTreeWidgetItem* InItem, int InIndex);
 
  //! Public Signals
  signals :
+  void                          SignalFileSelected      (QString InFilename);
 
  //! Public Actions
  public :

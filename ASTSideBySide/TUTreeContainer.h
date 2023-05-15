@@ -44,6 +44,7 @@ class TUTreeContainer : public QWidget
 
  //! Public Methods
  public :
+  void                          SetErrorFilename        (QString InErrorFilename);
 
  //! Public Data
  public :

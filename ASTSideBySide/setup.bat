@@ -5,5 +5,5 @@ doskey md=make -j 4 -f Makefile.Debug
 doskey mc=make cleanall
 doskey mq=qmake
 doskey asb=release\ASTSByS $*
-doskey asd=debug\ASTSByS $*
+doskey asd=gdb debug\ASTSByS $*
 title ASTSByS

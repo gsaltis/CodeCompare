@@ -8,7 +8,9 @@
   "Paths" : {
     "sourcepath"                        : "D:/Source/NCUCodeMerge/Track2_NCU_Code/src",
     "track1path"                        : "D:\\Source\\NCUCodeMerge\\Track3_NCU_Code\\G3\\src",
-    "track2path"                        : "D:\\Source\\NCUCodeMerge\\Track2_NCU_Code\\src"
+    "track2path"                        : "D:\\Source\\NCUCodeMerge\\Track2_NCU_Code\\src",
+    "track1astpath"                     : "D:/Source/NCUCodeMerge/CodeCompare/BuildDir/Track2",
+    "track2astpath"                     : "D:/Source/NCUCodeMerge/CodeCompare/BuildDir/Track3"
   },
   "Diff" : {
     "diff"                              : "C:\\Program Files (x86)\\Vim\\vim82\\diff.exe",

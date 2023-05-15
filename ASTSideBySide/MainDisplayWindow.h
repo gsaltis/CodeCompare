@@ -98,6 +98,7 @@ class MainDisplayWindow : public QWidget
   void                          SlotJSON2TreeExpanded           (QTreeWidgetItem* InItem);
   void                          SlotJSON2TreeCollapsed          (QTreeWidgetItem* InItem);
   void                          SlotSetErrorWindowHeight2       (int InPosition);
+  void                          SlotDirFileSelected             (QString InFilename);
 
  //! Public Signals
  signals :
