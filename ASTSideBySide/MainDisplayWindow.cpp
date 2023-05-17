@@ -57,6 +57,7 @@ MainDisplayWindow::MainDisplayWindow
 {
   QPalette                              pal;
 
+  TRACE_FUNCTION_START();
   application = InApplication;
   pal = palette();
   pal.setBrush(QPalette::Window, QBrush(QColor(160, 160, 160)));
@@ -64,7 +65,10 @@ MainDisplayWindow::MainDisplayWindow
   setAutoFillBackground(true);
   filename1 = InFilename1;
   filename2 = InFilename2;
+  TRACE_FUNCTION_QSTRING(InFilename1);
+  TRACE_FUNCTION_QSTRING(InFilename2);
   Initialize();
+  TRACE_FUNCTION_END();
 }
 
 /*****************************************************************************!
@@ -102,9 +106,11 @@ MainDisplayWindow::CreateSubWindows()
 {
   QString                                       jsonFilename1;
   QString                                       jsonFilename2;
-  
+
+  TRACE_FUNCTION_START();
   splitter = new QSplitter(this);
 
+  TRACE_FUNCTION_LOCATION();
   //!
   jsonTree1 = new TUTree(filename1);
   connect(jsonTree1,
@@ -139,20 +145,30 @@ MainDisplayWindow::CreateSubWindows()
           this,
           SLOT(SlotJSON2TreeCollapsed(QTreeWidgetItem*)));
   
+  TRACE_FUNCTION_LOCATION();
   jsonTreeContainer1 = new TUTreeContainer(jsonTree1, filename1 + QString(".errors"));
+  TRACE_FUNCTION_LOCATION();
   jsonTreeContainer2 = new TUTreeContainer(jsonTree2, filename2 + QString(".errors"));
+  TRACE_FUNCTION_LOCATION();
   connect(jsonTreeContainer1, TUTreeContainer::SignalSplitterMoved, this, MainDisplayWindow::SlotSetErrorWindowHeight2);
 
+  TRACE_FUNCTION_LOCATION();
   jsonFilename1 = filename1 + QString(".json");
   jsonFilename2 = filename2 + QString(".json");
+  TRACE_FUNCTION_LOCATION();
   fileWindow1 = new TitledWindow(jsonTreeContainer1, filename1);
   fileWindow2 = new TitledWindow(jsonTreeContainer2, filename2);
+  TRACE_FUNCTION_LOCATION();
   splitter->addWidget(dirTree);
   splitter->addWidget(fileWindow1);
   splitter->addWidget(fileWindow2);
+  TRACE_FUNCTION_LOCATION();
   PopulateASTTree(jsonTree1, jsonFilename1);
+  TRACE_FUNCTION_LOCATION();
   PopulateASTTree(jsonTree2, jsonFilename2);
+  TRACE_FUNCTION_LOCATION();
   FlagTranslationUnitDifferences();
+  TRACE_FUNCTION_END();
 }
 
 /*****************************************************************************!
@@ -278,6 +294,8 @@ MainDisplayWindow::PopulateASTTree
   QString                               filename;
   QFileInfo                             fileinfo(InFilename);
 
+  TRACE_FUNCTION_START();
+  TRACE_FUNCTION_QSTRING(InFilename);
   InTree->clear();
   
   item = new TUTreeElement(TUTreeElement::TopLevel, "Source", "", QJsonValue());
@@ -301,6 +319,7 @@ MainDisplayWindow::PopulateASTTree
     ProcessValue(item2, value);
   }
   ProcessTranslationUnitInner(item, innerValue.toArray(), filename);
+  TRACE_FUNCTION_END();
   // InTree->sortItems(0, Qt::AscendingOrder);
 }
 

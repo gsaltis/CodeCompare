@@ -24,6 +24,7 @@
 #include "TUTree.h"
 #include "TUTreeContainerSplitter.h"
 #include "CodeDisplay.h"
+#include "CodeEditor.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -76,6 +77,7 @@ class TUTreeContainer : public QWidget
   QString                       errorFilename;
   QStackedWidget*               displayArea;
   CodeDisplay*                  codeDisplay;
+  CodeEditor*                   codeEditor;
   
  //! Public Slots
  public slots :

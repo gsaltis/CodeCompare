@@ -62,22 +62,29 @@ TUTreeContainer::CreateSubWindows()
 {
   QPalette                              pal;
 
+  TRACE_FUNCTION_START();
   errorWindow = new QTextEdit();
 
   pal = errorWindow->palette();
   pal.setBrush(QPalette::Base, QBrush(QColor(0, 0, 200)));
   errorWindow->setPalette(pal);
 
-  displayArea = new QStackedWidget();
   errorWindow->setTextBackgroundColor(QColor(0, 0, 200));
   errorWindow->setTextColor(QColor(244, 244, 244));
   errorWindow->setAutoFillBackground(true);
-  errorWindow->setMaximumHeight(300);
   errorWindow->resize(0, 300);
-  displayArea->addWidget(errorWindow);
 
+#if 0
   codeDisplay = new CodeDisplay();
-  displayArea->addWidget(codeDisplay);
+#endif
+
+  TRACE_FUNCTION_LOCATION();
+  codeEditor = new CodeEditor();
+  TRACE_FUNCTION_LOCATION();
+  displayArea = new QStackedWidget();
+  displayArea->addWidget(errorWindow);
+  displayArea->addWidget(codeEditor);
+  TRACE_FUNCTION_LOCATION();
   
   splitter = new TUTreeContainerSplitter();
   splitter->setParent(this);
@@ -89,6 +96,7 @@ TUTreeContainer::CreateSubWindows()
           this,
           TUTreeContainer::SlotSplitterMoved);
   displayArea->setCurrentIndex(0);
+  TRACE_FUNCTION_END();
 }
 
 /*****************************************************************************!
@@ -184,5 +192,8 @@ void
 TUTreeContainer::SetTextSection
 (QString InText)
 {
+#if 0  
   codeDisplay->SetSectionText(InText, 0);
+#endif
+  codeEditor->setPlainText(InText);
 }

@@ -31,7 +31,6 @@ CodeDisplay::CodeDisplay
   setPalette(pal);
   setAutoFillBackground(true);
   initialize();
-  setMaximumHeight(400);
 }
 
 /*****************************************************************************!

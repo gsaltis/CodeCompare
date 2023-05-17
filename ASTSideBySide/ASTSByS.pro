@@ -29,14 +29,17 @@ QT                              += core gui widgets
 DEFINES                         += \
 
 SOURCES                         += \
+                                   CodeEditor.cpp                               \
                                    CodeDisplay.cpp                              \
                                    CodeDisplayLine.cpp                          \
+                                   CodeHighlighter.cpp                          \
                                    DirTree.cpp                                  \
                                    DirTreeItem.cpp                              \
                                    DirTreeItemDir.cpp                           \
                                    DirTreeItemFile.cpp                          \
                                    JSONAST.cpp                                  \
 				   MainDisplayWindow.cpp                        \
+                                   LineNumberArea.cpp                           \
 				   MainWindow.cpp                               \
 				   SystemConfig.cpp                             \
 				   TUTreeElement.cpp                            \
@@ -52,11 +55,14 @@ SOURCES                         += \
 HEADERS                         += \
                                    CodeDisplay.h                                \
                                    CodeDisplayLine.h                            \
+                                   CodeEditor.h                                 \
+                                   CodeHighlighter.h                            \
                                    DirTree.h                                    \
                                    DirTreeItem.h                                \
                                    DirTreeItemDir.h                             \
                                    DirTreeItemFile.h                            \
 				   JSONAST.h                                    \
+                                   LineNumberArea.h                             \
 				   MainDisplayWindow.h                          \
 				   MainWindow.h                                 \
 				   SystemConfig.h                               \
