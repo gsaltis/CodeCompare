@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : TUTreeContainer.h
- * DATE         : May 12 2023
+ * FILE NAME    : CodeDisplay.h
+ * DATE         : May 16 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _tutreecontainer_h_
-#define _tutreecontainer_h_
+#ifndef _codedisplay_h_
+#define _codedisplay_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -13,43 +13,39 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
-#include <QSplitter>
-#include <QPlainTextEdit>
-#include <QTextEdit>
-#include <QStackedWidget>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "TUTree.h"
-#include "TUTreeContainerSplitter.h"
-#include "CodeDisplay.h"
+#include "CodeDisplayLine.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
+#define CODE_DISPLAY_X                  200
+#define CODE_DISPLAY_Y                  200
+#define CODE_DISPLAY_WIDTH              200
+#define CODE_DISPLAY_HEIGHT             200
 
 /*****************************************************************************!
- * Exported Class : TUTreeContainer
+ * Exported Class : CodeDisplay
  *****************************************************************************/
-class TUTreeContainer : public QWidget
+class CodeDisplay : public QWidget
 {
   Q_OBJECT;
 
  //! Constructors
  public :
-  TUTreeContainer               (TUTree* InTree, QString InErrorFilename);
+  CodeDisplay                   ();
 
  //! Destructor
  public :
-  ~TUTreeContainer              ();
+  ~CodeDisplay                  ();
 
  //! Public Methods
  public :
-  void                          SetErrorFilename        (QString InErrorFilename);
-  void                          DisplayErrorWindow      (void);
-  void                          DisplayTextWindow       (void);
-  void                          SetTextSection          (QString InText);
+  void                          ClearLines              (void);
+  void                          SetSectionText          (QString InText, int InStartingLine);
 
  //! Public Data
  public :
@@ -66,29 +62,20 @@ class TUTreeContainer : public QWidget
   void                          CreateSubWindows        ();
   void                          InitializeSubWindows    ();
   void                          resizeEvent             (QResizeEvent* InEvent);
-  void                          SetErrorText            ();
 
  //! Private Data
  private :
-  TUTreeContainerSplitter*      splitter;
-  TUTree*                       tree;
-  QTextEdit*                    errorWindow;
-  QString                       errorFilename;
-  QStackedWidget*               displayArea;
-  CodeDisplay*                  codeDisplay;
+  QList<CodeDisplayLine*>       lines;
   
  //! Public Slots
  public slots :
-  void                          SlotSplitterMoved       (int InPosition, int InIndex);
-  void                          SlotSetErrorWindowHeight (int InHeight);
 
  //! Public Signals
  signals :
-  void                          SignalSplitterMoved     (int InPosition);
 
  //! Public Actions
  public :
 
 };
 
-#endif /* _tutreecontainer_h_*/
+#endif /* _codedisplay_h_*/

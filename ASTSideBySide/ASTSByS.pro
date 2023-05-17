@@ -29,6 +29,8 @@ QT                              += core gui widgets
 DEFINES                         += \
 
 SOURCES                         += \
+                                   CodeDisplay.cpp                              \
+                                   CodeDisplayLine.cpp                          \
                                    DirTree.cpp                                  \
                                    DirTreeItem.cpp                              \
                                    DirTreeItemDir.cpp                           \
@@ -48,6 +50,8 @@ SOURCES                         += \
 				   trace.cpp                                    \
 
 HEADERS                         += \
+                                   CodeDisplay.h                                \
+                                   CodeDisplayLine.h                            \
                                    DirTree.h                                    \
                                    DirTreeItem.h                                \
                                    DirTreeItemDir.h                             \

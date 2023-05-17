@@ -14,6 +14,7 @@
 #include <QtGui>
 #include <QTreeWidgetItem>
 #include <QWidget>
+#include <QJsonValue>
 
 /*****************************************************************************!
  * Local Headers
@@ -51,12 +52,12 @@ class TUTreeElement : public QTreeWidgetItem
     FunctionDecl,
     FunctionDef,
     Other,
-
   };
+  
  //! Constructors
  public :
-  TUTreeElement                 (Type InType, QString InText1, QString InText2);
-  TUTreeElement                 (Type InType, QStringList InNames);
+  TUTreeElement                 (Type InType, QString InText1, QString InText2, QJsonValue InValue);
+  TUTreeElement                 (Type InType, QStringList InNames, QJsonValue InValue);
   
  //! Destructor
  public :
@@ -69,7 +70,8 @@ class TUTreeElement : public QTreeWidgetItem
   TranslationUnitType           GetTUType               ();
   void                          SetTUType               (TranslationUnitType InType);
   TUTreeElement*                FindChildByName         (QString InChildName);
-
+  QJsonValue                    GetJSONValue            ();
+  
  //! Public Data
  public :
 
@@ -90,6 +92,7 @@ class TUTreeElement : public QTreeWidgetItem
  private :
   Type                          type;
   TranslationUnitType           tuType;
+  QJsonValue                    jsonValue;
   
  //! Public Slots
  public slots :

@@ -11,6 +11,8 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
+#include <QHeaderView>
+#include <QTreeWidgetItem>
 
 /*****************************************************************************!
  * Local Headers
@@ -21,9 +23,10 @@
  * Function : TUTree
  *****************************************************************************/
 TUTree::TUTree
-() : QTreeWidget()
+(QString InFilename) : QTreeWidget()
 {
   QPalette pal;
+  filename = InFilename;
   pal = palette();
   pal.setBrush(QPalette::Window, QBrush(QColor(255, 255, 255)));
   setPalette(pal);
@@ -45,8 +48,21 @@ TUTree::~TUTree
 void
 TUTree::initialize()
 {
+  QTreeWidgetItem*                              headerItem;
+  QHeaderView*                                  headerView;
+
   InitializeSubWindows();  
   CreateSubWindows();
+  setColumnCount(3);
+  headerView = header();
+  headerView->resizeSection(0, 300);
+  headerView->resizeSection(1, 300);
+
+  headerItem = new QTreeWidgetItem();
+  headerItem->setText(0, "Name");
+  headerItem->setText(1, "Value");
+  headerItem->setText(2, "Compare");
+  setHeaderItem(headerItem);
 }
 
 /*****************************************************************************!
@@ -110,4 +126,55 @@ TUTree::FindElementByNameType
     }
   }
   return NULL;
+}
+
+/*****************************************************************************!
+ * Function : GetFilename
+ *****************************************************************************/
+QString
+TUTree::GetFilename(void)
+{
+  
+  return filename;
+}
+
+/*****************************************************************************!
+ * Function : SetFilename
+ *****************************************************************************/
+void
+TUTree::SetFilename
+(QString InFilename)
+{  
+  filename = InFilename;
+}
+
+/*****************************************************************************!
+ * Function : GetFileSection
+ *****************************************************************************/
+QString
+TUTree::GetFileSection
+(int InBegin, int InEnd)
+{
+  int                                   length;
+  QFile                                 file(filename);
+  if ( ! file.open(QIODeviceBase::ReadOnly) ) {
+    return QString();
+  }
+
+  QString s = QString(file.readAll());
+  file.close();
+
+  length = InEnd - InBegin;
+  if ( length < 1 ) {
+    return QString();
+  }
+
+  if ( InBegin + length >= s.length() ) {
+    return QString();
+  }
+
+  if ( s[InBegin + length] == QChar(';') ) {
+    length++;
+  }
+  return s.sliced(InBegin, length);
 }

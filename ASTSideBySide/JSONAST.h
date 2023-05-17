@@ -42,6 +42,11 @@ class JSONAST : public QWidget
  public :
   static QString                FindCallExprName        (QJsonObject InCallExprObject);
   static void                   GetTopLevelLinesNumbers (QJsonObject InTUObject, int &InStartLine, int &InEndLine, QString &InFileName);
+  static void                   DisplayValue            (QJsonValue InValue, int InDepth);
+  static bool                   CompareVarDecl          (QJsonValue InDecl1, QJsonValue InDecl2);
+  static bool                   CompareValues           (QJsonValue InValue1, QJsonValue InValue2);
+  static bool                   CompareVarDeclType      (QJsonValue InValue1, QJsonValue InValue2);
+  static void                   GetTopLevelRangeInfo    (QJsonValue InValue, int& InBegin, int& InEnd);
   
  //! Public Data
  public :

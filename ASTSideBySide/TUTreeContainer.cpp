@@ -67,22 +67,28 @@ TUTreeContainer::CreateSubWindows()
   pal = errorWindow->palette();
   pal.setBrush(QPalette::Base, QBrush(QColor(0, 0, 200)));
   errorWindow->setPalette(pal);
-  
+
+  displayArea = new QStackedWidget();
   errorWindow->setTextBackgroundColor(QColor(0, 0, 200));
   errorWindow->setTextColor(QColor(244, 244, 244));
   errorWindow->setAutoFillBackground(true);
   errorWindow->setMaximumHeight(300);
   errorWindow->resize(0, 300);
+  displayArea->addWidget(errorWindow);
+
+  codeDisplay = new CodeDisplay();
+  displayArea->addWidget(codeDisplay);
   
   splitter = new TUTreeContainerSplitter();
   splitter->setParent(this);
   splitter->addWidget(tree);
   splitter->setOrientation(Qt::Vertical);
-  splitter->addWidget(errorWindow);
+  splitter->addWidget(displayArea);
   connect(splitter,
           QSplitter::splitterMoved,
           this,
           TUTreeContainer::SlotSplitterMoved);
+  displayArea->setCurrentIndex(0);
 }
 
 /*****************************************************************************!
@@ -151,4 +157,32 @@ TUTreeContainer::SetErrorFilename
 {
   errorFilename = InErrorFilename;
   SetErrorText();
+}
+
+/*****************************************************************************!
+ * Function : DisplayErrorWindow
+ *****************************************************************************/
+void
+TUTreeContainer::DisplayErrorWindow(void)
+{
+  displayArea->setCurrentIndex(0);
+}
+
+/*****************************************************************************!
+ * Function : DisplayTextWindow
+ *****************************************************************************/
+void
+TUTreeContainer::DisplayTextWindow(void)
+{
+  displayArea->setCurrentIndex(1);
+}
+
+/*****************************************************************************!
+ * Function : SetTextSection
+ *****************************************************************************/
+void
+TUTreeContainer::SetTextSection
+(QString InText)
+{
+  codeDisplay->SetSectionText(InText, 0);
 }

@@ -74,6 +74,9 @@ class MainDisplayWindow : public QWidget
   QJsonObject                   FindElementInInnerObject        (QJsonArray InInnerObject, QString InName);
   TUTreeElement*                CreateTreeItem                  (TUTreeElement* InItem, TopTranslationUnitElement* InTUElement);
   void                          ExpandFunction                  (TUTree* InTree, TUTreeElement* InElement);
+  void                          FlagTranslationUnitDifferences  (void);
+  void                          FlagTranslationUnitDifferences  (TUTree* InTree1, TUTree* InTree2);
+  void                          CheckForVarDeclDifference       (TUTreeElement* InElement);
 
  //! Private Data
  private :

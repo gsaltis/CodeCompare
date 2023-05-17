@@ -21,8 +21,9 @@
  * Function : TUTreeElement
  *****************************************************************************/
 TUTreeElement::TUTreeElement
-(Type InType, QString InText1, QString InText2) : QTreeWidgetItem()
+(Type InType, QString InText1, QString InText2, QJsonValue InValue) : QTreeWidgetItem()
 {
+  jsonValue = InValue;
   type = InType;
   setText(0, InText1);
   setText(1, InText2);
@@ -32,8 +33,9 @@ TUTreeElement::TUTreeElement
  * Function : TUTreeElement
  *****************************************************************************/
 TUTreeElement::TUTreeElement
-(Type InType, QStringList InNames)
+(Type InType, QStringList InNames, QJsonValue InValue)
 {
+  jsonValue = InValue;
   type = InType;
   for (int i = 0 ; i < InNames.count(); i++ ) {
     setText(0, InNames[i]);
@@ -118,4 +120,14 @@ TUTreeElement::FindChildByName
     }
   }
   return NULL;
+}
+
+/*****************************************************************************!
+ * Function : GetJSONValue
+ *****************************************************************************/
+QJsonValue
+TUTreeElement::GetJSONValue
+()
+{
+  return jsonValue;
 }

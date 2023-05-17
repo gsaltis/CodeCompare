@@ -37,7 +37,7 @@ class TUTree : public QTreeWidget
 
  //! Constructors
  public :
-  TUTree                        ();
+  TUTree                        (QString InFilename);
 
  //! Destructor
  public :
@@ -46,6 +46,9 @@ class TUTree : public QTreeWidget
  //! Public Methods
  public :
   TUTreeElement*                FindElementByNameType   (QString InName, TUTreeElement::TranslationUnitType InType);
+  QString                       GetFilename             (void);
+  void                          SetFilename             (QString InFilename);
+  QString                       GetFileSection          (int InBegin, int InEnd);
 
  //! Public Data
  public :
@@ -65,6 +68,7 @@ class TUTree : public QTreeWidget
 
  //! Private Data
  private :
+  QString                       filename;
 
  //! Public Slots
  public slots :
