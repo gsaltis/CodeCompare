@@ -69,7 +69,7 @@ class MainDisplayWindow : public QWidget
   void                          resizeEvent                     (QResizeEvent* InEvent);
   void                          ProcessValue                    (TUTreeElement* InItem, QJsonValue InValue);
   void                          PopulateASTTree                 (QTreeWidget* InTree, QString InFilename);
-  void                          ProcessTranslationUnitInner     (TUTreeElement* InItem, QJsonArray InArray, QString InFilename);
+  void                          ProcessTranslationUnitInner     (TUTree* InTree, TUTreeElement* InItem, QJsonArray InArray, QString InFilename);
   void                          FontifyTreeItem                 (TUTreeElement* InTreeItem, QJsonObject InObject, QString InKind);
   QJsonObject                   FindElementInInnerObject        (QJsonArray InInnerObject, QString InName);
   TUTreeElement*                CreateTreeItem                  (TUTreeElement* InItem, TopTranslationUnitElement* InTUElement);
@@ -77,6 +77,9 @@ class MainDisplayWindow : public QWidget
   void                          FlagTranslationUnitDifferences  (void);
   void                          FlagTranslationUnitDifferences  (TUTree* InTree1, TUTree* InTree2);
   void                          CheckForVarDeclDifference       (TUTreeElement* InElement);
+  void                          CheckForFunctionDefDifference   (TUTreeElement* InElement);
+  void                          CheckForFunctionDeclDifference  (TUTreeElement* InElement);
+  bool                          CompareCodeSections             (QString InSection1, QString InSection2);
 
  //! Private Data
  private :

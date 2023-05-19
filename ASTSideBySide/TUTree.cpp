@@ -5,6 +5,7 @@
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
 
+#define TRACE_USE
 /*****************************************************************************!
  * Global Headers
  *****************************************************************************/
@@ -18,6 +19,7 @@
  * Local Headers
  *****************************************************************************/
 #include "TUTree.h"
+#include "trace.h"
 
 /*****************************************************************************!
  * Function : TUTree
@@ -108,24 +110,11 @@ TUTreeElement*
 TUTree::FindElementByNameType
 (QString InName, TUTreeElement::TranslationUnitType InType)
 {
-  int                                   i;
-  int                                   n;
-  TUTreeElement*                        topLevel;
-  TUTreeElement*                        ch;
-  QTreeWidgetItem*                      ti;
-  
-  ti = topLevelItem(0);
-  topLevel = (TUTreeElement*)ti;
-  
-  n = topLevel->childCount();
-
-  for (i = 0; i < n; i++) {
-    ch = (TUTreeElement*)topLevel->child(i);
-    if ( ch->text(1) == InName && ch->GetTUType() == InType ) {
-      return ch;
-    }
-  }
-  return NULL;
+  TUTreeElement*                        element;
+  QString                               key =
+    QString("%1.%2").arg(InName).arg(TUTreeElement::TranslationUnitTypeToString(InType));
+  element = elements[key];
+  return element;
 }
 
 /*****************************************************************************!
@@ -157,13 +146,13 @@ TUTree::GetFileSection
 {
   int                                   length;
   QFile                                 file(filename);
+
   if ( ! file.open(QIODeviceBase::ReadOnly) ) {
     return QString();
   }
 
   QString s = QString(file.readAll());
   file.close();
-
   length = InEnd - InBegin;
   if ( length < 1 ) {
     return QString();
@@ -177,4 +166,27 @@ TUTree::GetFileSection
     length++;
   }
   return s.sliced(InBegin, length);
+}
+
+/*****************************************************************************!
+ * Function : AddElement
+ *****************************************************************************/
+void
+TUTree::AddElement
+(TUTreeElement* InElement)
+{
+  addTopLevelItem(InElement);
+  AddElementToElements(InElement);
+}
+
+/*****************************************************************************!
+ * Function : AddElementToElements
+ *****************************************************************************/
+void
+TUTree::AddElementToElements
+(TUTreeElement* InElement)
+{
+  QString                               key =
+    QString("%1.%2").arg(InElement->text(1)).arg(TUTreeElement::TranslationUnitTypeToString(InElement->GetTUType()));
+  elements[key] = InElement;
 }

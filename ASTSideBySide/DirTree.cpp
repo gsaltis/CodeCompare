@@ -30,6 +30,9 @@ DirTree::DirTree
 {
   QTreeWidgetItem*                      headerItem;
   QDir                                  d;
+  QHeaderView*                                  headerView;
+
+  headerView = header();
 
   connect(this, QTreeWidget::itemClicked, this, DirTree::SlotFileSelected);
   
@@ -41,6 +44,7 @@ DirTree::DirTree
   headerItem = new QTreeWidgetItem();
   headerItem->setText(0, filePath1);
   headerItem->setText(1, filePath2);
+  headerView->resizeSection(0, 200);
   setHeaderItem(headerItem);
 
   setMaximumWidth(400);

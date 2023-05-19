@@ -91,6 +91,41 @@ JSONAST::FindCallExprName
 }
 
 /*****************************************************************************!
+ * Function : FindDeclStmtName
+ *****************************************************************************/
+QString
+JSONAST::FindDeclStmtName
+(QJsonObject InDeclStmtObject)
+{
+  
+  QJsonValue                            val;
+  QJsonArray                            inner;
+  QJsonObject                           obj;
+  QJsonValue                            name;
+
+  val = InDeclStmtObject["inner"];
+  if ( ! val.isArray() ) {
+    return QString();
+  }
+  inner = val.toArray();
+
+  for ( int i = 0 ; i < inner.count() ; i++ ) {
+    val = inner[i];
+    if ( ! val.isObject() ) {
+      continue;
+    }
+    
+    obj = val.toObject();
+    name = obj["name"];
+    if ( ! name.isString() ) {
+      continue;
+    }
+    return name.toString();
+  }
+  return QString();
+}
+
+/*****************************************************************************!
  * Function : GetTopLevelLinesNumbers
  *****************************************************************************/
 void
@@ -142,7 +177,7 @@ JSONAST::GetTopLevelLinesNumbers
 }
 
 /*****************************************************************************!
- * Function : ProcessValue
+ * Function : DisplayValue
  *****************************************************************************/
 void
 JSONAST::DisplayValue
@@ -450,6 +485,7 @@ JSONAST::GetTopLevelRangeInfo
 (QJsonValue InValue, int& InBegin, int& InEnd)
 {
   QJsonObject                           expansionLocObj;
+  QJsonValue                            rangeVal;
   QJsonValue                            expansionLocVal;
   QJsonObject                           obj;
   QJsonObject                           rangeObj;
@@ -461,7 +497,7 @@ JSONAST::GetTopLevelRangeInfo
   QJsonValue                            tokenLengthVal2;
   int                                   offset;
   int                                   tokenLength;
-  
+
   InBegin = -1;
   InEnd = -1;
 
@@ -470,21 +506,24 @@ JSONAST::GetTopLevelRangeInfo
     return;
   }
 
-  rangeObj = obj["range"].toObject();
+  rangeVal = obj["range"];
+  
+  rangeObj = rangeVal.toObject();
   if ( rangeObj.empty() ) {
     return;
   }
+
+  //!
 
   beginObj = rangeObj["begin"].toObject();
   if ( beginObj.empty() ) {
     return;
   }
-  
-  offsetVal = beginObj["offset"];
-  if ( offsetVal.isDouble() ) {
-    InBegin = offsetVal.toInteger();
+  if ( ! JSONAST::GetTopLevelBeginInfo(beginObj, InBegin) ) {
+    return;
   }
-
+  
+  //
   endObj = rangeObj["end"].toObject();
   if ( endObj.empty() ) {
     InBegin = -1;
@@ -498,6 +537,7 @@ JSONAST::GetTopLevelRangeInfo
     offset = offsetVal.toInteger();
     tokenLength = tokenLengthVal.toInteger();
     InEnd = offset + tokenLength;
+    return;
   }
 
   expansionLocVal = endObj["expansionLoc"].toObject();
@@ -513,3 +553,33 @@ JSONAST::GetTopLevelRangeInfo
     }
   }
 }
+
+/*****************************************************************************!
+ * Function : GetTopLevelBeginInfo
+ *****************************************************************************/
+bool
+JSONAST::GetTopLevelBeginInfo
+(QJsonObject InBeginObject, int& InBegin)
+{
+  QJsonObject                           expansionLocObj;
+  QJsonValue                            expansionLocVal;
+  QJsonValue                            offsetVal;
+  QJsonValue                            offsetVal2;
+
+  offsetVal = InBeginObject["offset"];
+  if ( offsetVal.isDouble() ) {
+    InBegin = offsetVal.toInteger();
+    return true;
+  }
+  expansionLocVal = InBeginObject["expansionLoc"].toObject();
+  if ( expansionLocVal.isObject() ) {
+    expansionLocObj = expansionLocVal.toObject();
+    offsetVal2 = expansionLocObj["offset"];
+    if ( offsetVal2.isDouble() ) {
+      InBegin = offsetVal2.toInteger();
+      return true;
+    }
+  }
+  return false;
+}
+  

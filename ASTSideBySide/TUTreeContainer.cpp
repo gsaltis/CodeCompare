@@ -62,7 +62,6 @@ TUTreeContainer::CreateSubWindows()
 {
   QPalette                              pal;
 
-  TRACE_FUNCTION_START();
   errorWindow = new QTextEdit();
 
   pal = errorWindow->palette();
@@ -78,13 +77,10 @@ TUTreeContainer::CreateSubWindows()
   codeDisplay = new CodeDisplay();
 #endif
 
-  TRACE_FUNCTION_LOCATION();
   codeEditor = new CodeEditor();
-  TRACE_FUNCTION_LOCATION();
   displayArea = new QStackedWidget();
   displayArea->addWidget(errorWindow);
   displayArea->addWidget(codeEditor);
-  TRACE_FUNCTION_LOCATION();
   
   splitter = new TUTreeContainerSplitter();
   splitter->setParent(this);
@@ -96,7 +92,6 @@ TUTreeContainer::CreateSubWindows()
           this,
           TUTreeContainer::SlotSplitterMoved);
   displayArea->setCurrentIndex(0);
-  TRACE_FUNCTION_END();
 }
 
 /*****************************************************************************!
@@ -196,4 +191,14 @@ TUTreeContainer::SetTextSection
   codeDisplay->SetSectionText(InText, 0);
 #endif
   codeEditor->setPlainText(InText);
+}
+
+/*****************************************************************************!
+ * Function : ClearTextWindow
+ *****************************************************************************/
+void
+TUTreeContainer::ClearTextWindow
+()
+{
+  codeEditor->setPlainText("");
 }

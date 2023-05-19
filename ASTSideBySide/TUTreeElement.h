@@ -45,10 +45,10 @@ class TUTreeElement : public QTreeWidgetItem
   enum TranslationUnitType
   {
     None,
-    EnumDecl,
-    VarDecl,
     RecordDecl,
     TypedefDecl,
+    EnumDecl,
+    VarDecl,
     FunctionDecl,
     FunctionDef,
     Other,
@@ -71,6 +71,7 @@ class TUTreeElement : public QTreeWidgetItem
   void                          SetTUType               (TranslationUnitType InType);
   TUTreeElement*                FindChildByName         (QString InChildName);
   QJsonValue                    GetJSONValue            ();
+  static QString                TranslationUnitTypeToString     (TranslationUnitType InType);
   
  //! Public Data
  public :
@@ -89,7 +90,7 @@ class TUTreeElement : public QTreeWidgetItem
   void                          resizeEvent             (QResizeEvent* InEvent);
 
  //! Private Data
- private :
+private :
   Type                          type;
   TranslationUnitType           tuType;
   QJsonValue                    jsonValue;

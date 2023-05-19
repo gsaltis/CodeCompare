@@ -49,6 +49,8 @@ class TUTree : public QTreeWidget
   QString                       GetFilename             (void);
   void                          SetFilename             (QString InFilename);
   QString                       GetFileSection          (int InBegin, int InEnd);
+  void                          AddElement              (TUTreeElement* InElement);
+  void                          AddElementToElements    (TUTreeElement* InElement);
 
  //! Public Data
  public :
@@ -68,8 +70,9 @@ class TUTree : public QTreeWidget
 
  //! Private Data
  private :
-  QString                       filename;
-
+  QString                               filename;
+  QHash<QString, TUTreeElement*>        elements;
+  
  //! Public Slots
  public slots :
 

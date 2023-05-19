@@ -38,7 +38,7 @@ TUTreeElement::TUTreeElement
   jsonValue = InValue;
   type = InType;
   for (int i = 0 ; i < InNames.count(); i++ ) {
-    setText(0, InNames[i]);
+    setText(i, InNames[i]);
   }
 }
 
@@ -130,4 +130,47 @@ TUTreeElement::GetJSONValue
 ()
 {
   return jsonValue;
+}
+
+/*****************************************************************************!
+ * Function : TranslationUnitTypeToString
+ *****************************************************************************/
+QString
+TUTreeElement::TranslationUnitTypeToString
+(TUTreeElement::TranslationUnitType InType)
+{
+  switch(InType) {
+    case None : {
+      return QString("None");
+    }
+      
+    case RecordDecl : {
+      return QString("RecordDecl");
+    }
+      
+    case TypedefDecl : {
+      return QString("TypedefDecl");
+    }
+      
+    case EnumDecl : {
+      return QString("EnumDecl");
+    }
+      
+    case VarDecl : {
+      return QString("VarDecl");
+    }
+      
+    case FunctionDecl : {
+      return QString("FunctionDecl");
+    }
+      
+    case FunctionDef : {
+      return QString("FunctionDef");
+    }
+      
+    case Other : {
+      break;
+    }
+  }
+  return QString("Other");
 }

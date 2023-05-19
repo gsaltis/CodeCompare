@@ -57,7 +57,6 @@ MainDisplayWindow::MainDisplayWindow
 {
   QPalette                              pal;
 
-  TRACE_FUNCTION_START();
   application = InApplication;
   pal = palette();
   pal.setBrush(QPalette::Window, QBrush(QColor(160, 160, 160)));
@@ -65,10 +64,7 @@ MainDisplayWindow::MainDisplayWindow
   setAutoFillBackground(true);
   filename1 = InFilename1;
   filename2 = InFilename2;
-  TRACE_FUNCTION_QSTRING(InFilename1);
-  TRACE_FUNCTION_QSTRING(InFilename2);
   Initialize();
-  TRACE_FUNCTION_END();
 }
 
 /*****************************************************************************!
@@ -107,10 +103,8 @@ MainDisplayWindow::CreateSubWindows()
   QString                                       jsonFilename1;
   QString                                       jsonFilename2;
 
-  TRACE_FUNCTION_START();
   splitter = new QSplitter(this);
 
-  TRACE_FUNCTION_LOCATION();
   //!
   jsonTree1 = new TUTree(filename1);
   connect(jsonTree1,
@@ -128,6 +122,7 @@ MainDisplayWindow::CreateSubWindows()
 
   dirTree = new DirTree(mainSystemConfig->GetSourceASTTrack1Path(),
                         mainSystemConfig->GetSourceASTTrack2Path());
+  dirTree->resize(400, 0);
   connect(dirTree, DirTree::SignalFileSelected, this, MainDisplayWindow::SlotDirFileSelected);
     
   //!
@@ -145,30 +140,20 @@ MainDisplayWindow::CreateSubWindows()
           this,
           SLOT(SlotJSON2TreeCollapsed(QTreeWidgetItem*)));
   
-  TRACE_FUNCTION_LOCATION();
   jsonTreeContainer1 = new TUTreeContainer(jsonTree1, filename1 + QString(".errors"));
-  TRACE_FUNCTION_LOCATION();
   jsonTreeContainer2 = new TUTreeContainer(jsonTree2, filename2 + QString(".errors"));
-  TRACE_FUNCTION_LOCATION();
   connect(jsonTreeContainer1, TUTreeContainer::SignalSplitterMoved, this, MainDisplayWindow::SlotSetErrorWindowHeight2);
 
-  TRACE_FUNCTION_LOCATION();
   jsonFilename1 = filename1 + QString(".json");
   jsonFilename2 = filename2 + QString(".json");
-  TRACE_FUNCTION_LOCATION();
   fileWindow1 = new TitledWindow(jsonTreeContainer1, filename1);
   fileWindow2 = new TitledWindow(jsonTreeContainer2, filename2);
-  TRACE_FUNCTION_LOCATION();
   splitter->addWidget(dirTree);
   splitter->addWidget(fileWindow1);
   splitter->addWidget(fileWindow2);
-  TRACE_FUNCTION_LOCATION();
   PopulateASTTree(jsonTree1, jsonFilename1);
-  TRACE_FUNCTION_LOCATION();
   PopulateASTTree(jsonTree2, jsonFilename2);
-  TRACE_FUNCTION_LOCATION();
   FlagTranslationUnitDifferences();
-  TRACE_FUNCTION_END();
 }
 
 /*****************************************************************************!
@@ -197,6 +182,7 @@ MainDisplayWindow::ProcessValue
 {
   QStringList                           names;
   QString                               callName;
+  QString                               declName;
   QJsonValue::Type                      type;
 
   type = InValue.type();
@@ -259,6 +245,11 @@ MainDisplayWindow::ProcessValue
           if ( st == "CallExpr" ) {
             callName = JSONAST::FindCallExprName(obj2);
             names << callName;
+          } else if ( st == "DeclStmt" ) {
+            declName = JSONAST::FindDeclStmtName(obj2);
+            names << declName;
+          } else if ( st == "ParmVarDecl" ) {
+            names << obj2["name"].toString();
           }
         }
         item = new TUTreeElement(TUTreeElement::Element, names, val);
@@ -281,6 +272,7 @@ void
 MainDisplayWindow::PopulateASTTree
 (QTreeWidget* InTree, QString InFilename)
 {
+  TUTree*                               tuTree;
   QJsonValue                            innerValue;
   QString                               objectFilename;
   QJsonValue                            value;
@@ -294,13 +286,11 @@ MainDisplayWindow::PopulateASTTree
   QString                               filename;
   QFileInfo                             fileinfo(InFilename);
 
-  TRACE_FUNCTION_START();
-  TRACE_FUNCTION_QSTRING(InFilename);
-  InTree->clear();
-  
   item = new TUTreeElement(TUTreeElement::TopLevel, "Source", "", QJsonValue());
-  InTree->addTopLevelItem(item);
-  InTree->expandItem(item);
+  tuTree = (TUTree*)InTree;
+  tuTree->clear();
+  tuTree->AddElement(item);
+  tuTree->expandItem(item);
   
   filename = fileinfo.completeBaseName();
   file.open(QIODeviceBase::ReadOnly);
@@ -315,11 +305,11 @@ MainDisplayWindow::PopulateASTTree
       continue;
     }
     item2 = new TUTreeElement(TUTreeElement::TranslationUnitElement, QStringList(key), value);
+    tuTree->AddElementToElements(item2);
     item->addChild(item2);
     ProcessValue(item2, value);
   }
-  ProcessTranslationUnitInner(item, innerValue.toArray(), filename);
-  TRACE_FUNCTION_END();
+  ProcessTranslationUnitInner(tuTree, item, innerValue.toArray(), filename);
   // InTree->sortItems(0, Qt::AscendingOrder);
 }
 
@@ -328,7 +318,7 @@ MainDisplayWindow::PopulateASTTree
  *****************************************************************************/
 void
 MainDisplayWindow::ProcessTranslationUnitInner
-(TUTreeElement* InItem, QJsonArray InArray, QString InFilename)
+(TUTree* InTree, TUTreeElement* InItem, QJsonArray InArray, QString InFilename)
 {
   QString                               name;
   QString                               kind;
@@ -358,30 +348,17 @@ MainDisplayWindow::ProcessTranslationUnitInner
     if ( ! inTargetFile ) {
       continue;
     }
-#if 1
+#if 0
     printf("%5d of %lld : %30s : %-60s\r", i + 1, InArray.count(),
            kind.toStdString().c_str(),
            name.toStdString().c_str());
 #endif    
     TopTranslationUnitElement* t = new TopTranslationUnitElement(kind, name, value);
-#if 0
-    tuElements << t;
-#endif    
     TUTreeElement* item = CreateTreeItem(InItem, t);
     InItem->addChild(item);
+    InTree->AddElementToElements(item);
   }
-#if 1
-  printf("\n");
-#endif
-#if 0
-  std::sort(tuElements.begin(), tuElements.end(), TUElementCompare);
-  for ( int i = 0 ; i <  tuElements.count(); i++  ) {
-           
-    TopTranslationUnitElement* t = tuElements[i];
-    printf("%4d of %lld : %s %s\n", i + 1, tuElements.count(),
-           t->kind.toStdString().c_str(),
-           t->name.toStdString().c_str());
-  }
+#if 0  
   printf("\n");
 #endif  
 }
@@ -483,22 +460,40 @@ void
 MainDisplayWindow::SlotJSON1TreeClicked
 (QTreeWidgetItem* InItem, int)
 {
-  QString                              section;
+  QString                               section;
+  QString                               section2;
   int                                   end;
   int                                   begin;
   TUTreeElement*                        element;
+  TUTreeElement*                        element2;
   QJsonValue                            value;
+  QJsonValue                            value2;
   
+  //!
   element = (TUTreeElement*)InItem;
   if ( element->GetType() != TUTreeElement::TranslationUnitElement ) {
     return;
   }
-  
+  jsonTreeContainer1->ClearTextWindow();
   value = element->GetJSONValue();
   JSONAST::GetTopLevelRangeInfo(value, begin, end);
   section = jsonTree1->GetFileSection(begin, end);
   jsonTreeContainer1->SetTextSection(section);
-  jsonTreeContainer1->DisplayTextWindow(); 
+  jsonTreeContainer1->DisplayTextWindow();
+
+  //!
+  jsonTreeContainer2->DisplayTextWindow();
+  jsonTreeContainer2->ClearTextWindow();
+
+  //!
+  element2 = jsonTree2->FindElementByNameType(element->text(1), element->GetTUType());
+  if ( NULL == element2 ) {
+    return;
+  }
+  value2 = element2->GetJSONValue();
+  JSONAST::GetTopLevelRangeInfo(value2, begin, end);
+  section2 = jsonTree2->GetFileSection(begin, end);
+  jsonTreeContainer2->SetTextSection(section2);
 } 
 
 /*****************************************************************************!
@@ -510,6 +505,12 @@ MainDisplayWindow::CheckForVarDeclDifference
 {
   QJsonValue                            content1;
   QJsonValue                            content2;
+  QString                               section1;
+  QString                               section2;
+  int                                   begin1;
+  int                                   end1;
+  int                                   begin2;
+  int                                   end2;
   TUTreeElement*                        element2;
   bool                                  b;
 
@@ -519,11 +520,112 @@ MainDisplayWindow::CheckForVarDeclDifference
   }
   content1 = InElement->GetJSONValue();
   content2 = element2->GetJSONValue();
-  b = JSONAST::CompareVarDecl(content1, content2);
+  JSONAST::GetTopLevelRangeInfo(content1, begin1, end1);
+  JSONAST::GetTopLevelRangeInfo(content2, begin2, end2);
+  section1 = jsonTree1->GetFileSection(begin1, end1);
+  section2 = jsonTree2->GetFileSection(begin2, end2);
+  
+  b = section1 == section2;
   if ( b ) {
     InElement->setText(2, "TRUE");
   } else {
     InElement->setText(2, "FALSE");
+    InElement->setForeground(2, QBrush(QColor(192, 0, 0)));
+    for ( int i = 0; i < 3 ; i++ ) {
+      InElement->setBackground(i, QBrush(QColor(240, 240, 240)));
+    }
+    QFont f = InElement->font(2);
+    f.setBold(true);
+    InElement->setFont(2, f);
+  }
+}
+
+/*****************************************************************************!
+ * Function : CheckForFunctionDefDifference
+ *****************************************************************************/
+void
+MainDisplayWindow::CheckForFunctionDefDifference
+(TUTreeElement*                         InElement)
+{
+  QJsonValue                            content1;
+  QJsonValue                            content2;
+  QString                               section1;
+  QString                               section2;
+  int                                   begin1;
+  int                                   end1;
+  int                                   begin2;
+  int                                   end2;
+  TUTreeElement*                        element2;
+  bool                                  b;
+
+  element2 = jsonTree2->FindElementByNameType(InElement->text(1), TUTreeElement::FunctionDef);
+  if ( NULL == element2 ) {
+    return;
+  }
+  content1 = InElement->GetJSONValue();
+  content2 = element2->GetJSONValue();
+  JSONAST::GetTopLevelRangeInfo(content1, begin1, end1);
+  JSONAST::GetTopLevelRangeInfo(content2, begin2, end2);
+  section1 = jsonTree1->GetFileSection(begin1, end1);
+  section2 = jsonTree2->GetFileSection(begin2, end2);
+  b = CompareCodeSections(section1, section2);
+  if ( InElement->text(1) == "WatchDog_Feed" ) {
+  }
+  if ( b ) {
+    InElement->setText(2, "TRUE");
+  } else {
+    InElement->setText(2, "FALSE");
+    InElement->setForeground(2, QBrush(QColor(192, 0, 0)));
+    for ( int i = 0; i < 3 ; i++ ) {
+      InElement->setBackground(i, QBrush(QColor(240, 240, 240)));
+    }
+    QFont f = InElement->font(2);
+    f.setBold(true);
+    InElement->setFont(2, f);
+  }
+}
+
+/*****************************************************************************!
+ * Function : CheckForFunctionDeclDifference
+ *****************************************************************************/
+void
+MainDisplayWindow::CheckForFunctionDeclDifference
+(TUTreeElement*                         InElement)
+{
+  QJsonValue                            content1;
+  QJsonValue                            content2;
+  QString                               section1;
+  QString                               section2;
+  int                                   begin1;
+  int                                   end1;
+  int                                   begin2;
+  int                                   end2;
+  TUTreeElement*                        element2;
+  bool                                  b;
+
+  element2 = jsonTree2->FindElementByNameType(InElement->text(1), InElement->GetTUType());
+  if ( NULL == element2 ) {
+    return;
+  }
+  content1 = InElement->GetJSONValue();
+  content2 = element2->GetJSONValue();
+  JSONAST::GetTopLevelRangeInfo(content1, begin1, end1);
+  JSONAST::GetTopLevelRangeInfo(content2, begin2, end2);
+  section1 = jsonTree1->GetFileSection(begin1, end1);
+  section2 = jsonTree2->GetFileSection(begin2, end2);
+
+  b = CompareCodeSections(section1, section2);
+  if ( b ) {
+    InElement->setText(2, "TRUE");
+  } else {
+    InElement->setText(2, "FALSE");
+    InElement->setForeground(2, QBrush(QColor(192, 0, 0)));
+    for ( int i = 0; i < 3 ; i++ ) {
+      InElement->setBackground(i, QBrush(QColor(240, 240, 240)));
+    }
+    QFont f = InElement->font(2);
+    f.setBold(true);
+    InElement->setFont(2, f);
   }
 }
 
@@ -611,8 +713,9 @@ MainDisplayWindow::SlotJSON1TreeCollapsed
  *****************************************************************************/
 void
 MainDisplayWindow::SlotJSON2TreeClicked
-(QTreeWidgetItem*, int)
+(QTreeWidgetItem* , int)
 {
+  //  TUTreeElement*                                element = (TUTreeElement*)InItem;
 }
 
 /*****************************************************************************!
@@ -674,13 +777,12 @@ MainDisplayWindow::SlotDirFileSelected
   
   PopulateASTTree(jsonTree1, jsonFilename1);
   PopulateASTTree(jsonTree2, jsonFilename2);
-  FlagTranslationUnitDifferences();
   jsonTree1->SetFilename(filename1);
   jsonTree2->SetFilename(filename2);
   jsonTreeContainer1->SetErrorFilename(errorFilename1);
   jsonTreeContainer2->SetErrorFilename(errorFilename2);  
+  FlagTranslationUnitDifferences();
 }
-
 
 /*****************************************************************************!
  * Function : FlagTranslationUnitDifferences
@@ -730,5 +832,61 @@ MainDisplayWindow::FlagTranslationUnitDifferences
     if ( item->GetTUType() == TUTreeElement::VarDecl ) {
       CheckForVarDeclDifference(item);
     }
+    if ( item->GetTUType() == TUTreeElement::FunctionDef ) {
+      CheckForFunctionDefDifference(item);
+    }
+    if ( item->GetTUType() == TUTreeElement::FunctionDecl ) {
+      CheckForFunctionDeclDifference(item);
+    }
+    if ( item->GetTUType() == TUTreeElement::FunctionDef ) {
+      CheckForFunctionDeclDifference(item);
+    }
   }
+}
+
+/*****************************************************************************!
+ * Function : CompareCodeSections
+ *****************************************************************************/
+bool
+MainDisplayWindow::CompareCodeSections
+(QString InSection1, QString InSection2)
+{
+  QStringList                           lines1;
+  QStringList                           lines2;
+  QString                               line1;
+  QString                               line2;
+  int                                   count1;
+  int                                   count2;
+  int                                   i;
+  int                                   len1;
+  int                                   len2;
+
+  lines1 = InSection1.split("\n");
+  lines2 = InSection2.split("\n");
+  count1 = lines1.count();
+  count2 = lines2.count();
+  if ( count1 != count2 ) {
+    return false;
+  }
+
+  for ( i = 0 ; i < count1; i++ ) {
+    line1 = lines1[i];
+    line2 = lines2[i];
+    len1 = line1.length();
+    len2 = line2.length();
+
+    if ( line1[len1-1] == QChar('\r') ) {
+      len1--;
+      line1 = line1.sliced(0, len1);
+    }
+    if ( line2[len2-1] == QChar('\r') ) {
+      len2--;
+      line2 = line2.sliced(0, len2);
+    }
+    
+    if ( line1 != line2 ) {
+      return false;
+    }
+  }
+  return true;
 }

@@ -51,7 +51,8 @@ class TUTreeContainer : public QWidget
   void                          DisplayErrorWindow      (void);
   void                          DisplayTextWindow       (void);
   void                          SetTextSection          (QString InText);
-
+  void                          ClearTextWindow         ();
+  
  //! Public Data
  public :
 

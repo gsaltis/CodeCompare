@@ -1,790 +1,212 @@
-set NCUINCLUDE=D:/Source/NCUCodeMerge/Track3_NCU_Code/G3/src/include/
-set NCUBASE=D:/Source/NCUCodeMerge/Track3_NCU_Code/G3/src
+@ECHO OFF
+cls
+set NCUINCLUDE=D:\Source\NCUCodeMerge\Track3_NCU_Code\G3\src\include\
+set NCUBASE=D:\Source\NCUCodeMerge\Track3_NCU_Code\G3\src
 set TRACK=Track3
 set ARGS=-c -std=c90 -Wno-macro-redefined -Wno-return-type -Wno-implicit-function-declaration -nostdinc -isystem stdincludes -I %NCUINCLUDE% -Xclang -ast-dump=json -ferror-limit=9999
 
 
-set DIR=haldriver/comm_hayes_modem
-set FILE=commdial.c 
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=haldriver/comm_hayes_modem
-set FILE=test_comm_modem.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=haldriver/comm_net_tcpip
-set FILE=commsock.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=haldriver/comm_net_tcpip
-set FILE=test_comm_tcpip.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=haldriver/comm_net_tcpip6
-set FILE=commsock6.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=haldriver/comm_net_tcpip6
-set FILE=test_comm_tcpip6.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=haldriver/comm_scup_485
-set FILE=comm_scup_485.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=haldriver/comm_std_serial
-set FILE=commserial.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=haldriver/comm_std_serial
-set FILE=test_comm_serial.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=haldriver/comm_virtual_port
-set FILE=commvirtual.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=haldriver/comm_virtual_port
-set FILE=test_comm_virtual.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=haldriver/ui_base
-set FILE=lcd_font_lib.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=haldriver/ui_base
-set FILE=lcd_interface.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/applog
-set FILE=appfilelog.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/applog
-set FILE=appflashlog.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/applog
-set FILE=applog.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/applog
-set FILE=test_applog.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/app_service
-set FILE=app_service.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/comm_base
-set FILE=halcomm.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/comm_base
-set FILE=test_comm_speed.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/comm_base
-set FILE=test_hal_comm.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/config_parser
-set FILE=cfg_parser.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/config_parser
-set FILE=cfg_reader.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/data_exchange
-set FILE=data_exchange.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/data_exchange
-set FILE=system_net_info.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/data_exchange
-set FILE=test_data_exchange.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/data_mgmt
-set FILE=his_data.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/data_mgmt
-set FILE=test_data_mng.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/publib
-set FILE=new.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/publib
-set FILE=pubfunc.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/publib
-set FILE=run_mutex.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/publib
-set FILE=run_queue.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/publib
-set FILE=run_thread.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/publib
-set FILE=run_timer.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/publib
-set FILE=test_pub_lib.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/security_manage
-set FILE=test_user_manage.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=lib/security_manage
-set FILE=user_manage.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=log
-set FILE=log_read.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/config_mgmt
-set FILE=cfg_loader.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/config_mgmt
-set FILE=cfg_loadrun.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/config_mgmt
-set FILE=cfg_load_solution.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/config_mgmt
-set FILE=cfg_load_stdbasic.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/config_mgmt
-set FILE=cfg_load_stdequip.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/config_mgmt
-set FILE=test_cfg.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/equip_mon
-set FILE=equip_ctrl_cmd.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/equip_mon
-set FILE=equip_data_process.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/equip_mon
-set FILE=equip_data_sample.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/equip_mon
-set FILE=equip_exp_eval.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/equip_mon
-set FILE=equip_mon_init.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/equip_mon
-set FILE=equip_mon_main.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/equip_mon
-set FILE=equip_mon_unload.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/equip_mon
-set FILE=equip_sn_convert.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/equip_mon
-set FILE=test_equip_mon.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/main
-set FILE=main.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/main
-set FILE=main_args.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/main
-set FILE=service_mgr.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/main
-set FILE=sig_handler.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/main
-set FILE=watch_dog.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/splash
-set FILE=acu_splash.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/splash
-set FILE=splash_args.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/splash
-set FILE=splash_main.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/time_sync
-set FILE=test_time_sync.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=mainapp/time_sync
-set FILE=time_sync.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=maintenance
-set FILE=debug_lcd_msg.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=maintenance
-set FILE=debug_s_p.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=maintenance
-set FILE=msp_args.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/can_sampler
-set FILE=can_converter.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/can_sampler
-set FILE=can_dcem.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/can_sampler
-set FILE=can_mppt.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/can_sampler
-set FILE=can_rectifier.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/can_sampler
-set FILE=can_sampler_main.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/can_sampler
-set FILE=can_smdu.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/can_sampler
-set FILE=can_smduh.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/can_sampler
-set FILE=can_smdup.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/can_sampler
-set FILE=can_smtemp.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/can_sampler
-set FILE=NA_battery.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/eem_csu
-set FILE=eem_csu.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/i2c_sampler
-set FILE=i2c_sampler_main.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/main_board
-set FILE=main_board.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/rs485_sampler
-set FILE=rs485_comm.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/rs485_sampler
-set FILE=rs485_FCUP.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/rs485_sampler
-set FILE=rs485_large_dus.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/rs485_sampler
-set FILE=rs485_main.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/rs485_sampler
-set FILE=rs485_modbus.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/rs485_sampler
-set FILE=rs485_report.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/rs485_sampler
-set FILE=rs485_slaves.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/rs485_sampler
-set FILE=rs485_smac.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/rs485_sampler
-set FILE=rs485_smbat.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/rs485_sampler
-set FILE=rs485_smbrc.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/rs485_sampler
-set FILE=rs485_smdu.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/rs485_sampler
-set FILE=rs485_smio.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=sampler/sampler_base
-set FILE=win32api_stub.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service
-set FILE=cgi_startacu.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/eem_soc
-set FILE=alarm_handler.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/eem_soc
-set FILE=command_handler.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/eem_soc
-set FILE=config_builder.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/eem_soc
-set FILE=eem_state_machine.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/eem_soc
-set FILE=esr_utility.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/eem_soc
-set FILE=frame_analysis.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/eem_soc
-set FILE=linklayer_manager.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/eem_soc
-set FILE=service_provider.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/eem_soc
-set FILE=soc_state_machine.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/eem_soc
-set FILE=test_esr.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_batt_cap.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_batt_history.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_batt_mgmt.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_boost_charge.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_discharge.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_dsl_test.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_engy_sav.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_estop_eshutdown.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_float_charge.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_init_equip.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_lvd.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_main_switch.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_picket.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_power_split.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_pri_cfg.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_rect_list.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_rect_redund.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_run_info.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_sig_value.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_test.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_test_log.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gc_timer.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=gen_ctl.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/gen_ctl
-set FILE=pub_list.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/lcd_ui
-set FILE=qt_fifo.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/mail
-set FILE=base64.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/mail
-set FILE=mail.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/maintenance_intf
-set FILE=debug_maintn.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/maintenance_intf
-set FILE=test_mp.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/modbus
-set FILE=command_handler.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/modbus
-set FILE=config_builder.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/modbus
-set FILE=frame_analysis.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/modbus
-set FILE=linklayer_manager.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/modbus
-set FILE=modbus_state_machine.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/modbus
-set FILE=modbus_utility.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/modbus
-set FILE=service_provider.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/plc
-set FILE=plc.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/plc
-set FILE=test_plc.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/simple_service
-set FILE=simple_service.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/sms
-set FILE=SMS.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/snmpv3_agent
-set FILE=powerMIB.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/snmpv3_agent
-set FILE=snmpd.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/snmpv3_agent
-set FILE=snmp_agent.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/snmp_agent
-set FILE=powerMIB.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/snmp_agent
-set FILE=snmpd.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/snmp_agent
-set FILE=snmp_agent.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=appmain.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=cgivars.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=cgi_filemanage.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=cgi_maintenance.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=cgi_multilanguage.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=cgi_passwd_netscape.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=cgi_pub.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=cgi_query.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=cgi_query_netscape.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=cgi_realtime.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=cgi_setting.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=cgi_suicide_timer.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=communicate.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=control_command.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=test_cgi.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=web_net_control.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=web_net_geteem.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=web_net_getip.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=web_net_getlang.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=web_net_getnms.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=web_net_gettime.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=web_net_reset.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=web_net_seteem.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=web_net_setip.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=web_net_setlang.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=web_net_setnms.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_ui
-set FILE=web_net_settime.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_user
-set FILE=appmain.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_user
-set FILE=cgivars.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_user
-set FILE=cgi_filemanage.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_user
-set FILE=cgi_pub.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_user
-set FILE=cgi_query.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_user
-set FILE=cgi_setting.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_user
-set FILE=cgi_suicide_timer.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_user
-set FILE=control_command.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_user
-set FILE=jsonFile.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_user
-set FILE=web_rw_flash.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/web_user
-set FILE=web_user.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/ydn23
-set FILE=alarm_handler.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/ydn23
-set FILE=command_handler.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/ydn23
-set FILE=config_builder.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/ydn23
-set FILE=frame_analysis.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/ydn23
-set FILE=linklayer_manager.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/ydn23
-set FILE=service_provider.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/ydn23
-set FILE=test_ydn.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/ydn23
-set FILE=ydn_state_machine.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
-set DIR=service/ydn23
-set FILE=ydn_utility.c
-clang  %ARGS% %NCUBASE%/%DIR%/%FILE% > BuildDir/%TRACK%/%DIR%/%FILE%.json 2> BuildDir/%TRACK%/%DIR%/%FILE%.errors
-
+CALL :build haldriver\comm_hayes_modem commdial.c 
+CALL :build haldriver\comm_hayes_modem test_comm_modem.c
+CALL :build haldriver\comm_net_tcpip commsock.c
+CALL :build haldriver\comm_net_tcpip test_comm_tcpip.c
+CALL :build haldriver\comm_net_tcpip6 commsock6.c
+CALL :build haldriver\comm_net_tcpip6 test_comm_tcpip6.c
+CALL :build haldriver\comm_scup_485 comm_scup_485.c
+CALL :build haldriver\comm_std_serial commserial.c
+CALL :build haldriver\comm_std_serial test_comm_serial.c
+CALL :build haldriver\comm_virtual_port commvirtual.c
+CALL :build haldriver\comm_virtual_port test_comm_virtual.c
+CALL :build haldriver\ui_base lcd_font_lib.c
+CALL :build haldriver\ui_base lcd_interface.c
+CALL :build lib\applog appfilelog.c
+CALL :build lib\applog appflashlog.c
+CALL :build lib\applog applog.c
+CALL :build lib\applog test_applog.c
+CALL :build lib\app_service app_service.c
+CALL :build lib\comm_base halcomm.c
+CALL :build lib\comm_base test_comm_speed.c
+CALL :build lib\comm_base test_hal_comm.c
+CALL :build lib\config_parser cfg_parser.c
+CALL :build lib\config_parser cfg_reader.c
+CALL :build lib\data_exchange data_exchange.c
+CALL :build lib\data_exchange system_net_info.c
+CALL :build lib\data_exchange test_data_exchange.c
+CALL :build lib\data_mgmt his_data.c
+CALL :build lib\data_mgmt test_data_mng.c
+CALL :build lib\publib new.c
+CALL :build lib\publib pubfunc.c
+CALL :build lib\publib run_mutex.c
+CALL :build lib\publib run_queue.c
+CALL :build lib\publib run_thread.c
+CALL :build lib\publib run_timer.c
+CALL :build lib\publib test_pub_lib.c
+CALL :build lib\security_manage test_user_manage.c
+CALL :build lib\security_manage user_manage.c
+CALL :build log log_read.c
+CALL :build mainapp\config_mgmt cfg_loader.c
+CALL :build mainapp\config_mgmt cfg_loadrun.c
+CALL :build mainapp\config_mgmt cfg_load_solution.c
+CALL :build mainapp\config_mgmt cfg_load_stdbasic.c
+CALL :build mainapp\config_mgmt cfg_load_stdequip.c
+CALL :build mainapp\config_mgmt test_cfg.c
+CALL :build mainapp\equip_mon equip_ctrl_cmd.c
+CALL :build mainapp\equip_mon equip_data_process.c
+CALL :build mainapp\equip_mon equip_data_sample.c
+CALL :build mainapp\equip_mon equip_exp_eval.c
+CALL :build mainapp\equip_mon equip_mon_init.c
+CALL :build mainapp\equip_mon equip_mon_main.c
+CALL :build mainapp\equip_mon equip_mon_unload.c
+CALL :build mainapp\equip_mon equip_sn_convert.c
+CALL :build mainapp\equip_mon test_equip_mon.c
+CALL :build mainapp\main main.c
+CALL :build mainapp\main main_args.c
+CALL :build mainapp\main service_mgr.c
+CALL :build mainapp\main sig_handler.c
+CALL :build mainapp\main watch_dog.c
+CALL :build mainapp\splash acu_splash.c
+CALL :build mainapp\splash splash_args.c
+CALL :build mainapp\splash splash_main.c
+CALL :build mainapp\time_sync test_time_sync.c
+CALL :build mainapp\time_sync time_sync.c
+CALL :build maintenance debug_lcd_msg.c
+CALL :build maintenance debug_s_p.c
+CALL :build maintenance msp_args.c
+CALL :build sampler\can_sampler can_converter.c
+CALL :build sampler\can_sampler can_dcem.c
+CALL :build sampler\can_sampler can_mppt.c
+CALL :build sampler\can_sampler can_rectifier.c
+CALL :build sampler\can_sampler can_sampler_main.c
+CALL :build sampler\can_sampler can_smdu.c
+CALL :build sampler\can_sampler can_smduh.c
+CALL :build sampler\can_sampler can_smdup.c
+CALL :build sampler\can_sampler can_smtemp.c
+CALL :build sampler\can_sampler NA_battery.c
+CALL :build sampler\eem_csu eem_csu.c
+CALL :build sampler\i2c_sampler i2c_sampler_main.c
+CALL :build sampler\main_board main_board.c
+CALL :build sampler\rs485_sampler rs485_comm.c
+CALL :build sampler\rs485_sampler rs485_FCUP.c
+CALL :build sampler\rs485_sampler rs485_large_dus.c
+CALL :build sampler\rs485_sampler rs485_main.c
+CALL :build sampler\rs485_sampler rs485_modbus.c
+CALL :build sampler\rs485_sampler rs485_report.c
+CALL :build sampler\rs485_sampler rs485_slaves.c
+CALL :build sampler\rs485_sampler rs485_smac.c
+CALL :build sampler\rs485_sampler rs485_smbat.c
+CALL :build sampler\rs485_sampler rs485_smbrc.c
+CALL :build sampler\rs485_sampler rs485_smdu.c
+CALL :build sampler\rs485_sampler rs485_smio.c
+CALL :build sampler\sampler_base win32api_stub.c
+CALL :build service cgi_startacu.c
+CALL :build service\eem_soc alarm_handler.c
+CALL :build service\eem_soc command_handler.c
+CALL :build service\eem_soc config_builder.c
+CALL :build service\eem_soc eem_state_machine.c
+CALL :build service\eem_soc esr_utility.c
+CALL :build service\eem_soc frame_analysis.c
+CALL :build service\eem_soc linklayer_manager.c
+CALL :build service\eem_soc service_provider.c
+CALL :build service\eem_soc soc_state_machine.c
+CALL :build service\eem_soc test_esr.c
+CALL :build service\gen_ctl gc_batt_cap.c
+CALL :build service\gen_ctl gc_batt_history.c
+CALL :build service\gen_ctl gc_batt_mgmt.c
+CALL :build service\gen_ctl gc_boost_charge.c
+CALL :build service\gen_ctl gc_discharge.c
+CALL :build service\gen_ctl gc_dsl_test.c
+CALL :build service\gen_ctl gc_engy_sav.c
+CALL :build service\gen_ctl gc_estop_eshutdown.c
+CALL :build service\gen_ctl gc_float_charge.c
+CALL :build service\gen_ctl gc_init_equip.c
+CALL :build service\gen_ctl gc_lvd.c
+CALL :build service\gen_ctl gc_main_switch.c
+CALL :build service\gen_ctl gc_picket.c
+CALL :build service\gen_ctl gc_power_split.c
+CALL :build service\gen_ctl gc_pri_cfg.c
+CALL :build service\gen_ctl gc_rect_list.c
+CALL :build service\gen_ctl gc_rect_redund.c
+CALL :build service\gen_ctl gc_run_info.c
+CALL :build service\gen_ctl gc_sig_value.c
+CALL :build service\gen_ctl gc_test.c
+CALL :build service\gen_ctl gc_test_log.c
+CALL :build service\gen_ctl gc_timer.c
+CALL :build service\gen_ctl gen_ctl.c
+CALL :build service\gen_ctl pub_list.c
+CALL :build service\lcd_ui qt_fifo.c
+CALL :build service\mail base64.c
+CALL :build service\mail mail.c
+CALL :build service\maintenance_intf debug_maintn.c
+CALL :build service\maintenance_intf test_mp.c
+CALL :build service\modbus command_handler.c
+CALL :build service\modbus config_builder.c
+CALL :build service\modbus frame_analysis.c
+CALL :build service\modbus linklayer_manager.c
+CALL :build service\modbus modbus_state_machine.c
+CALL :build service\modbus modbus_utility.c
+CALL :build service\modbus service_provider.c
+CALL :build service\plc plc.c
+CALL :build service\plc test_plc.c
+CALL :build service\simple_service simple_service.c
+CALL :build service\sms SMS.c
+CALL :build service\snmpv3_agent powerMIB.c
+CALL :build service\snmpv3_agent snmpd.c
+CALL :build service\snmpv3_agent snmp_agent.c
+CALL :build service\snmp_agent powerMIB.c
+CALL :build service\snmp_agent snmpd.c
+CALL :build service\snmp_agent snmp_agent.c
+CALL :build service\web_ui appmain.c
+CALL :build service\web_ui cgivars.c
+CALL :build service\web_ui cgi_filemanage.c
+CALL :build service\web_ui cgi_maintenance.c
+CALL :build service\web_ui cgi_multilanguage.c
+CALL :build service\web_ui cgi_passwd_netscape.c
+CALL :build service\web_ui cgi_pub.c
+CALL :build service\web_ui cgi_query.c
+CALL :build service\web_ui cgi_query_netscape.c
+CALL :build service\web_ui cgi_realtime.c
+CALL :build service\web_ui cgi_setting.c
+CALL :build service\web_ui cgi_suicide_timer.c
+CALL :build service\web_ui communicate.c
+CALL :build service\web_ui control_command.c
+CALL :build service\web_ui test_cgi.c
+CALL :build service\web_ui web_net_control.c
+CALL :build service\web_ui web_net_geteem.c
+CALL :build service\web_ui web_net_getip.c
+CALL :build service\web_ui web_net_getlang.c
+CALL :build service\web_ui web_net_getnms.c
+CALL :build service\web_ui web_net_gettime.c
+CALL :build service\web_ui web_net_reset.c
+CALL :build service\web_ui web_net_seteem.c
+CALL :build service\web_ui web_net_setip.c
+CALL :build service\web_ui web_net_setlang.c
+CALL :build service\web_ui web_net_setnms.c
+CALL :build service\web_ui web_net_settime.c
+CALL :build service\web_user appmain.c
+CALL :build service\web_user cgivars.c
+CALL :build service\web_user cgi_filemanage.c
+CALL :build service\web_user cgi_pub.c
+CALL :build service\web_user cgi_query.c
+CALL :build service\web_user cgi_setting.c
+CALL :build service\web_user cgi_suicide_timer.c
+CALL :build service\web_user control_command.c
+CALL :build service\web_user jsonFile.c
+CALL :build service\web_user web_rw_flash.c
+CALL :build service\web_user web_user.c
+CALL :build service\ydn23 alarm_handler.c
+CALL :build service\ydn23 command_handler.c
+CALL :build service\ydn23 config_builder.c
+CALL :build service\ydn23 frame_analysis.c
+CALL :build service\ydn23 linklayer_manager.c
+CALL :build service\ydn23 service_provider.c
+CALL :build service\ydn23 test_ydn.c
+CALL :build service\ydn23 ydn_state_machine.c
+CALL :build service\ydn23 ydn_utility.c
+
+EXIT /B %ERRORLEVEL%
+
+:build
+echo Building %~2
+tr --delete '\r' <  %NCUBASE%\%~1\%~2 > BuildDir\%TRACK%\%~1\%~2
+clang  %ARGS% BuildDir\%TRACK%\%~1\%~2 > BuildDir\%TRACK%\%~1\%~2.json 2> BuildDir\%TRACK%\%~1\%~2.errors
+EXIT /B %ERRORLEVEL%
