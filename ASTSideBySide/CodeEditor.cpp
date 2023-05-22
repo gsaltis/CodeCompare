@@ -24,6 +24,7 @@
 CodeEditor::CodeEditor
 () : QPlainTextEdit()
 {
+  topLineNumber = 0;
   lineNumberArea = new LineNumberArea(this);
 
   connect(this, &CodeEditor::blockCountChanged, this, &CodeEditor::updateLineNumberAreaWidth);
@@ -42,6 +43,7 @@ CodeEditor::CodeEditor
 CodeEditor::CodeEditor
 (QWidget* InParent) : QPlainTextEdit(InParent)
 {
+  topLineNumber = 0;
   lineNumberArea = new LineNumberArea(this);
 
   connect(this, &CodeEditor::blockCountChanged, this, &CodeEditor::updateLineNumberAreaWidth);
@@ -113,7 +115,7 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event)
   
   while (block.isValid() && top <= event->rect().bottom()) {
     if (block.isVisible() && bottom >= event->rect().top()) {
-      QString number = QString::number(blockNumber + 1);
+      QString number = QString::number(blockNumber + topLineNumber);
       painter.setPen(Qt::black);
       painter.drawText(0, top, lineNumberArea->width()-3, fontMetrics().height(),
                        Qt::AlignRight, number);
@@ -195,4 +197,14 @@ CodeEditor::SlotSetCurrentLine
   textCursor.movePosition(QTextCursor::StartOfLine);
   setTextCursor(textCursor);
   centerCursor();
+}
+
+/*****************************************************************************!
+ * Function : SlotSetTopLineNumber
+ *****************************************************************************/
+void
+CodeEditor::SlotSetTopLineNumber
+(int InTopLineNumber)
+{
+  topLineNumber = InTopLineNumber;
 }

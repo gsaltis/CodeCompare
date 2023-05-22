@@ -482,7 +482,7 @@ JSONAST::CompareValues
  *****************************************************************************/
 void
 JSONAST::GetTopLevelRangeInfo
-(QJsonValue InValue, int& InBegin, int& InEnd)
+(QJsonValue InValue, int& InLineNumber, int& InBegin, int& InEnd)
 {
   QJsonObject                           expansionLocObj;
   QJsonValue                            rangeVal;
@@ -497,7 +497,10 @@ JSONAST::GetTopLevelRangeInfo
   QJsonValue                            tokenLengthVal2;
   int                                   offset;
   int                                   tokenLength;
-
+  QJsonValue                            locVal;
+  QJsonValue                            lineVal;
+  QJsonObject                           locObject;
+  
   InBegin = -1;
   InEnd = -1;
 
@@ -506,6 +509,18 @@ JSONAST::GetTopLevelRangeInfo
     return;
   }
 
+  locVal = obj["loc"];
+  if ( ! locVal.isObject() ) {
+    return;
+  }
+
+  locObject = locVal.toObject();
+  lineVal = locObject["line"];
+  if ( ! lineVal.isDouble() ) {
+    return;
+  }
+  InLineNumber = lineVal.toInt();
+  
   rangeVal = obj["range"];
   
   rangeObj = rangeVal.toObject();

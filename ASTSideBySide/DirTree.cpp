@@ -30,8 +30,11 @@ DirTree::DirTree
 {
   QTreeWidgetItem*                      headerItem;
   QDir                                  d;
-  QHeaderView*                                  headerView;
-
+  QHeaderView*                          headerView;
+  QString                               commonPrefix;
+  int                                   n, m, len1, len2;
+  QString                               namePath1, namePath2;
+  
   headerView = header();
 
   connect(this, QTreeWidget::itemClicked, this, DirTree::SlotFileSelected);
@@ -39,17 +42,29 @@ DirTree::DirTree
   filePath1 = d.toNativeSeparators(InFilePath1);
   filePath2 = d.toNativeSeparators(InFilePath2);
 
+  commonPrefix = GetCommonPrefix(filePath1, filePath2);
+  if ( ! commonPrefix.isEmpty() ) {
+    n = commonPrefix.length();
+    len1 = filePath1.length();
+    len2 = filePath2.length();
+    m = len1 - n;
+    namePath1 = filePath1.sliced(n, m);
+
+    m  = len2 - n;
+    namePath2 = filePath2.sliced(n, m);
+  }
   setColumnCount(2);
 
   headerItem = new QTreeWidgetItem();
-  headerItem->setText(0, filePath1);
-  headerItem->setText(1, filePath2);
+  headerItem->setText(0, namePath1);
+  headerItem->setText(1, namePath2);
   headerView->resizeSection(0, 200);
   setHeaderItem(headerItem);
 
   setMaximumWidth(400);
 
   PopulateTree();
+  PopulateTree2();
   initialize();
 }
 
@@ -94,6 +109,28 @@ DirTree::PopulateTree(void)
 }
 
 /*****************************************************************************!
+ * Function : PopulateTree2
+ *****************************************************************************/
+void
+DirTree::PopulateTree2(void)
+{
+  QDir                                  dir(filePath2);
+  dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+  dir.setSorting(QDir::Name);
+
+  QFileInfoList                         list = dir.entryInfoList();
+
+  for (auto i = list.begin() ; i != list.end(); i++ ) {
+    QFileInfo                           info = *i;
+    QString                             dirname = info.fileName();
+    DirTreeItemDir*                     item = FindDirItem(dirname);
+    if ( item ) {
+      item->setText(1, dirname);
+    }
+  }
+}
+
+/*****************************************************************************!
  * Function : PopulateTreeDir
  *****************************************************************************/
 void
@@ -126,7 +163,9 @@ DirTree::PopulateTreeDir
     QFileInfo                           info = *i;
     QString                             filename = info.completeBaseName();
     QString                             cfilename = dir.toNativeSeparators(info.canonicalFilePath());
-    QString                             filename1 = cfilename.sliced(filePathLen + 1, cfilename.length() - filePathLen);
+    int                                 n2 = cfilename.length() ;
+    int                                 n = n2 - filePathLen;
+    QString                             filename1 = cfilename.sliced(filePathLen + 1, n-1);
     DirTreeItemFile*                    fileItem;
 
     if ( info.suffix() != "json" ) {
@@ -164,4 +203,70 @@ DirTree::SlotFileSelected
   f = (DirTreeItemFile*)d;
   filename = f->GetFilename();
   emit SignalFileSelected(filename);
+}
+
+/*****************************************************************************!
+ * Function : GetCommonPrefix
+ *****************************************************************************/
+QString
+DirTree::GetCommonPrefix
+(QString InFilename1, QString InFilename2)
+{
+  int                                   i;
+  int                                   len1;
+  int                                   len2;
+  int                                   len;
+  int                                   lastDirSep;
+  
+  if ( InFilename1.isEmpty() || InFilename2.isEmpty() ) {
+    return QString();
+  }
+
+  len1 = InFilename1.length();
+  len2 = InFilename2.length();
+
+  len = len1 < len2 ?  len1 : len2;
+
+  lastDirSep = 0;
+  for (i = 0; i < len; i++) {
+    if ( InFilename1[i] == InFilename2[i] ) {
+      if ( InFilename1[i] == '/' || InFilename1[i] == '\\' ) {
+        lastDirSep = i;
+      }
+      continue;
+    }
+    break;
+  }
+  if ( len == 0 && len == i ) {
+    return QString();
+  }
+
+  if ( lastDirSep > 0 ) {
+    lastDirSep++;
+  }
+  if ( lastDirSep == len ) {
+    return QString();
+  }
+  return InFilename1.sliced(0, lastDirSep);
+}
+
+/*****************************************************************************!
+ * Function : FindDirItem
+ *****************************************************************************/
+DirTreeItemDir*
+DirTree::FindDirItem
+(QString InDirName)
+{
+  DirTreeItemDir*                       dirItem;
+  int                                   i, n;
+
+  n = topLevelItemCount();
+
+  for (i = 0; i < n; i++) {
+    dirItem = (DirTreeItemDir*)topLevelItem(i);
+    if ( dirItem->text(0) == InDirName ) {
+      return dirItem;
+    }
+  }
+  return NULL;
 }

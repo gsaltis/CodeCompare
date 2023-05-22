@@ -15,8 +15,6 @@
 #include <QJsonObject>
 #include <QHeaderView>
 
-#define TRACE_USE
-
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
@@ -464,11 +462,12 @@ MainDisplayWindow::SlotJSON1TreeClicked
   QString                               section2;
   int                                   end;
   int                                   begin;
+  int                                   lineNumber;
   TUTreeElement*                        element;
   TUTreeElement*                        element2;
   QJsonValue                            value;
   QJsonValue                            value2;
-  
+
   //!
   element = (TUTreeElement*)InItem;
   if ( element->GetType() != TUTreeElement::TranslationUnitElement ) {
@@ -476,9 +475,9 @@ MainDisplayWindow::SlotJSON1TreeClicked
   }
   jsonTreeContainer1->ClearTextWindow();
   value = element->GetJSONValue();
-  JSONAST::GetTopLevelRangeInfo(value, begin, end);
+  JSONAST::GetTopLevelRangeInfo(value, lineNumber, begin, end);
   section = jsonTree1->GetFileSection(begin, end);
-  jsonTreeContainer1->SetTextSection(section);
+  jsonTreeContainer1->SetTextSection(section, lineNumber);
   jsonTreeContainer1->DisplayTextWindow();
 
   //!
@@ -491,9 +490,9 @@ MainDisplayWindow::SlotJSON1TreeClicked
     return;
   }
   value2 = element2->GetJSONValue();
-  JSONAST::GetTopLevelRangeInfo(value2, begin, end);
+  JSONAST::GetTopLevelRangeInfo(value2, lineNumber, begin, end);
   section2 = jsonTree2->GetFileSection(begin, end);
-  jsonTreeContainer2->SetTextSection(section2);
+  jsonTreeContainer2->SetTextSection(section2, lineNumber);
 } 
 
 /*****************************************************************************!
@@ -511,6 +510,7 @@ MainDisplayWindow::CheckForVarDeclDifference
   int                                   end1;
   int                                   begin2;
   int                                   end2;
+  int                                   lineNumber;
   TUTreeElement*                        element2;
   bool                                  b;
 
@@ -520,8 +520,8 @@ MainDisplayWindow::CheckForVarDeclDifference
   }
   content1 = InElement->GetJSONValue();
   content2 = element2->GetJSONValue();
-  JSONAST::GetTopLevelRangeInfo(content1, begin1, end1);
-  JSONAST::GetTopLevelRangeInfo(content2, begin2, end2);
+  JSONAST::GetTopLevelRangeInfo(content1, lineNumber, begin1, end1);
+  JSONAST::GetTopLevelRangeInfo(content2, lineNumber, begin2, end2);
   section1 = jsonTree1->GetFileSection(begin1, end1);
   section2 = jsonTree2->GetFileSection(begin2, end2);
   
@@ -553,6 +553,7 @@ MainDisplayWindow::CheckForFunctionDefDifference
   QString                               section2;
   int                                   begin1;
   int                                   end1;
+  int                                   lineNumber;
   int                                   begin2;
   int                                   end2;
   TUTreeElement*                        element2;
@@ -564,8 +565,8 @@ MainDisplayWindow::CheckForFunctionDefDifference
   }
   content1 = InElement->GetJSONValue();
   content2 = element2->GetJSONValue();
-  JSONAST::GetTopLevelRangeInfo(content1, begin1, end1);
-  JSONAST::GetTopLevelRangeInfo(content2, begin2, end2);
+  JSONAST::GetTopLevelRangeInfo(content1, lineNumber, begin1, end1);
+  JSONAST::GetTopLevelRangeInfo(content2, lineNumber, begin2, end2);
   section1 = jsonTree1->GetFileSection(begin1, end1);
   section2 = jsonTree2->GetFileSection(begin2, end2);
   b = CompareCodeSections(section1, section2);
@@ -599,6 +600,7 @@ MainDisplayWindow::CheckForFunctionDeclDifference
   int                                   begin1;
   int                                   end1;
   int                                   begin2;
+  int                                   lineNumber;
   int                                   end2;
   TUTreeElement*                        element2;
   bool                                  b;
@@ -609,8 +611,8 @@ MainDisplayWindow::CheckForFunctionDeclDifference
   }
   content1 = InElement->GetJSONValue();
   content2 = element2->GetJSONValue();
-  JSONAST::GetTopLevelRangeInfo(content1, begin1, end1);
-  JSONAST::GetTopLevelRangeInfo(content2, begin2, end2);
+  JSONAST::GetTopLevelRangeInfo(content1, lineNumber, begin1, end1);
+  JSONAST::GetTopLevelRangeInfo(content2, lineNumber, begin2, end2);
   section1 = jsonTree1->GetFileSection(begin1, end1);
   section2 = jsonTree2->GetFileSection(begin2, end2);
 
@@ -760,28 +762,37 @@ MainDisplayWindow::SlotDirFileSelected
   QString                               jsonFilename2;
   QString                               errorFilename1;
   QString                               errorFilename2;
-  
+
+  TRACE_FUNCTION_START();
   basename1 = mainSystemConfig->GetSourceASTTrack1Path() + QString("/") + InFilename;
   basename1 = d.toNativeSeparators(basename1);
   
+  TRACE_FUNCTION_LOCATION();
   basename2 = mainSystemConfig->GetSourceASTTrack2Path() + QString("/") + InFilename;
   basename2 = d.toNativeSeparators(basename2);
 
+  TRACE_FUNCTION_LOCATION();
   filename1 = basename1;
   filename2 = basename2;
 
+  TRACE_FUNCTION_LOCATION();
   jsonFilename1 = filename1 + ".json";
   jsonFilename2 = filename2 + ".json";
   errorFilename1 = filename1 + ".errors";
   errorFilename2 = filename2 + ".errors";
   
+  TRACE_FUNCTION_LOCATION();
   PopulateASTTree(jsonTree1, jsonFilename1);
+  TRACE_FUNCTION_LOCATION();
   PopulateASTTree(jsonTree2, jsonFilename2);
+  TRACE_FUNCTION_LOCATION();
   jsonTree1->SetFilename(filename1);
   jsonTree2->SetFilename(filename2);
   jsonTreeContainer1->SetErrorFilename(errorFilename1);
   jsonTreeContainer2->SetErrorFilename(errorFilename2);  
+  TRACE_FUNCTION_LOCATION();
   FlagTranslationUnitDifferences();
+  TRACE_FUNCTION_END();
 }
 
 /*****************************************************************************!
@@ -790,8 +801,11 @@ MainDisplayWindow::SlotDirFileSelected
 void
 MainDisplayWindow::FlagTranslationUnitDifferences(void)
 {
+  TRACE_FUNCTION_START();
   FlagTranslationUnitDifferences(jsonTree1, jsonTree2);
+  TRACE_FUNCTION_LOCATION();
   FlagTranslationUnitDifferences(jsonTree2, jsonTree1);
+  TRACE_FUNCTION_END();
 }
 
 /*****************************************************************************!
@@ -807,41 +821,51 @@ MainDisplayWindow::FlagTranslationUnitDifferences
   TUTreeElement*                        top;
   TUTreeElement*                        item2;
 
+  TRACE_FUNCTION_START();
   top = (TUTreeElement*)InTree1->topLevelItem(0);
-
+  TRACE_FUNCTION_LOCATION();
   n = top->childCount();
+  TRACE_FUNCTION_INT(n);
   for (i = 0; i < n; i++) {
     TUTreeElement*                      item = (TUTreeElement*)top->child(i);
     QString                             s2 = item->text(1);
     TUTreeElement::TranslationUnitType  tutype;
 
+    TRACE_FUNCTION_INT(i);
+    TRACE_FUNCTION_QSTRING(s2);
     tutype = item->GetTUType();
+    TRACE_FUNCTION_INT(tutype);
     item2 = InTree2->FindElementByNameType(s2, tutype);
     if ( NULL == item2 ) {
       item->setForeground(1, QBrush(QColor(128, 0, 0)));
       continue;
     }
 
+    TRACE_FUNCTION_LOCATION();
     font = item2->font(1);
     font.setBold(true);
     item2->setFont(1, font);
     item->setFont(1, font);
 
+    TRACE_FUNCTION_LOCATION();
     item->setForeground(1, QBrush(QColor(0, 128, 0)));
     item2->setForeground(1, QBrush(QColor(0, 128, 0)));
+    TRACE_FUNCTION_LOCATION();
     if ( item->GetTUType() == TUTreeElement::VarDecl ) {
       CheckForVarDeclDifference(item);
+      continue;
     }
+    TRACE_FUNCTION_LOCATION();
     if ( item->GetTUType() == TUTreeElement::FunctionDef ) {
       CheckForFunctionDefDifference(item);
     }
+    TRACE_FUNCTION_LOCATION();
     if ( item->GetTUType() == TUTreeElement::FunctionDecl ) {
       CheckForFunctionDeclDifference(item);
     }
-    if ( item->GetTUType() == TUTreeElement::FunctionDef ) {
-      CheckForFunctionDeclDifference(item);
-    }
+    TRACE_FUNCTION_LOCATION();
   }
+  TRACE_FUNCTION_END();
 }
 
 /*****************************************************************************!

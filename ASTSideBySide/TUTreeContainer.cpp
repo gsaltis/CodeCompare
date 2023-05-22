@@ -185,12 +185,10 @@ TUTreeContainer::DisplayTextWindow(void)
  *****************************************************************************/
 void
 TUTreeContainer::SetTextSection
-(QString InText)
+(QString InText, int InLineNumber)
 {
-#if 0  
-  codeDisplay->SetSectionText(InText, 0);
-#endif
   codeEditor->setPlainText(InText);
+  codeEditor->SlotSetTopLineNumber(InLineNumber);
 }
 
 /*****************************************************************************!

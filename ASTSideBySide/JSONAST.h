@@ -47,7 +47,7 @@ class JSONAST : public QWidget
   static bool                   CompareVarDecl          (QJsonValue InDecl1, QJsonValue InDecl2);
   static bool                   CompareValues           (QJsonValue InValue1, QJsonValue InValue2);
   static bool                   CompareVarDeclType      (QJsonValue InValue1, QJsonValue InValue2);
-  static void                   GetTopLevelRangeInfo    (QJsonValue InValue, int& InBegin, int& InEnd);
+  static void                   GetTopLevelRangeInfo    (QJsonValue InValue, int& InLineNumber, int& InBegin, int& InEnd);
   static bool                   GetTopLevelBeginInfo    (QJsonObject InBeginObject, int& InBegin);
   
  //! Public Data

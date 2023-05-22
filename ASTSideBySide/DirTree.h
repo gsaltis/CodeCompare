@@ -60,7 +60,10 @@ class DirTree : public QTreeWidget
  private :
   void                          initialize              ();
   void                          PopulateTree            (void);
+  void                          PopulateTree2           (void);
   void                          PopulateTreeDir         (DirTreeItemDir* InItem, QString InFilePath, QFileInfo InFileInfo);
+  QString                       GetCommonPrefix         (QString InFilename1, QString InFilename2);
+  DirTreeItemDir*               FindDirItem             (QString InDirName);
 
  //! Private Data
  private :

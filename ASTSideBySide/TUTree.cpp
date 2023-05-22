@@ -5,7 +5,6 @@
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
 
-#define TRACE_USE
 /*****************************************************************************!
  * Global Headers
  *****************************************************************************/
@@ -14,6 +13,7 @@
 #include <QWidget>
 #include <QHeaderView>
 #include <QTreeWidgetItem>
+#include <sys/stat.h>
 
 /*****************************************************************************!
  * Local Headers
@@ -144,28 +144,73 @@ QString
 TUTree::GetFileSection
 (int InBegin, int InEnd)
 {
-  int                                   length;
-  QFile                                 file(filename);
+  FILE*                                 file;
+  char*                                 buffer;
+  struct stat                           st;
+  const char*                           fname;
+  char*                                 returnString;
+  QString                               rString;
+  int                                   bytesRead;
+  int                                   n;
+  
+  TRACE_FUNCTION_START();
+  TRACE_FUNCTION_INT(InBegin);
+  TRACE_FUNCTION_INT(InEnd);
+  fname = filename.toStdString().c_str();
+  TRACE_FUNCTION_STRING(fname);
 
-  if ( ! file.open(QIODeviceBase::ReadOnly) ) {
+  file = fopen(fname, "rb");
+  if ( NULL == file ) {
+    TRACE_FUNCTION_END();
     return QString();
   }
 
-  QString s = QString(file.readAll());
-  file.close();
-  length = InEnd - InBegin;
-  if ( length < 1 ) {
+  stat(fname, &st);
+  TRACE_FUNCTION_INT(st.st_size);
+  
+  buffer = (char*)malloc(st.st_size + 1);
+  if ( NULL == buffer ) {
+    fclose(file);
+    TRACE_FUNCTION_END();
     return QString();
   }
 
-  if ( InBegin + length >= s.length() ) {
+  bytesRead = fread(buffer, 1, st.st_size, file);
+  TRACE_FUNCTION_INT(bytesRead);
+  if ( bytesRead != st.st_size ) {
+    fclose(file);
+    free(buffer);
+    TRACE_FUNCTION_END();
     return QString();
   }
 
-  if ( s[InBegin + length] == QChar(';') ) {
-    length++;
+  fclose(file);
+  buffer[st.st_size] = 0x00;
+
+  n = (InEnd - InBegin) + 1;
+  TRACE_FUNCTION_INT(n);
+  if ( n < 1 ) {
+    free(buffer);
+    TRACE_FUNCTION_END();
+    return QString();
   }
-  return s.sliced(InBegin, length);
+
+  returnString = (char*)malloc(n + 1);
+  if ( returnString == NULL ) {
+    TRACE_FUNCTION_END();
+    free(buffer);
+    return QString();
+  }
+
+  memcpy(returnString, &(buffer[InBegin]), n);
+  returnString[n] = 0x00;
+
+  rString = QString(returnString);
+  free(returnString);
+  free(buffer);
+  TRACE_FUNCTION_QSTRING(rString);
+  TRACE_FUNCTION_END();
+  return rString;
 }
 
 /*****************************************************************************!

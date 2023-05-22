@@ -25,6 +25,7 @@ TUTreeElement::TUTreeElement
 {
   jsonValue = InValue;
   type = InType;
+  tuType = None;
   setText(0, InText1);
   setText(1, InText2);
 }
@@ -36,6 +37,7 @@ TUTreeElement::TUTreeElement
 (Type InType, QStringList InNames, QJsonValue InValue)
 {
   jsonValue = InValue;
+  tuType = None;
   type = InType;
   for (int i = 0 ; i < InNames.count(); i++ ) {
     setText(i, InNames[i]);

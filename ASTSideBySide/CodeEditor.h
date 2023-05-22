@@ -71,12 +71,14 @@ class CodeEditor : public QPlainTextEdit
  private :
   CodeHighlighter*              codeHighlighter;
   QWidget *                     lineNumberArea;
+  int                           topLineNumber;
   
  //! Public Slots
  public slots :
   void                          updateLineNumberArea    (const QRect &rect, int dy);
   void                          SlotSetCurrentLine      (int InLineNumber);
-
+  void                          SlotSetTopLineNumber    (int InTopLineNumber);
+  
  //! Public Signals
  signals :
 
