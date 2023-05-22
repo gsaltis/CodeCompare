@@ -28,6 +28,7 @@
 DirTree::DirTree
 (QString InFilePath1, QString InFilePath2) : QTreeWidget()
 {
+  expanded = false;
   QTreeWidgetItem*                      headerItem;
   QDir                                  d;
   QHeaderView*                          headerView;
@@ -35,6 +36,7 @@ DirTree::DirTree
   int                                   n, m, len1, len2;
   QString                               namePath1, namePath2;
   
+  expanded = false;
   headerView = header();
 
   connect(this, QTreeWidget::itemClicked, this, DirTree::SlotFileSelected);
@@ -60,8 +62,6 @@ DirTree::DirTree
   headerItem->setText(1, namePath2);
   headerView->resizeSection(0, 200);
   setHeaderItem(headerItem);
-
-  setMaximumWidth(400);
 
   PopulateTree();
   PopulateTree2();
@@ -269,4 +269,36 @@ DirTree::FindDirItem
     }
   }
   return NULL;
+}
+
+/*****************************************************************************!
+ * Function : SlotToggleTreeView
+ *****************************************************************************/
+void
+DirTree::SlotToggleTreeView(void)
+{
+  int                                   n = topLevelItemCount();
+
+  if ( expanded ) {
+    for (int i = 0; i < n; i++) {
+      DirTreeItemDir* dirItem = (DirTreeItemDir*)topLevelItem(i);
+      dirItem->CollapseChildren();
+    }
+    expanded = false;
+    return;
+  }
+  for (int i = 0; i < n; i++) {
+    DirTreeItemDir* dirItem = (DirTreeItemDir*)topLevelItem(i);
+    dirItem->ExpandChildren();
+  }
+  expanded = true;
+}
+
+/*****************************************************************************!
+ * Function : GetExpanded
+ *****************************************************************************/
+bool
+DirTree::GetExpanded(void)
+{
+  return expanded;
 }

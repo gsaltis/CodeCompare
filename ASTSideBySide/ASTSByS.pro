@@ -28,12 +28,15 @@ QT                              += core gui widgets
 
 DEFINES                         += \
 
+RESOURCES                       += images.qrc
+
 SOURCES                         += \
                                    CodeEditor.cpp                               \
                                    CodeDisplay.cpp                              \
                                    CodeDisplayLine.cpp                          \
                                    CodeHighlighter.cpp                          \
                                    DirTree.cpp                                  \
+                                   DirTreeContainer.cpp                         \
                                    DirTreeItem.cpp                              \
                                    DirTreeItemDir.cpp                           \
                                    DirTreeItemFile.cpp                          \
@@ -58,6 +61,7 @@ HEADERS                         += \
                                    CodeEditor.h                                 \
                                    CodeHighlighter.h                            \
                                    DirTree.h                                    \
+                                   DirTreeContainer.h                           \
                                    DirTreeItem.h                                \
                                    DirTreeItemDir.h                             \
                                    DirTreeItemFile.h                            \

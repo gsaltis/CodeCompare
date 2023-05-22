@@ -48,3 +48,39 @@ DirTreeItemDir::initialize()
   setForeground(0, QBrush(QColor(128, 64, 140)));
 }
 
+/*****************************************************************************!
+ * Function : CollapseChildren
+ *****************************************************************************/
+void
+DirTreeItemDir::CollapseChildren(void)
+{
+  int                                   n = childCount();
+
+  for ( int i = 0; i < n; i++) {
+    DirTreeItem*                        item = (DirTreeItem*)child(i);
+    if ( item->GetType() == DirTreeItem::Dir ) {
+      DirTreeItemDir* dirItem = (DirTreeItemDir*)item;
+      dirItem->CollapseChildren();
+    }
+  }
+  treeWidget()->collapseItem(this);
+}
+
+/*****************************************************************************!
+ * Function : ExpandChildren
+ *****************************************************************************/
+void
+DirTreeItemDir::ExpandChildren(void)
+{
+  int                                   n = childCount();
+
+  for ( int i = 0; i < n; i++) {
+    DirTreeItem*                        item = (DirTreeItem*)child(i);
+    if ( item->GetType() == DirTreeItem::Dir ) {
+      DirTreeItemDir* dirItem = (DirTreeItemDir*)item;
+      dirItem->ExpandChildren();
+    }
+  }
+  treeWidget()->expandItem(this);
+}
+

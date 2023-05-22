@@ -46,6 +46,7 @@ class DirTree : public QTreeWidget
 
  //! Public Methods
  public :
+  bool                          GetExpanded             (void);
 
  //! Public Data
  public :
@@ -70,9 +71,12 @@ class DirTree : public QTreeWidget
   QString                       filePath1;
   QString                       filePath2;
   
+  bool                          expanded;
+
  //! Public Slots
  public slots :
   void                          SlotFileSelected        (QTreeWidgetItem* InItem, int InIndex);
+  void                          SlotToggleTreeView      (void);
 
  //! Public Signals
  signals :

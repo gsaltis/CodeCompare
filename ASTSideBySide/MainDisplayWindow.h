@@ -28,6 +28,7 @@
 #include "TUTree.h"
 #include "DirTree.h"
 #include "TUTreeContainer.h"
+#include "DirTreeContainer.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -94,6 +95,7 @@ class MainDisplayWindow : public QWidget
   QString                       filename2;
   QApplication*                 application;
   DirTree*                      dirTree;
+  DirTreeContainer*             dirTreeContainer;
   
  //! Public Slots
  public slots :
