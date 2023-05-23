@@ -124,7 +124,14 @@ MainDisplayWindow::CreateSubWindows()
   
   dirTreeContainer->resize(400, 0);
   connect(dirTree, DirTree::SignalFileSelected, this, MainDisplayWindow::SlotDirFileSelected);
-    
+
+  buildTree = new BuildTree(mainSystemConfig->GetSourceASTTrack1Path(),
+                            mainSystemConfig->GetSourceASTTrack2Path());
+  buildTreeContainer = new BuildTreeContainer(buildTree);
+
+  dirBuildContainer = new DirBuildContainer(dirTreeContainer, buildTreeContainer);
+  dirBuildContainer->resize(400, 0);
+  
   //!
   jsonTree2 = new TUTree(filename2);
   connect(jsonTree2,
@@ -148,7 +155,8 @@ MainDisplayWindow::CreateSubWindows()
   jsonFilename2 = filename2 + QString(".json");
   fileWindow1 = new TitledWindow(jsonTreeContainer1, filename1);
   fileWindow2 = new TitledWindow(jsonTreeContainer2, filename2);
-  splitter->addWidget(dirTreeContainer);
+
+  splitter->addWidget(dirBuildContainer);
   splitter->addWidget(fileWindow1);
   splitter->addWidget(fileWindow2);
   PopulateASTTree(jsonTree1, jsonFilename1);

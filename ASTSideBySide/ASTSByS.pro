@@ -31,10 +31,14 @@ DEFINES                         += \
 RESOURCES                       += images.qrc
 
 SOURCES                         += \
+                                   BuildTree.cpp                                \
+                                   BuildTreeContainer.cpp                       \
                                    CodeEditor.cpp                               \
                                    CodeDisplay.cpp                              \
                                    CodeDisplayLine.cpp                          \
                                    CodeHighlighter.cpp                          \
+                                   CommonFileTree.cpp                           \
+                                   DirBuildContainer.cpp                        \
                                    DirTree.cpp                                  \
                                    DirTreeContainer.cpp                         \
                                    DirTreeItem.cpp                              \
@@ -56,10 +60,14 @@ SOURCES                         += \
 				   trace.cpp                                    \
 
 HEADERS                         += \
+                                   BuildTree.h                                  \
+                                   BuildTreeContainer.h                         \
                                    CodeDisplay.h                                \
                                    CodeDisplayLine.h                            \
                                    CodeEditor.h                                 \
                                    CodeHighlighter.h                            \
+                                   CommonFileTree.h                             \
+                                   DirBuildContainer.h                          \
                                    DirTree.h                                    \
                                    DirTreeContainer.h                           \
                                    DirTreeItem.h                                \

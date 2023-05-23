@@ -1,87 +1,80 @@
 /*****************************************************************************
- * FILE NAME    : DirTree.h
- * DATE         : May 12 2023
+ * FILE NAME    : CommonFileTree.h
+ * DATE         : May 23 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _dirtree_h_
-#define _dirtree_h_
+#ifndef _commonfiletree_h_
+#define _commonfiletree_h_
 
 /*****************************************************************************!
  * Global Headers
  *****************************************************************************/
 #include <QtCore>
 #include <QtGui>
-#include <QTreeWidget>
 #include <QWidget>
+#include <QTreeWidget>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "DirTreeItemDir.h"
-#include "DirTreeItemFile.h"
-#include "CommonFileTree.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define DIR_TREE_X                      200
-#define DIR_TREE_Y                      200
-#define DIR_TREE_WIDTH                  200
-#define DIR_TREE_HEIGHT                 200
+#define COMMON_FILE_TREE_X              200
+#define COMMON_FILE_TREE_Y              200
+#define COMMON_FILE_TREE_WIDTH          200
+#define COMMON_FILE_TREE_HEIGHT         200
 
 /*****************************************************************************!
- * Exported Class : DirTree
+ * Exported Class : CommonFileTree
  *****************************************************************************/
-class DirTree : public CommonFileTree
+class CommonFileTree : public QTreeWidget
 {
   Q_OBJECT;
 
  //! Constructors
  public :
-  DirTree                       (QString InFilePath1, QString InFilePath2);
+  CommonFileTree                (QString InFilePath1, QString InFilePath2);
 
  //! Destructor
  public :
-  ~DirTree                      ();
+  ~CommonFileTree               ();
 
  //! Public Methods
  public :
-  bool                          GetExpanded             (void);
 
  //! Public Data
  public :
 
  //! Protected Methods
  protected :
+  QString                       GetCommonPrefix         (QString InFilename1, QString InFilename2);
 
  //! Protected Data
  protected :
-
+  QString                       filePath1;
+  QString                       filePath2;
+  QString                       headerName1;
+  QString                       headerName2;
+  
  //! Private Methods
  private :
   void                          initialize              ();
-  void                          PopulateTree            (void);
-  void                          PopulateTree2           (void);
-  void                          PopulateTreeDir         (DirTreeItemDir* InItem, QString InFilePath, QFileInfo InFileInfo);
-  DirTreeItemDir*               FindDirItem             (QString InDirName);
 
- //! Private Data
+  //! Private Data
  private :
-  bool                          expanded;
 
  //! Public Slots
  public slots :
-  void                          SlotFileSelected        (QTreeWidgetItem* InItem, int InIndex);
-  void                          SlotToggleTreeView      (void);
 
  //! Public Signals
  signals :
-  void                          SignalFileSelected      (QString InFilename);
 
  //! Public Actions
  public :
 
 };
 
-#endif /* _dirtree_h_*/
+#endif /* _commonfiletree_h_*/

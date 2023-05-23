@@ -26,46 +26,14 @@
  * Function : DirTree
  *****************************************************************************/
 DirTree::DirTree
-(QString InFilePath1, QString InFilePath2) : QTreeWidget()
+(QString InFilePath1, QString InFilePath2)
+  : CommonFileTree(InFilePath1, InFilePath2)
 {
   expanded = false;
-  QTreeWidgetItem*                      headerItem;
-  QDir                                  d;
-  QHeaderView*                          headerView;
-  QString                               commonPrefix;
-  int                                   n, m, len1, len2;
-  QString                               namePath1, namePath2;
-  
-  expanded = false;
-  headerView = header();
 
   connect(this, QTreeWidget::itemClicked, this, DirTree::SlotFileSelected);
-  
-  filePath1 = d.toNativeSeparators(InFilePath1);
-  filePath2 = d.toNativeSeparators(InFilePath2);
-
-  commonPrefix = GetCommonPrefix(filePath1, filePath2);
-  if ( ! commonPrefix.isEmpty() ) {
-    n = commonPrefix.length();
-    len1 = filePath1.length();
-    len2 = filePath2.length();
-    m = len1 - n;
-    namePath1 = filePath1.sliced(n, m);
-
-    m  = len2 - n;
-    namePath2 = filePath2.sliced(n, m);
-  }
-  setColumnCount(2);
-
-  headerItem = new QTreeWidgetItem();
-  headerItem->setText(0, namePath1);
-  headerItem->setText(1, namePath2);
-  headerView->resizeSection(0, 200);
-  setHeaderItem(headerItem);
-
   PopulateTree();
   PopulateTree2();
-  initialize();
 }
 
 /*****************************************************************************!
@@ -73,14 +41,6 @@ DirTree::DirTree
  *****************************************************************************/
 DirTree::~DirTree
 ()
-{
-}
-
-/*****************************************************************************!
- * Function : initialize
- *****************************************************************************/
-void
-DirTree::initialize()
 {
 }
 
@@ -206,52 +166,7 @@ DirTree::SlotFileSelected
 }
 
 /*****************************************************************************!
- * Function : GetCommonPrefix
- *****************************************************************************/
-QString
-DirTree::GetCommonPrefix
-(QString InFilename1, QString InFilename2)
-{
-  int                                   i;
-  int                                   len1;
-  int                                   len2;
-  int                                   len;
-  int                                   lastDirSep;
-  
-  if ( InFilename1.isEmpty() || InFilename2.isEmpty() ) {
-    return QString();
-  }
-
-  len1 = InFilename1.length();
-  len2 = InFilename2.length();
-
-  len = len1 < len2 ?  len1 : len2;
-
-  lastDirSep = 0;
-  for (i = 0; i < len; i++) {
-    if ( InFilename1[i] == InFilename2[i] ) {
-      if ( InFilename1[i] == '/' || InFilename1[i] == '\\' ) {
-        lastDirSep = i;
-      }
-      continue;
-    }
-    break;
-  }
-  if ( len == 0 && len == i ) {
-    return QString();
-  }
-
-  if ( lastDirSep > 0 ) {
-    lastDirSep++;
-  }
-  if ( lastDirSep == len ) {
-    return QString();
-  }
-  return InFilename1.sliced(0, lastDirSep);
-}
-
-/*****************************************************************************!
- * Function : FindDirItem
+  * Function : FindDirItem
  *****************************************************************************/
 DirTreeItemDir*
 DirTree::FindDirItem
