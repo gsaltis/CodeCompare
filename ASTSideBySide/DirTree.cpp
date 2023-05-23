@@ -69,28 +69,6 @@ DirTree::PopulateTree(void)
 }
 
 /*****************************************************************************!
- * Function : PopulateTree2
- *****************************************************************************/
-void
-DirTree::PopulateTree2(void)
-{
-  QDir                                  dir(filePath2);
-  dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
-  dir.setSorting(QDir::Name);
-
-  QFileInfoList                         list = dir.entryInfoList();
-
-  for (auto i = list.begin() ; i != list.end(); i++ ) {
-    QFileInfo                           info = *i;
-    QString                             dirname = info.fileName();
-    DirTreeItemDir*                     item = FindDirItem(dirname);
-    if ( item ) {
-      item->setText(1, dirname);
-    }
-  }
-}
-
-/*****************************************************************************!
  * Function : PopulateTreeDir
  *****************************************************************************/
 void
@@ -140,6 +118,83 @@ DirTree::PopulateTreeDir
     fn = dir.toNativeSeparators(fn);
     fileItem = new DirTreeItemFile(filename, fn);
     InItem->addChild(fileItem);
+  }
+}
+
+/*****************************************************************************!
+ * Function : PopulateTree2
+ *****************************************************************************/
+void
+DirTree::PopulateTree2(void)
+{
+  QDir                                  dir(filePath2);
+  dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+  dir.setSorting(QDir::Name);
+
+  QFileInfoList                         list = dir.entryInfoList();
+
+  for (auto i = list.begin() ; i != list.end(); i++ ) {
+    QFileInfo                           info = *i;
+    QString                             dirname = info.fileName();
+    DirTreeItemDir*                     item = FindDirItem(dirname);
+    if ( item ) {
+      item->setText(1, dirname);
+      PopulateTreeDir2(item, info.canonicalFilePath());
+    }
+  }
+}
+
+/*****************************************************************************!
+ * Function: PopulateTreeDir2
+ *****************************************************************************/
+void
+DirTree::PopulateTreeDir2
+(DirTreeItemDir* InItem, QString InFilePath)
+{
+  QString                               fullPath;
+  DirTreeItemDir*                       dirItem;
+  DirTreeItem*                          item;
+  QString                               filename;
+  QFileInfo                             fileInfo(InFilePath);
+  QDir                                  dir(InFilePath);
+  QString                               suffix;
+  
+  filename = fileInfo.fileName();
+  
+  dir.setFilter(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
+  dir.setSorting(QDir::Name);
+
+  QFileInfoList                         list = dir.entryInfoList();
+
+  for (auto i = list.begin() ; i != list.end(); i++ ) {
+    QFileInfo                           info = *i;
+    QString                             name = info.fileName();
+    //TRACE_FUNCTION_QSTRING(name);
+    item = InItem->FindItem(name);
+    fullPath = info.canonicalFilePath();
+
+    suffix = info.suffix();
+
+    
+    
+    if ( item ) {
+      if ( item->GetType() == DirTreeItem::Dir ) {
+        item->setText(1, name);
+        dirItem = (DirTreeItemDir*)item;
+        PopulateTreeDir2(dirItem, fullPath);
+        continue;
+      }
+      if ( info.suffix() != "c" ) {
+        continue;
+      }
+      //TRACE_FUNCTION_QSTRING(fullPath);
+      //TRACE_FUNCTION_QSTRING(name);
+      item->setText(1, name);
+      continue;
+    }
+    if ( info.suffix() == "c" ) {
+      TRACE_FUNCTION_QSTRING(fullPath);
+    }
   }
 }
 

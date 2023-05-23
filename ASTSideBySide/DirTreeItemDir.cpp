@@ -84,3 +84,26 @@ DirTreeItemDir::ExpandChildren(void)
   treeWidget()->expandItem(this);
 }
 
+/*****************************************************************************!
+ * Function : FindItem
+ *****************************************************************************/
+DirTreeItem*
+DirTreeItemDir::FindItem
+(QString InText)
+{
+  DirTreeItem*                          item;
+  int                                   i, n;
+
+  n = childCount();
+
+  for (i = 0; i < n; i++) {
+    item = (DirTreeItem*)child(i);
+    if ( item->text(0) == InText) {
+      return item;
+    }
+  }
+  return NULL;
+}
+
+
+  

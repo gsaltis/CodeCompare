@@ -64,6 +64,7 @@ class DirTree : public CommonFileTree
   void                          PopulateTree            (void);
   void                          PopulateTree2           (void);
   void                          PopulateTreeDir         (DirTreeItemDir* InItem, QString InFilePath, QFileInfo InFileInfo);
+  void                          PopulateTreeDir2        (DirTreeItemDir* InItem, QString InFilePath);
   DirTreeItemDir*               FindDirItem             (QString InDirName);
 
  //! Private Data

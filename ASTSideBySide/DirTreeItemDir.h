@@ -41,7 +41,8 @@ class DirTreeItemDir : public DirTreeItem
  public :
   void                          CollapseChildren        (void);
   void                          ExpandChildren          (void);
-
+  DirTreeItem*                  FindItem                (QString InText);
+  
  //! Public Data
  public :
 
