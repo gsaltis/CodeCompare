@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : BuildLineSet.h
- * DATE         : April 07 2023
+ * FILE NAME    : CodeTrack.h
+ * DATE         : May 01 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _buildlineset_h_
-#define _buildlineset_h_
+#ifndef _codetrack_h_
+#define _codetrack_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -17,36 +17,36 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildLine.h"
-#include "CodeTrack.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
 
 /*****************************************************************************!
- * Exported Class : BuildLineSet
+ * Exported Class : CodeTrack
  *****************************************************************************/
-class BuildLineSet : public QWidget
+class CodeTrack : public QWidget
 {
   Q_OBJECT;
 
  //! Constructors
  public :
-  BuildLineSet                  ();
+  CodeTrack                     (QString InBasePath, int InIndex);
 
  //! Destructor
  public :
-  ~BuildLineSet                 ();
+  ~CodeTrack                    ();
 
  //! Public Methods
  public :
-  int                           GetLineCount                    ();
-  BuildLine*                    GetLineByIndex                  (int InIndex);
-  void                          AppendLine                      (BuildLine* InLine);
-  void                          Dump                            (void);
-  void                          BuildAST                        (CodeTrack* InCodeTrack);
-  
+  QString                       GetBasePath             (void);
+  void                          SetBasePath             (QString InBasePath);
+  int                           GetBasePathLen          (void);
+  bool                          PathBeginsWithBasePath  (QString InPath);
+  QString                       RemoveLeadingBasePath   (QString InPath);
+  int                           GetIndex                (void);
+  void                          SetIndex                (int InIndex);
+
  //! Public Data
  public :
 
@@ -61,8 +61,10 @@ class BuildLineSet : public QWidget
 
  //! Private Data
  private :
-  QList<BuildLine*>             lines;
-  
+  QString                       basePath;
+  int                           basePathLen;
+  int                           index;
+
  //! Public Slots
  public slots :
 
@@ -74,4 +76,4 @@ class BuildLineSet : public QWidget
 
 };
 
-#endif /* _buildlineset_h_*/
+#endif /* _codetrack_h_*/

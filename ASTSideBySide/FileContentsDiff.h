@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : BuildLineSet.h
- * DATE         : April 07 2023
+ * FILE NAME    : FileContentsDiff.h
+ * DATE         : April 22 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _buildlineset_h_
-#define _buildlineset_h_
+#ifndef _filecontentsdiff_h_
+#define _filecontentsdiff_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -17,35 +17,29 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildLine.h"
-#include "CodeTrack.h"
+#include "FileSectionDiff.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
 
 /*****************************************************************************!
- * Exported Class : BuildLineSet
+ * Exported Class : FileContentsDiff
  *****************************************************************************/
-class BuildLineSet : public QWidget
+class FileContentsDiff : public QList<FileSectionDiff>
 {
-  Q_OBJECT;
-
  //! Constructors
  public :
-  BuildLineSet                  ();
+  FileContentsDiff              ();              
 
  //! Destructor
  public :
-  ~BuildLineSet                 ();
+  ~FileContentsDiff             ();
 
  //! Public Methods
  public :
-  int                           GetLineCount                    ();
-  BuildLine*                    GetLineByIndex                  (int InIndex);
-  void                          AppendLine                      (BuildLine* InLine);
-  void                          Dump                            (void);
-  void                          BuildAST                        (CodeTrack* InCodeTrack);
+  void                          ParseLines              (QString InLines);
+  QList<int>                    GetCounts               (void);
   
  //! Public Data
  public :
@@ -61,8 +55,7 @@ class BuildLineSet : public QWidget
 
  //! Private Data
  private :
-  QList<BuildLine*>             lines;
-  
+
  //! Public Slots
  public slots :
 
@@ -74,4 +67,4 @@ class BuildLineSet : public QWidget
 
 };
 
-#endif /* _buildlineset_h_*/
+#endif /* _filecontentsdiff_h_*/

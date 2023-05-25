@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : BuildLineSet.h
- * DATE         : April 07 2023
+ * FILE NAME    : BuildForLine.h
+ * DATE         : April 03 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _buildlineset_h_
-#define _buildlineset_h_
+#ifndef _buildforline_h_
+#define _buildforline_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -18,34 +18,31 @@
  * Local Headers
  *****************************************************************************/
 #include "BuildLine.h"
-#include "CodeTrack.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
 
 /*****************************************************************************!
- * Exported Class : BuildLineSet
+ * Exported Class : BuildForLine
  *****************************************************************************/
-class BuildLineSet : public QWidget
+class BuildForLine : public BuildLine
 {
   Q_OBJECT;
 
  //! Constructors
  public :
-  BuildLineSet                  ();
+  BuildForLine                     ();
 
  //! Destructor
  public :
-  ~BuildLineSet                 ();
+  ~BuildForLine                    ();
 
  //! Public Methods
  public :
-  int                           GetLineCount                    ();
-  BuildLine*                    GetLineByIndex                  (int InIndex);
-  void                          AppendLine                      (BuildLine* InLine);
-  void                          Dump                            (void);
-  void                          BuildAST                        (CodeTrack* InCodeTrack);
+  void                          ParseLine               (QString InBuildLine);
+  QStringList                   GetTargets              (void);
+  QString                       GetAction               (void);
   
  //! Public Data
  public :
@@ -61,7 +58,8 @@ class BuildLineSet : public QWidget
 
  //! Private Data
  private :
-  QList<BuildLine*>             lines;
+  QString                               action;
+  QStringList                           targets;
   
  //! Public Slots
  public slots :
@@ -74,4 +72,4 @@ class BuildLineSet : public QWidget
 
 };
 
-#endif /* _buildlineset_h_*/
+#endif /* _buildforline_h_*/

@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : BuildLineSet.h
- * DATE         : April 07 2023
+ * FILE NAME    : BuildElementSet.h
+ * DATE         : April 10 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _buildlineset_h_
-#define _buildlineset_h_
+#ifndef _buildelementset_h_
+#define _buildelementset_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -17,35 +17,40 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
+#include "BuildElement.h"
 #include "BuildLine.h"
-#include "CodeTrack.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
 
 /*****************************************************************************!
- * Exported Class : BuildLineSet
+ * Exported Class : BuildElementSet
  *****************************************************************************/
-class BuildLineSet : public QWidget
+class BuildElementSet : public QWidget
 {
   Q_OBJECT;
 
  //! Constructors
  public :
-  BuildLineSet                  ();
+  BuildElementSet
+  (QString InElementName);
 
  //! Destructor
  public :
-  ~BuildLineSet                 ();
+  ~BuildElementSet              ();
 
  //! Public Methods
  public :
-  int                           GetLineCount                    ();
-  BuildLine*                    GetLineByIndex                  (int InIndex);
-  void                          AppendLine                      (BuildLine* InLine);
-  void                          Dump                            (void);
-  void                          BuildAST                        (CodeTrack* InCodeTrack);
+  void                          AddElement              (BuildElement* InElement);
+  QString                       GetTarget               (void);
+  void                          SetTarget               (QString InTarget);
+  void                          Dump                    (int InIndent);
+  bool                          IsSourceElement         (QString InName);
+  void                          SetBuildLine            (BuildLine* InBuildLine);
+  int                           GetElementCount         (void);
+  BuildElement*                 GetElementByIndex       (int InIndex);
+  void                          Dump                    (void);
   
  //! Public Data
  public :
@@ -61,7 +66,9 @@ class BuildLineSet : public QWidget
 
  //! Private Data
  private :
-  QList<BuildLine*>             lines;
+  QList<BuildElement*>          elements;
+  QString                       target;
+  BuildLine*                    buildLine;
   
  //! Public Slots
  public slots :
@@ -74,4 +81,4 @@ class BuildLineSet : public QWidget
 
 };
 
-#endif /* _buildlineset_h_*/
+#endif /* _buildelementset_h_*/

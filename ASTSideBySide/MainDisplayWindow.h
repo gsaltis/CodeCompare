@@ -31,6 +31,8 @@
 #include "DirTreeContainer.h"
 #include "DirBuildContainer.h"
 #include "BuildTree.h"
+#include "BuildLineSet.h"
+#include "BuildTreeItemSection.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -83,7 +85,12 @@ class MainDisplayWindow : public QWidget
   void                          CheckForFunctionDefDifference   (TUTreeElement* InElement);
   void                          CheckForFunctionDeclDifference  (TUTreeElement* InElement);
   bool                          CompareCodeSections             (QString InSection1, QString InSection2);
-
+  void                          CreateBuildTree                 (void);
+  void                          CreateBuildTreeDir              (QString InDirName, BuildLineSet* InBuildLines);
+  void                          GetBuildLines                   (QString InFilePath, BuildLineSet* InBuildLines);
+  void                          ProcessBuildLines               (QString InFilePath, BuildLineSet* InBuildLines);
+  void                          ProcessBuildLineSources         (BuildTreeItem* InItem, QStringList InSources, BuildLineSet* InBuildLines);
+  
  //! Private Data
  private :
   QSplitter*                    splitter;
@@ -101,6 +108,10 @@ class MainDisplayWindow : public QWidget
   DirBuildContainer*            dirBuildContainer;
   BuildTree*                    buildTree;
   BuildTreeContainer*           buildTreeContainer;
+  BuildTreeItemSection*         buildTreeBinary;
+  BuildTreeItemSection*         buildTreeCGI;
+  BuildTreeItemSection*         buildTreeSharedObject;
+  BuildTreeItemSection*         buildTreeOther;
   
  //! Public Slots
  public slots :

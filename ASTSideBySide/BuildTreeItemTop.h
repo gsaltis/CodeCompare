@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : BuildLineSet.h
- * DATE         : April 07 2023
+ * FILE NAME    : BuildTreeItemTop.h
+ * DATE         : May 24 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _buildlineset_h_
-#define _buildlineset_h_
+#ifndef _buildtreeitemtop_h_
+#define _buildtreeitemtop_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -17,36 +17,32 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildLine.h"
-#include "CodeTrack.h"
+#include "BuildTreeItem.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
+#define BUILD_TREE_ITEM_TOP_X           200
+#define BUILD_TREE_ITEM_TOP_Y           200
+#define BUILD_TREE_ITEM_TOP_WIDTH       200
+#define BUILD_TREE_ITEM_TOP_HEIGHT      200
 
 /*****************************************************************************!
- * Exported Class : BuildLineSet
+ * Exported Class : BuildTreeItemTop
  *****************************************************************************/
-class BuildLineSet : public QWidget
+class BuildTreeItemTop : public BuildTreeItem
 {
-  Q_OBJECT;
-
  //! Constructors
  public :
-  BuildLineSet                  ();
+  BuildTreeItemTop              ();
 
  //! Destructor
  public :
-  ~BuildLineSet                 ();
+  ~BuildTreeItemTop             ();
 
  //! Public Methods
  public :
-  int                           GetLineCount                    ();
-  BuildLine*                    GetLineByIndex                  (int InIndex);
-  void                          AppendLine                      (BuildLine* InLine);
-  void                          Dump                            (void);
-  void                          BuildAST                        (CodeTrack* InCodeTrack);
-  
+
  //! Public Data
  public :
 
@@ -58,11 +54,11 @@ class BuildLineSet : public QWidget
 
  //! Private Methods
  private :
+  void                          initialize              ();
 
  //! Private Data
  private :
-  QList<BuildLine*>             lines;
-  
+
  //! Public Slots
  public slots :
 
@@ -74,4 +70,4 @@ class BuildLineSet : public QWidget
 
 };
 
-#endif /* _buildlineset_h_*/
+#endif /* _buildtreeitemtop_h_*/

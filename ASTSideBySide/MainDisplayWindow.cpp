@@ -15,6 +15,7 @@
 #include <QJsonObject>
 #include <QHeaderView>
 
+#define TRACE_USE
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
@@ -25,6 +26,14 @@
 #include "TUTreeElement.h"
 #include "TopTranslationUnitElement.h"
 #include "main.h"
+#include "BuildLine.h"
+#include "BuildLineSet.h"
+#include "BuildCompileLine.h"
+#include "BuildForLine.h"
+#include "BuildARLine.h"
+#include "BuildTreeItem.h"
+#include "BuildTreeItemTop.h"
+#include "BuildTreeItemComponent.h"
 
 /*****************************************************************************!
  * 
@@ -128,8 +137,16 @@ MainDisplayWindow::CreateSubWindows()
   buildTree = new BuildTree(mainSystemConfig->GetSourceASTTrack1Path(),
                             mainSystemConfig->GetSourceASTTrack2Path());
   buildTreeContainer = new BuildTreeContainer(buildTree);
-
-  dirBuildContainer = new DirBuildContainer(dirTreeContainer, buildTreeContainer);
+  buildTreeBinary = new BuildTreeItemSection("Binary");
+  buildTreeCGI = new BuildTreeItemSection("CGI");
+  buildTreeSharedObject = new BuildTreeItemSection("Shared Object");
+  buildTreeOther = new BuildTreeItemSection("Other");
+  buildTree->addTopLevelItem(buildTreeBinary);
+  buildTree->addTopLevelItem(buildTreeSharedObject);
+  buildTree->addTopLevelItem(buildTreeCGI);
+  buildTree->addTopLevelItem(buildTreeOther);
+  
+                             dirBuildContainer = new DirBuildContainer(dirTreeContainer, buildTreeContainer);;
   dirBuildContainer->resize(400, 0);
   
   //!
@@ -162,6 +179,7 @@ MainDisplayWindow::CreateSubWindows()
   PopulateASTTree(jsonTree1, jsonFilename1);
   PopulateASTTree(jsonTree2, jsonFilename2);
   FlagTranslationUnitDifferences();
+  CreateBuildTree();
 }
 
 /*****************************************************************************!
@@ -773,36 +791,27 @@ MainDisplayWindow::SlotDirFileSelected
   QString                               errorFilename1;
   QString                               errorFilename2;
 
-  TRACE_FUNCTION_START();
   basename1 = mainSystemConfig->GetSourceASTTrack1Path() + QString("/") + InFilename;
   basename1 = d.toNativeSeparators(basename1);
   
-  TRACE_FUNCTION_LOCATION();
   basename2 = mainSystemConfig->GetSourceASTTrack2Path() + QString("/") + InFilename;
   basename2 = d.toNativeSeparators(basename2);
 
-  TRACE_FUNCTION_LOCATION();
   filename1 = basename1;
   filename2 = basename2;
 
-  TRACE_FUNCTION_LOCATION();
   jsonFilename1 = filename1 + ".json";
   jsonFilename2 = filename2 + ".json";
   errorFilename1 = filename1 + ".errors";
   errorFilename2 = filename2 + ".errors";
   
-  TRACE_FUNCTION_LOCATION();
   PopulateASTTree(jsonTree1, jsonFilename1);
-  TRACE_FUNCTION_LOCATION();
   PopulateASTTree(jsonTree2, jsonFilename2);
-  TRACE_FUNCTION_LOCATION();
   jsonTree1->SetFilename(filename1);
   jsonTree2->SetFilename(filename2);
   jsonTreeContainer1->SetErrorFilename(errorFilename1);
   jsonTreeContainer2->SetErrorFilename(errorFilename2);  
-  TRACE_FUNCTION_LOCATION();
   FlagTranslationUnitDifferences();
-  TRACE_FUNCTION_END();
 }
 
 /*****************************************************************************!
@@ -811,11 +820,8 @@ MainDisplayWindow::SlotDirFileSelected
 void
 MainDisplayWindow::FlagTranslationUnitDifferences(void)
 {
-  TRACE_FUNCTION_START();
   FlagTranslationUnitDifferences(jsonTree1, jsonTree2);
-  TRACE_FUNCTION_LOCATION();
   FlagTranslationUnitDifferences(jsonTree2, jsonTree1);
-  TRACE_FUNCTION_END();
 }
 
 /*****************************************************************************!
@@ -831,51 +837,38 @@ MainDisplayWindow::FlagTranslationUnitDifferences
   TUTreeElement*                        top;
   TUTreeElement*                        item2;
 
-  TRACE_FUNCTION_START();
   top = (TUTreeElement*)InTree1->topLevelItem(0);
-  TRACE_FUNCTION_LOCATION();
   n = top->childCount();
-  TRACE_FUNCTION_INT(n);
   for (i = 0; i < n; i++) {
     TUTreeElement*                      item = (TUTreeElement*)top->child(i);
     QString                             s2 = item->text(1);
     TUTreeElement::TranslationUnitType  tutype;
 
-    TRACE_FUNCTION_INT(i);
-    TRACE_FUNCTION_QSTRING(s2);
     tutype = item->GetTUType();
-    TRACE_FUNCTION_INT(tutype);
     item2 = InTree2->FindElementByNameType(s2, tutype);
     if ( NULL == item2 ) {
       item->setForeground(1, QBrush(QColor(128, 0, 0)));
       continue;
     }
 
-    TRACE_FUNCTION_LOCATION();
     font = item2->font(1);
     font.setBold(true);
     item2->setFont(1, font);
     item->setFont(1, font);
 
-    TRACE_FUNCTION_LOCATION();
     item->setForeground(1, QBrush(QColor(0, 128, 0)));
     item2->setForeground(1, QBrush(QColor(0, 128, 0)));
-    TRACE_FUNCTION_LOCATION();
     if ( item->GetTUType() == TUTreeElement::VarDecl ) {
       CheckForVarDeclDifference(item);
       continue;
     }
-    TRACE_FUNCTION_LOCATION();
     if ( item->GetTUType() == TUTreeElement::FunctionDef ) {
       CheckForFunctionDefDifference(item);
     }
-    TRACE_FUNCTION_LOCATION();
     if ( item->GetTUType() == TUTreeElement::FunctionDecl ) {
       CheckForFunctionDeclDifference(item);
     }
-    TRACE_FUNCTION_LOCATION();
   }
-  TRACE_FUNCTION_END();
 }
 
 /*****************************************************************************!
@@ -924,3 +917,224 @@ MainDisplayWindow::CompareCodeSections
   }
   return true;
 }
+
+/*****************************************************************************!
+ * Function : CreateBuildTree
+ *****************************************************************************/
+void
+MainDisplayWindow::CreateBuildTree(void)
+{
+  QString                               track1Name;
+  BuildLineSet*                         buildLines;
+  
+  track1Name = mainSystemConfig->GetSourceASTTrack1Path();
+  buildLines = new BuildLineSet();
+  CreateBuildTreeDir(track1Name, buildLines);
+  ProcessBuildLines(track1Name, buildLines);
+  buildTreeBinary->sortChildren(0, Qt::AscendingOrder);
+  buildTreeCGI->sortChildren(0, Qt::AscendingOrder);
+  buildTreeSharedObject->sortChildren(0, Qt::AscendingOrder);
+}
+
+/*****************************************************************************!
+ * Function : CreateBuildTreeDir
+ *****************************************************************************/
+void
+MainDisplayWindow::CreateBuildTreeDir
+(QString InDirName, BuildLineSet* InBuildLineSet)
+{
+  QString                               dirName;
+  QString                               fullFilePath;
+  QDir                                  dir;
+  QFileInfoList                         fileInfoList;
+  int                                   i, n;
+  QFileInfo                             info;
+  QString                               buildFilename;
+  
+  dir.setPath(InDirName);
+
+  dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+  dir.setSorting(QDir::Name);
+  fileInfoList = dir.entryInfoList();
+  n = fileInfoList.size();
+  for (i = 0; i < n; i++) {
+    info = fileInfoList.at(i);
+    fullFilePath = info.canonicalFilePath();
+    buildFilename = fullFilePath + "/build.txt";
+    buildFilename = QDir::toNativeSeparators(buildFilename);
+    dirName = info.fileName();
+    if ( dir.exists(buildFilename) ) {
+    }
+    GetBuildLines(buildFilename, InBuildLineSet);
+    CreateBuildTreeDir(fullFilePath, InBuildLineSet);
+  }
+}
+
+/*****************************************************************************!
+ * Function : GetBuildLines
+ *****************************************************************************/
+void
+MainDisplayWindow::GetBuildLines
+(QString InFilePath, BuildLineSet* InBuildLines)
+{
+  QString                               command;
+  QStringList                           lineParts;
+  QString                               line;
+  QStringList                           lines;
+  QString                               content;
+  QFile                                 file(InFilePath);
+
+  if ( ! file.open(QIODeviceBase::ReadOnly) ) {
+    return;
+  }
+  content = QString(file.readAll());
+  lines = content.split("\n", Qt::SkipEmptyParts);
+  for ( int i = 0; i < lines.size(); i++ ) {
+    line = lines[i];
+    lineParts = BuildLine::GetLineElements(line);
+    command = lineParts[0];
+    if ( command[0] == QChar('#') ) {
+      continue;
+    }
+    if ( command == "gcc" ) {
+      BuildCompileLine*                 compileLine = new BuildCompileLine();
+      compileLine->ParseLine(line);      
+      InBuildLines->AppendLine(compileLine);
+      continue;
+    }
+
+    if ( command == "ln" ) {
+      // Nothing to be done for ln command
+      continue;
+    }
+
+    if ( command == "echo" ) {
+      // Nothing to be done for echo command
+      continue;
+    }
+
+    if ( command == "ranlib" ) {
+      // Nothing to be done for ranlib command
+      continue;
+    }
+
+    if ( command == "ar" ) {
+      BuildARLine*                      arLine = new BuildARLine();
+      arLine->ParseLine(line);
+      InBuildLines->AppendLine(arLine);
+      continue;
+    }
+    
+    if ( command.sliced(0, 4) == "make" ) {
+      // Nothing to be done for make command
+      continue;
+    }
+    if ( command == "for" ) {
+      BuildForLine*                     forLine = new BuildForLine();
+      forLine->ParseLine(line);
+      InBuildLines->AppendLine(forLine);
+      continue;
+    }
+    TRACE_FUNCTION_QSTRING(lineParts[0]);
+
+  }
+  file.close();
+}
+
+/*****************************************************************************!
+ * Function : ProcessBuildLines
+ *****************************************************************************/
+void
+MainDisplayWindow::ProcessBuildLines
+(QString , BuildLineSet* InBuildLines)
+{
+  QStringList                           sources;
+  BuildCompileLine*                     compileLine;
+  BuildARLine*                          arLine;
+  QString                               target;
+  int                                   i, n;
+  BuildTreeItemTop*                     topItem;
+  
+  n = InBuildLines->GetLineCount();
+
+  for (i = 0; i < n; i++) {
+    BuildLine*                          line;
+
+    line = InBuildLines->GetLineByIndex(i);
+    switch ( line->GetType() ) {
+      case BuildLine::TypeCompile : {
+        compileLine = (BuildCompileLine*)line;
+        target = compileLine->GetTarget();
+        if ( compileLine->GetIsTargetObject() ) {
+          break;
+        }
+        topItem = new BuildTreeItemTop();
+        topItem->setText(0, target);
+        QFileInfo                       info(target);
+        QString                         suffix;
+
+        suffix = info.suffix();
+        if ( suffix == "so" ) {
+          if ( !buildTreeSharedObject->ElementExists(target) ) {
+            buildTreeSharedObject->addChild(topItem);
+          }
+          buildTreeSharedObject->addChild(topItem);
+        } else if ( suffix == "cgi" ) {
+          if ( !buildTreeCGI->ElementExists(target) ) {
+            buildTreeCGI->addChild(topItem);
+          }
+        } else if ( suffix == "" ) {
+          if ( !buildTreeBinary->ElementExists(target) ) {
+            buildTreeBinary->addChild(topItem);
+          }
+        } else {
+          buildTree->addTopLevelItem(topItem);
+        }
+        sources = compileLine->GetSources();
+        ProcessBuildLineSources(topItem, sources, InBuildLines);
+        break;
+      }
+      case BuildLine::TypeAR : {
+        arLine = (BuildARLine*)line;
+        target = arLine->GetTarget();
+        sources = arLine->GetSources();
+        topItem = new BuildTreeItemTop();
+        topItem->setText(0, target);
+        buildTreeOther->addChild(topItem);
+        ProcessBuildLineSources(topItem, sources, InBuildLines);
+        break;
+      }
+      default :
+        break;
+    }
+  }
+}
+
+/*****************************************************************************!
+ * Function : ProcessBuildLineSources
+ *****************************************************************************/
+void
+MainDisplayWindow::ProcessBuildLineSources
+(BuildTreeItem* InItem, QStringList InSources, BuildLineSet* InLineSet)
+{
+  QStringList                           sources;
+  BuildLine*                            buildLine;
+  BuildTreeItemComponent*               sourceItem;
+
+  foreach ( auto s, InSources ) {
+    sourceItem = new BuildTreeItemComponent();
+    sourceItem->setText(0, s);
+    InItem->addChild(sourceItem);
+    buildLine = InLineSet->GetLineByTargetName(s);
+    if ( buildLine == NULL ) {
+      continue;
+    }
+    if ( buildLine->GetType() == BuildLine::TypeCompile ) {
+      BuildCompileLine*                 compileLine;
+      compileLine = (BuildCompileLine*)buildLine;
+      sources = compileLine->GetSources();
+      ProcessBuildLineSources(sourceItem, sources, InLineSet);
+    }
+  }
+}
+  

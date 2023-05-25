@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : BuildLineSet.h
- * DATE         : April 07 2023
+ * FILE NAME    : TranslationUnit.h
+ * DATE         : May 05 2023
  * PROJECT      : 
- * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
+ * COPYRIGHT    : Copyright (C) 2023 by Vertiv Company
  *****************************************************************************/
-#ifndef _buildlineset_h_
-#define _buildlineset_h_
+#ifndef _translationunit_h_
+#define _translationunit_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -17,36 +17,29 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildLine.h"
-#include "CodeTrack.h"
+#include "TranslationUnitType.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
 
 /*****************************************************************************!
- * Exported Class : BuildLineSet
+ * Exported Class : TranslationUnit
  *****************************************************************************/
-class BuildLineSet : public QWidget
+class TranslationUnit : public QList<TranslationUnitType*>
 {
-  Q_OBJECT;
-
  //! Constructors
  public :
-  BuildLineSet                  ();
+  TranslationUnit               ();
 
  //! Destructor
  public :
-  ~BuildLineSet                 ();
-
+  ~TranslationUnit              ();
+  
  //! Public Methods
  public :
-  int                           GetLineCount                    ();
-  BuildLine*                    GetLineByIndex                  (int InIndex);
-  void                          AppendLine                      (BuildLine* InLine);
-  void                          Dump                            (void);
-  void                          BuildAST                        (CodeTrack* InCodeTrack);
-  
+  void                          Write                   (QString InFilename);
+
  //! Public Data
  public :
 
@@ -61,8 +54,7 @@ class BuildLineSet : public QWidget
 
  //! Private Data
  private :
-  QList<BuildLine*>             lines;
-  
+
  //! Public Slots
  public slots :
 
@@ -74,4 +66,4 @@ class BuildLineSet : public QWidget
 
 };
 
-#endif /* _buildlineset_h_*/
+#endif /* _translationunit_h_*/

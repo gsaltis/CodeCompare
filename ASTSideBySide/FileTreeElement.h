@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : BuildLineSet.h
- * DATE         : April 07 2023
+ * FILE NAME    : FileTreeElement.h
+ * DATE         : April 28 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _buildlineset_h_
-#define _buildlineset_h_
+#ifndef _filetreeelement_h_
+#define _filetreeelement_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -17,7 +17,7 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildLine.h"
+#include "FileContentsDiff.h"
 #include "CodeTrack.h"
 
 /*****************************************************************************!
@@ -25,27 +25,29 @@
  *****************************************************************************/
 
 /*****************************************************************************!
- * Exported Class : BuildLineSet
+ * Exported Class : FileTreeElement
  *****************************************************************************/
-class BuildLineSet : public QWidget
+class FileTreeElement
 {
-  Q_OBJECT;
-
  //! Constructors
  public :
-  BuildLineSet                  ();
+  FileTreeElement               (QString InAbsoluteFileName1, QString InAbsoluteFileName2, CodeTrack* InTrack1, CodeTrack* InTrack2);
 
  //! Destructor
  public :
-  ~BuildLineSet                 ();
 
  //! Public Methods
  public :
-  int                           GetLineCount                    ();
-  BuildLine*                    GetLineByIndex                  (int InIndex);
-  void                          AppendLine                      (BuildLine* InLine);
-  void                          Dump                            (void);
-  void                          BuildAST                        (CodeTrack* InCodeTrack);
+  QString                       GetAbsoluteFileName1    (void);
+  void                          SetAbsoluteFileName1    (QString InAbsoluteFileName1);
+  QString                       GetAbsoluteFileName2    (void);
+  void                          SetAbsoluteFileName2    (QString InAbsoluteFileName2);
+  virtual void                  Read                    ();
+  bool                          GetIsDirectory          ();
+  virtual int                   GetFileCount            ();
+  virtual QList<int>            GetChangeLinesCount     ();
+  CodeTrack*                    GetCodeTrack1           ();
+  CodeTrack*                    GetCodeTrack2           ();
   
  //! Public Data
  public :
@@ -55,14 +57,19 @@ class BuildLineSet : public QWidget
 
  //! Protected Data
  protected :
-
+  bool                          IsDirectory;
+  QString                       AbsoluteFileName1;
+  QString                       AbsoluteFileName2;
+  bool                          FilesHaveBeenRead;
+  
  //! Private Methods
  private :
 
  //! Private Data
  private :
-  QList<BuildLine*>             lines;
-  
+  CodeTrack*                    codeTrack1;
+  CodeTrack*                    codeTrack2;
+
  //! Public Slots
  public slots :
 
@@ -74,4 +81,4 @@ class BuildLineSet : public QWidget
 
 };
 
-#endif /* _buildlineset_h_*/
+#endif /* _filetreeelement_h_*/

@@ -15,13 +15,13 @@
 #include <string.h>
 #include <QtGui>
 #include <QMessageBox>
+#include <QCommandLineParser>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
 #include "MainWindow.h"
 #include "main.h"
-#include <QCommandLineParser>
 
 /*****************************************************************************!
  * Local Macros
