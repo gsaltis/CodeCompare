@@ -40,6 +40,9 @@ class DirTreeItemFile : public DirTreeItem
  //! Public Methods
  public :
   QString                       GetFilename             ();
+  bool                          GetChanged              (void);
+  void                          SetChanged              (bool InChanged);
+  void                          operator<<              (bool InChanged);
   
  //! Public Data
  public :
@@ -57,6 +60,7 @@ class DirTreeItemFile : public DirTreeItem
  //! Private Data
  private :
   QString                       filename;
+  bool                          changed;
   
  //! Public Slots
  public slots :

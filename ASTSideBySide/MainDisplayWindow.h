@@ -90,6 +90,7 @@ class MainDisplayWindow : public QWidget
   void                          GetBuildLines                   (QString InFilePath, BuildLineSet* InBuildLines);
   void                          ProcessBuildLines               (QString InFilePath, BuildLineSet* InBuildLines);
   void                          ProcessBuildLineSources         (BuildTreeItem* InItem, QStringList InSources, BuildLineSet* InBuildLines);
+  void                          ProcessBuildLineLibs            (BuildTreeItem* InItem, QStringList InLibs);
   
  //! Private Data
  private :

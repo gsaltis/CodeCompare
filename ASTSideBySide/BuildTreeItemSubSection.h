@@ -1,60 +1,44 @@
 /*****************************************************************************
- * FILE NAME    : BuildTreeItem.h
+ * FILE NAME    : BuildTreeItemSubSection.h
  * DATE         : May 24 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _buildtreeitem_h_
-#define _buildtreeitem_h_
+#ifndef _buildtreeitemsubsection_h_
+#define _buildtreeitemsubsection_h_
 
 /*****************************************************************************!
  * Global Headers
  *****************************************************************************/
 #include <QtCore>
 #include <QtGui>
-#include <QTreeWidgetItem>
 #include <QWidget>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
+#include "BuildTreeItem.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define BUILD_TREE_ITEM_X               200
-#define BUILD_TREE_ITEM_Y               200
-#define BUILD_TREE_ITEM_WIDTH           200
-#define BUILD_TREE_ITEM_HEIGHT          200
 
 /*****************************************************************************!
- * Exported Class : BuildTreeItem
+ * Exported Class : BuildTreeItemSubSection
  *****************************************************************************/
-class BuildTreeItem : public QTreeWidgetItem
+class BuildTreeItemSubSection : public BuildTreeItem
 {
  //! Constructors
  public :
-  BuildTreeItem                 ();
+  BuildTreeItemSubSection       (QString InName);
 
- //! Enumerated Types
- public :
-  enum Type
-  {
-    None,
-    Top,
-    Component,
-    Section,
-    SubSection
-  };
-  
  //! Destructor
  public :
-  ~BuildTreeItem                ();
+  ~BuildTreeItemSubSection      ();
 
  //! Public Methods
  public :
-  Type                          GetType                 ();
-  bool                          Contains                (QString InName);
+  bool                          ElementExists           (QString InName);
   
  //! Public Data
  public :
@@ -64,12 +48,11 @@ class BuildTreeItem : public QTreeWidgetItem
 
  //! Protected Data
  protected :
-  Type                          type;
-  
+
  //! Private Methods
  private :
   void                          initialize              ();
-  
+
  //! Private Data
  private :
 
@@ -84,4 +67,4 @@ class BuildTreeItem : public QTreeWidgetItem
 
 };
 
-#endif /* _buildtreeitem_h_*/
+#endif /* _buildtreeitemsubsection_h_*/

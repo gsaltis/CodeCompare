@@ -34,6 +34,7 @@
 #include "BuildTreeItem.h"
 #include "BuildTreeItemTop.h"
 #include "BuildTreeItemComponent.h"
+#include "BuildTreeItemSubSection.h"
 
 /*****************************************************************************!
  * 
@@ -1049,6 +1050,7 @@ MainDisplayWindow::ProcessBuildLines
 (QString , BuildLineSet* InBuildLines)
 {
   QStringList                           sources;
+  QStringList                           libs;
   BuildCompileLine*                     compileLine;
   BuildARLine*                          arLine;
   QString                               target;
@@ -1068,6 +1070,7 @@ MainDisplayWindow::ProcessBuildLines
         if ( compileLine->GetIsTargetObject() ) {
           break;
         }
+        
         topItem = new BuildTreeItemTop();
         topItem->setText(0, target);
         QFileInfo                       info(target);
@@ -1091,7 +1094,9 @@ MainDisplayWindow::ProcessBuildLines
           buildTree->addTopLevelItem(topItem);
         }
         sources = compileLine->GetSources();
+        libs = compileLine->GetLibraries();
         ProcessBuildLineSources(topItem, sources, InBuildLines);
+        ProcessBuildLineLibs(topItem, libs);
         break;
       }
       case BuildLine::TypeAR : {
@@ -1120,11 +1125,20 @@ MainDisplayWindow::ProcessBuildLineSources
   QStringList                           sources;
   BuildLine*                            buildLine;
   BuildTreeItemComponent*               sourceItem;
+  BuildTreeItemSubSection*              subSection;
 
+  
+  if ( InSources.size() == 0 ) {
+    return;
+  }
+
+  subSection = new BuildTreeItemSubSection("Sources");
+  InItem->addChild(subSection);
+  
   foreach ( auto s, InSources ) {
     sourceItem = new BuildTreeItemComponent();
     sourceItem->setText(0, s);
-    InItem->addChild(sourceItem);
+    subSection->addChild(sourceItem);
     buildLine = InLineSet->GetLineByTargetName(s);
     if ( buildLine == NULL ) {
       continue;
@@ -1136,5 +1150,34 @@ MainDisplayWindow::ProcessBuildLineSources
       ProcessBuildLineSources(sourceItem, sources, InLineSet);
     }
   }
+}
+  
+/*****************************************************************************!
+ * Function : ProcessBuildLineLibs
+ *****************************************************************************/
+void
+MainDisplayWindow::ProcessBuildLineLibs
+(BuildTreeItem* InItem, QStringList InLibs)
+{
+  BuildTreeItemComponent*               sourceItem;
+  BuildTreeItemSubSection*              subSection;
+  
+  if ( InLibs.size() == 0 ) {
+    return;
+  }
+
+  subSection = new BuildTreeItemSubSection("Libs");
+  InItem->addChild(subSection);
+  
+  foreach ( auto s, InLibs ) {
+    sourceItem = new BuildTreeItemComponent();
+
+    if ( InItem->Contains(s) ) {
+      continue;
+    }
+    sourceItem->setText(0, s);
+    subSection->addChild(sourceItem);
+  }
+  subSection->sortChildren(0, Qt::AscendingOrder);
 }
   

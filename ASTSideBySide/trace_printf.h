@@ -229,6 +229,7 @@
 //!
 #define TRACE_FUNCTION_INT(n)                                                                   \
   {                                                                                             \
+    printf("%s %d : --- %d\n", __FILE__, __LINE__, n);                                              \
     struct timeval tv;                                                                          \
     struct tm* t2;                                                                              \
     int i;                                                                                      \

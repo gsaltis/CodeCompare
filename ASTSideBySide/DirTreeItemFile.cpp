@@ -23,6 +23,7 @@
 DirTreeItemFile::DirTreeItemFile
 (QString InLabel, QString InFilename) : DirTreeItem()
 {
+  changed = false;
   type = File;
   setText(0, InLabel);
   filename = InFilename;
@@ -58,4 +59,33 @@ DirTreeItemFile::GetFilename
 ()
 {
   return filename;
+}
+
+/*****************************************************************************!
+ * Function : GetChanged
+ *****************************************************************************/
+bool
+DirTreeItemFile::GetChanged(void)
+{
+  return changed;
+}
+
+/*****************************************************************************!
+ * Function : SetChanged
+ *****************************************************************************/
+void
+DirTreeItemFile::SetChanged
+(bool InChanged)
+{
+  changed = InChanged;
+}
+
+/*****************************************************************************!
+ * Function : operater<<
+ *****************************************************************************/
+void
+DirTreeItemFile::operator<<
+(bool InChanged)
+{
+  changed = InChanged;
 }

@@ -48,6 +48,7 @@ class DirTree : public CommonFileTree
  //! Public Methods
  public :
   bool                          GetExpanded             (void);
+  bool                          GetDisplayAllItems      (void);
 
  //! Public Data
  public :
@@ -66,20 +67,29 @@ class DirTree : public CommonFileTree
   void                          PopulateTreeDir         (DirTreeItemDir* InItem, QString InFilePath, QFileInfo InFileInfo);
   void                          PopulateTreeDir2        (DirTreeItemDir* InItem, QString InFilePath);
   DirTreeItemDir*               FindDirItem             (QString InDirName);
-
+  void                          GetAllFileNames         (QString InBasePath, QString InFilePath, QStringList& InFilenames);
+  bool                          FilesAreSame            (QString InFilename1, QString InFilename2);
+  void                          GetAllDifferingFilenames(QString InFilePath1, QString InFilePath2, QStringList InFilenames, QStringList& InDifferingNames);
+  bool                          LineIsCopyrightLine     (QString InLine);
+  void                          HideItems               (QStringList InDifferingItems);
+  void                          HideDirItems            (DirTreeItem* InItem, QStringList InDifferingItems);
+  
  //! Private Data
  private :
   bool                          expanded;
+  bool                          displayAllItems;
+  QList<DirTreeItemFile*>       fileItems;
 
  //! Public Slots
  public slots :
   void                          SlotFileSelected        (QTreeWidgetItem* InItem, int InIndex);
   void                          SlotToggleTreeView      (void);
+  void                          SlotToggleChangedItems  (void);
 
  //! Public Signals
  signals :
   void                          SignalFileSelected      (QString InFilename);
-
+  
  //! Public Actions
  public :
 

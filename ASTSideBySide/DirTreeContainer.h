@@ -71,15 +71,17 @@ class DirTreeContainer : public QWidget
   QFrame*                       toolBar;
   
   QPushButton*                  CollapseButton;
-
+  QPushButton*                  ChangedItemsButton;
+  
  //! Public Slots
  public slots :
-  void                          SlotCollapseButtonPushed (void);
-
+  void                          SlotCollapseButtonPushed        (void);
+  void                          SlotChangedItemsButtonPushed    (void);
  //! Public Signals
  signals :
-  void                          SignalCollapseTree      (void);
-
+  void                          SignalCollapseTree              (void);
+  void                          SignalChangedItemsDisplay       (void);
+  
  //! Public Actions
  public :
   QAction*                      ActionCollapseButtonPushed;

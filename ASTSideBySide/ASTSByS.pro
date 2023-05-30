@@ -44,6 +44,7 @@ SOURCES                         += \
 				   BuildTreeItem.cpp				\
 				   BuildTreeItemComponent.cpp			\
 				   BuildTreeItemSection.cpp			\
+				   BuildTreeItemSubSection.cpp			\
 				   BuildTreeItemTop.cpp				\
 				   BuildTreeContainer.cpp			\
 				   CodeDisplay.cpp				\
@@ -93,6 +94,7 @@ HEADERS                         += \
 				   BuildTreeItem.h				\
 				   BuildTreeItemComponent.h			\
 				   BuildTreeItemSection.h			\
+				   BuildTreeItemSubSection.h			\
 				   BuildTreeItemTop.h				\
 				   BuildTreeContainer.h				\
 				   CodeDisplay.h				\

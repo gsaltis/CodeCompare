@@ -16,6 +16,7 @@
  * Local Headers
  *****************************************************************************/
 #include "BuildTreeItemSection.h"
+#include "BuildTreeItemSubSection.h"
 
 /*****************************************************************************!
  * Function : BuildTreeItemSection
@@ -58,6 +59,13 @@ BuildTreeItemSection::ElementExists
 
   for (i = 0; i < n; i++) {
     item = (BuildTreeItem*)child(i);
+    if ( item->GetType() == BuildTreeItem::SubSection ) {
+      BuildTreeItemSubSection*          subSection = (BuildTreeItemSubSection*)item;
+      if ( subSection->ElementExists(InName) ) {
+        return true;
+      }
+      continue;
+    }
     if ( item->text(0) == InName ) {
       return true;
     }

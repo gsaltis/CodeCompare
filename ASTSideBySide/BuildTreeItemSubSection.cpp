@@ -1,5 +1,5 @@
 /*****************************************************************************
- * FILE NAME    : BuildTreeItem.cpp
+ * FILE NAME    : BuildTreeItemSubSection.cpp
  * DATE         : May 24 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
@@ -15,20 +15,22 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildTreeItem.h"
+#include "BuildTreeItemSubSection.h"
 
 /*****************************************************************************!
- * Function : BuildTreeItem
+ * Function : BuildTreeItemSubSection
  *****************************************************************************/
-BuildTreeItem::BuildTreeItem
-() : QTreeWidgetItem()
+BuildTreeItemSubSection::BuildTreeItemSubSection
+(QString InName) : BuildTreeItem()
 {
+  setText(0, InName);
+  initialize();
 }
 
 /*****************************************************************************!
- * Function : ~BuildTreeItem
+ * Function : ~BuildTreeItemSubSection
  *****************************************************************************/
-BuildTreeItem::~BuildTreeItem
+BuildTreeItemSubSection::~BuildTreeItemSubSection
 ()
 {
 }
@@ -37,39 +39,28 @@ BuildTreeItem::~BuildTreeItem
  * Function : initialize
  *****************************************************************************/
 void
-BuildTreeItem::initialize()
+BuildTreeItemSubSection::initialize()
 {
-  type = None;
+  type = SubSection;
 }
 
 /*****************************************************************************!
- * Function : GetType
- *****************************************************************************/
-BuildTreeItem::Type
-BuildTreeItem::GetType
-()
-{
-  return type;
-}
-
-/*****************************************************************************!
- * Function : Contains
+ * Function : ElementExists
  *****************************************************************************/
 bool
-BuildTreeItem::Contains
+BuildTreeItemSubSection::ElementExists
 (QString InName)
 {
-  QTreeWidgetItem*                      item;
   int                                   i, n;
-
+  BuildTreeItem*                        item;
+  
   n = childCount();
 
   for (i = 0; i < n; i++) {
-    item = child(i);
+    item = (BuildTreeItem*)child(i);
     if ( item->text(0) == InName ) {
       return true;
     }
   }
   return false;
 }
-

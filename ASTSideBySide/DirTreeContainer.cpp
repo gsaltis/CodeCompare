@@ -51,8 +51,6 @@ DirTreeContainer::initialize()
 {
   InitializeSubWindows();  
   CreateSubWindows();
-  ActionCollapseButtonPushed = new QAction("CollapseButtonPushed", this);
-  connect(ActionCollapseButtonPushed, SIGNAL(triggered()), this, SLOT(SlotCollapseButtonPushed()));
   CreateConnections();
 }
 
@@ -74,6 +72,13 @@ DirTreeContainer::CreateSubWindows()
   CollapseButton->move(1, 1);
   CollapseButton->resize(30,30);
   connect(CollapseButton, SIGNAL(pressed()), this, SLOT(SlotCollapseButtonPushed()));
+
+  ChangedItemsButton = new QPushButton();
+  ChangedItemsButton->setParent(toolBar);
+  ChangedItemsButton->setText("Ch");
+  ChangedItemsButton->move(33, 1);
+  ChangedItemsButton->resize(30,30);
+  connect(ChangedItemsButton, SIGNAL(pressed()), this, SLOT(SlotChangedItemsButtonPushed()));
 }
 
 /*****************************************************************************!
@@ -134,10 +139,25 @@ DirTreeContainer::SlotCollapseButtonPushed(void)
 }
 
 /*****************************************************************************!
+ * Function : SlotChangedItemsButtonPushed
+ *****************************************************************************/
+void
+DirTreeContainer::SlotChangedItemsButtonPushed(void)
+{
+  emit SignalChangedItemsDisplay();
+  if ( dirTree->GetDisplayAllItems() ) {
+    ChangedItemsButton->setText("Ch");
+    return;
+  }
+  ChangedItemsButton->setText("Al");
+}
+
+/*****************************************************************************!
  * Function : CreateConnections
  *****************************************************************************/
 void
 DirTreeContainer::CreateConnections(void)
 {
   connect(this, DirTreeContainer::SignalCollapseTree, dirTree, DirTree::SlotToggleTreeView);
+  connect(this, DirTreeContainer::SignalChangedItemsDisplay, dirTree, DirTree::SlotToggleChangedItems);
 }
