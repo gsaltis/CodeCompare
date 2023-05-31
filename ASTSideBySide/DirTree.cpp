@@ -274,39 +274,14 @@ void
 DirTree::SlotToggleChangedItems
 ()
 {
-  QStringList                   filenames;
-  QStringList                   differingFilenames;
-  QDir                          d;  
-  QString                       basePath;
+  if ( displayAllItems ) {
+    ShowChangedItems();
+    displayAllItems = false;
+    return;
+  }
 
-  basePath = d.toNativeSeparators(filePath1);
-  GetAllFileNames(basePath, filePath1, filenames);
-
-  basePath = d.toNativeSeparators(filePath2);
-  GetAllFileNames(basePath, filePath2, filenames);
-
-  filenames.sort();
-  GetAllDifferingFilenames(filePath1, filePath2, filenames, differingFilenames);
-  displayAllItems = !displayAllItems;
-  HideItems(differingFilenames);
-}
-
-/*****************************************************************************!
- * Function : GetExpanded
- *****************************************************************************/
-bool
-DirTree::GetExpanded(void)
-{
-  return expanded;
-}
-
-/*****************************************************************************!
- * Function : GetDisplayAllItems
- *****************************************************************************/
-bool
-DirTree::GetDisplayAllItems(void)
-{  
-  return displayAllItems;
+  ShowAllItems();
+  displayAllItems = true;
 }
 
 /*****************************************************************************!
@@ -456,56 +431,29 @@ DirTree::LineIsCopyrightLine
 }
 
 /*****************************************************************************!
- * Function : HideItems
+ * Function : ShowAllItems
  *****************************************************************************/
 void
-DirTree::HideItems
-(QStringList InDifferingItems)
+DirTree::ShowAllItems(void)
 {
   int                                   i, n;
-  DirTreeItem*                          item;
 
-  TRACE_FUNCTION_START();
-  n = topLevelItemCount();
-  i = 0;
-  TRACE_FUNCTION_INT(n);
-  printf("%s %d : %d\n", __FILE__, __LINE__, i);
-  do {
-    TRACE_FUNCTION_INT(i);
-    item = (DirTreeItem*)topLevelItem(i);
-    HideDirItems(item, InDifferingItems);
-    i++;
-  } while ( i < n );
-  TRACE_FUNCTION_END();
+  n = fileItems.size();
+  for (i = 0; i < n; i++) {
+    fileItems[i]->setHidden(false);
+  }
 }
 
 /*****************************************************************************!
- * Function ; HideDirItems
+ * Function : ShowChangedItems
  *****************************************************************************/
 void
-DirTree::HideDirItems
-(DirTreeItem* InItem, QStringList InDifferingItems)
+DirTree::ShowChangedItems(void)
 {
-  QString                               filename;
   int                                   i, n;
-  DirTreeItemFile*                      fileItem;
-  DirTreeItem*                          item;
-  
-  TRACE_FUNCTION_START();
-  n = InItem->childCount();
-  for ( i = 0 ; i < n; i++ ) {
-    TRACE_FUNCTION_INT(i);
-    item = (DirTreeItem*)InItem->child(i);
-    if ( item->GetType() == DirTreeItem::Dir ) {
-      HideDirItems(item, InDifferingItems);
-    }
-    fileItem = (DirTreeItemFile*)item;
-    filename = fileItem->GetFilename();
-    TRACE_FUNCTION_QSTRING(filename);
-    if ( InDifferingItems.contains(filename) ) {
-      continue;
-    }
-    fileItem->setHidden(true);
-  }
-  TRACE_FUNCTION_END();
+
+  n = fileItems.size();
+  for (i = 0; i < n; i++) {
+    fileItems[i]->setHidden(fileItems[i]->GetChanged());
+  }  
 }

@@ -13,6 +13,8 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
+#include <QFrame>
+#include <QPushButton>
 
 /*****************************************************************************!
  * Local Headers
@@ -60,16 +62,25 @@ class BuildTreeContainer : public QWidget
   void                          CreateSubWindows        ();
   void                          InitializeSubWindows    ();
   void                          resizeEvent             (QResizeEvent* InEvent);
+  void                          CreateConnections       (void);
 
  //! Private Data
  private :
   BuildTree*                    buildTree;
+  QFrame*                       toolBar;
+  
+  QPushButton*                  CollapseButton;
+  QPushButton*                  ChangedItemsButton;
   
  //! Public Slots
  public slots :
+  void                          SlotCollapseButtonPushed        (void);
+  void                          SlotChangedItemsButtonPushed    (void);
 
  //! Public Signals
  signals :
+  void                          SignalCollapseTree              (void);
+  void                          SignalChangedItemsDisplay       (void);
 
  //! Public Actions
  public :

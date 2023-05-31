@@ -73,3 +73,35 @@ BuildTreeItem::Contains
   return false;
 }
 
+/*****************************************************************************!
+ * Function : CollapseChildren
+ *****************************************************************************/
+void
+BuildTreeItem::CollapseChildren(void)
+{
+  int                                   n = childCount();
+
+  for ( int i = 0; i < n; i++) {
+    BuildTreeItem*                      item = (BuildTreeItem*)child(i);
+    BuildTreeItem* buildItem = (BuildTreeItem*)item;
+    buildItem->CollapseChildren();
+  }
+  treeWidget()->collapseItem(this);
+}
+
+/*****************************************************************************!
+ * Function : ExpandChildren
+ *****************************************************************************/
+void
+BuildTreeItem::ExpandChildren(void)
+{
+  int                                   n = childCount();
+
+  for ( int i = 0; i < n; i++) {
+    BuildTreeItem*                        item = (BuildTreeItem*)child(i);
+    BuildTreeItem* buildItem = (BuildTreeItem*)item;
+    buildItem->ExpandChildren();
+  }
+  treeWidget()->expandItem(this);
+}
+

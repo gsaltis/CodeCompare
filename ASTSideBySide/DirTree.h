@@ -47,8 +47,6 @@ class DirTree : public CommonFileTree
 
  //! Public Methods
  public :
-  bool                          GetExpanded             (void);
-  bool                          GetDisplayAllItems      (void);
 
  //! Public Data
  public :
@@ -73,11 +71,11 @@ class DirTree : public CommonFileTree
   bool                          LineIsCopyrightLine     (QString InLine);
   void                          HideItems               (QStringList InDifferingItems);
   void                          HideDirItems            (DirTreeItem* InItem, QStringList InDifferingItems);
+  void                          ShowAllItems            (void);
+  void                          ShowChangedItems        (void);
   
  //! Private Data
  private :
-  bool                          expanded;
-  bool                          displayAllItems;
   QList<DirTreeItemFile*>       fileItems;
 
  //! Public Slots

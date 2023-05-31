@@ -12,10 +12,13 @@
 #include <QtGui>
 #include <QWidget>
 
+#define TRACE_USE
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
 #include "BuildTree.h"
+#include "BuildTreeItem.h"
+#include "trace.h"
 
 /*****************************************************************************!
  * Function : BuildTree
@@ -47,6 +50,8 @@ BuildTree::~BuildTree
 void
 BuildTree::initialize()
 {
+  expanded = false;
+  displayAllItems = true;
   InitializeSubWindows();  
   CreateSubWindows();
 }
@@ -86,3 +91,46 @@ BuildTree::resizeEvent
   (void)height;
   (void)width;
 }
+
+/*****************************************************************************!
+ * Function : SlotToggleTreeView
+ *****************************************************************************/
+void
+BuildTree::SlotToggleTreeView(void)
+{
+  int                                   i;
+  int                                   n;
+
+  n = topLevelItemCount();
+  if ( expanded ) {
+    expanded = false;
+    for (i = 0; i < n; i++) {
+      BuildTreeItem*                    item;
+      item = (BuildTreeItem*)topLevelItem(i);
+      item->CollapseChildren();
+    }
+    return;
+  }
+  for (i = 0; i < n; i++) {
+    BuildTreeItem*                    item;
+    item = (BuildTreeItem*)topLevelItem(i);
+    item->ExpandChildren();
+  }
+  expanded = true;
+}
+
+/*****************************************************************************!
+ * Function : SlotToggleChangedItems
+ *****************************************************************************/
+void
+BuildTree::SlotToggleChangedItems
+()
+{
+  if ( displayAllItems ) {
+    displayAllItems = false;
+    return;
+  }
+
+  displayAllItems = true;
+}
+

@@ -115,3 +115,21 @@ CommonFileTree::GetCommonPrefix
   return InFilename1.sliced(0, lastDirSep);
 }
 
+/*****************************************************************************!
+ * Function : GetExpanded
+ *****************************************************************************/
+bool
+CommonFileTree::GetExpanded(void)
+{
+  return expanded;
+}
+
+/*****************************************************************************!
+ * Function : GetDisplayAllItems
+ *****************************************************************************/
+bool
+CommonFileTree::GetDisplayAllItems(void)
+{  
+  return displayAllItems;
+}
+

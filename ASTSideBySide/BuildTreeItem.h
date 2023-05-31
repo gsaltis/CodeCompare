@@ -55,6 +55,8 @@ class BuildTreeItem : public QTreeWidgetItem
  public :
   Type                          GetType                 ();
   bool                          Contains                (QString InName);
+  void                          CollapseChildren        (void);
+  void                          ExpandChildren          (void);
   
  //! Public Data
  public :

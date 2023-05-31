@@ -87,7 +87,7 @@ class MainDisplayWindow : public QWidget
   bool                          CompareCodeSections             (QString InSection1, QString InSection2);
   void                          CreateBuildTree                 (void);
   void                          CreateBuildTreeDir              (QString InDirName, BuildLineSet* InBuildLines);
-  void                          GetBuildLines                   (QString InFilePath, BuildLineSet* InBuildLines);
+  void                          GetBuildLines                   (QString InFullFilePath, QString InFilePath, BuildLineSet* InBuildLines);
   void                          ProcessBuildLines               (QString InFilePath, BuildLineSet* InBuildLines);
   void                          ProcessBuildLineSources         (BuildTreeItem* InItem, QStringList InSources, BuildLineSet* InBuildLines);
   void                          ProcessBuildLineLibs            (BuildTreeItem* InItem, QStringList InLibs);

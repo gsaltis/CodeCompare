@@ -33,7 +33,7 @@ class BuildCompileLine : public BuildLine
 
  //! Constructors
  public :
-  BuildCompileLine                     ();
+  BuildCompileLine                     (QString InFullFilePath);
 
  //! Destructor
  public :
@@ -54,6 +54,8 @@ class BuildCompileLine : public BuildLine
   void                          BuildAST                (CodeTrack* InCodeTrack);
   void                          GenerateAST             (CodeTrack* InCodeTrack, FILE* InFile);
   void                          ProcessInnerTranslationUnitArray(QJsonArray InTUArray, QString InFilename, FILE* InFile);
+  QString                       GetFullFilePath         (void);
+  void                          SetFullFilePath         (QString InFullFilePath);
 
  //! Public Data
  public :
@@ -76,7 +78,8 @@ class BuildCompileLine : public BuildLine
   QStringList                           flags;
   QStringList                           libs;
   QStringList                           libPaths;
-  
+  QString                               fullFilePath;
+
  //! Public Slots
  public slots :
 

@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <sys/stat.h>
 
+#define TRACE_USE
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
@@ -28,9 +29,10 @@
  * Function : BuildCompileLine
  *****************************************************************************/
 BuildCompileLine::BuildCompileLine
-() : BuildLine()
+(QString InFullFilePath) : BuildLine()
 {
   buildType = TypeCompile;
+  fullFilePath = InFullFilePath;
 }
 
 /*****************************************************************************!
@@ -57,6 +59,7 @@ BuildCompileLine::ParseLine
   QString                               libpath;
   QString                               lib;
 
+  TRACE_FUNCTION_START();
   lineText = QString(InBuildCompileLine);
   
   elements = InBuildCompileLine.split(QRegularExpression("\\s+|\n"));
@@ -102,8 +105,10 @@ BuildCompileLine::ParseLine
       flags << s;
       continue;
     }
+    TRACE_FUNCTION_QSTRING(s);
     sources << s;
   }
+  TRACE_FUNCTION_END();
 }
 
 /*****************************************************************************!
@@ -207,3 +212,21 @@ BuildCompileLine::GetIsTargetObject
   return false;
 }
 
+/*****************************************************************************!
+ * Function : GetFullFilePath
+ *****************************************************************************/
+QString
+BuildCompileLine::GetFullFilePath(void)
+{
+  return fullFilePath;  
+}
+
+/*****************************************************************************!
+ * Function : SetFullFilePath
+ *****************************************************************************/
+void
+BuildCompileLine::SetFullFilePath
+(QString InFullFilePath)
+{
+  fullFilePath = InFullFilePath;  
+}

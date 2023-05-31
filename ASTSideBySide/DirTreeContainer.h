@@ -77,6 +77,7 @@ class DirTreeContainer : public QWidget
  public slots :
   void                          SlotCollapseButtonPushed        (void);
   void                          SlotChangedItemsButtonPushed    (void);
+
  //! Public Signals
  signals :
   void                          SignalCollapseTree              (void);

@@ -147,7 +147,7 @@ MainDisplayWindow::CreateSubWindows()
   buildTree->addTopLevelItem(buildTreeCGI);
   buildTree->addTopLevelItem(buildTreeOther);
   
-                             dirBuildContainer = new DirBuildContainer(dirTreeContainer, buildTreeContainer);;
+  dirBuildContainer = new DirBuildContainer(dirTreeContainer, buildTreeContainer);;
   dirBuildContainer->resize(400, 0);
   
   //!
@@ -293,7 +293,6 @@ MainDisplayWindow::ProcessValue
 
 /*****************************************************************************!
  * Function : PopulateASTTree
- * Purpose  : QTreeWidget*
  *****************************************************************************/
 void
 MainDisplayWindow::PopulateASTTree
@@ -966,7 +965,7 @@ MainDisplayWindow::CreateBuildTreeDir
     dirName = info.fileName();
     if ( dir.exists(buildFilename) ) {
     }
-    GetBuildLines(buildFilename, InBuildLineSet);
+    GetBuildLines(fullFilePath, buildFilename, InBuildLineSet);
     CreateBuildTreeDir(fullFilePath, InBuildLineSet);
   }
 }
@@ -976,7 +975,7 @@ MainDisplayWindow::CreateBuildTreeDir
  *****************************************************************************/
 void
 MainDisplayWindow::GetBuildLines
-(QString InFilePath, BuildLineSet* InBuildLines)
+(QString InFullFilePath, QString InFilePath, BuildLineSet* InBuildLines)
 {
   QString                               command;
   QStringList                           lineParts;
@@ -985,6 +984,8 @@ MainDisplayWindow::GetBuildLines
   QString                               content;
   QFile                                 file(InFilePath);
 
+  TRACE_FUNCTION_START();
+  TRACE_FUNCTION_QSTRING(InFullFilePath);
   if ( ! file.open(QIODeviceBase::ReadOnly) ) {
     return;
   }
@@ -998,7 +999,7 @@ MainDisplayWindow::GetBuildLines
       continue;
     }
     if ( command == "gcc" ) {
-      BuildCompileLine*                 compileLine = new BuildCompileLine();
+      BuildCompileLine*                 compileLine = new BuildCompileLine(InFullFilePath);
       compileLine->ParseLine(line);      
       InBuildLines->AppendLine(compileLine);
       continue;
@@ -1040,6 +1041,7 @@ MainDisplayWindow::GetBuildLines
 
   }
   file.close();
+  TRACE_FUNCTION_END();
 }
 
 /*****************************************************************************!
@@ -1096,7 +1098,9 @@ MainDisplayWindow::ProcessBuildLines
         sources = compileLine->GetSources();
         libs = compileLine->GetLibraries();
         ProcessBuildLineSources(topItem, sources, InBuildLines);
+#ifdef PROCESS_LINE_LIBS
         ProcessBuildLineLibs(topItem, libs);
+#endif        
         break;
       }
       case BuildLine::TypeAR : {
@@ -1125,20 +1129,21 @@ MainDisplayWindow::ProcessBuildLineSources
   QStringList                           sources;
   BuildLine*                            buildLine;
   BuildTreeItemComponent*               sourceItem;
+#if 0
   BuildTreeItemSubSection*              subSection;
-
+#endif
   
   if ( InSources.size() == 0 ) {
     return;
   }
-
+#if 0
   subSection = new BuildTreeItemSubSection("Sources");
   InItem->addChild(subSection);
-  
+#endif  
   foreach ( auto s, InSources ) {
     sourceItem = new BuildTreeItemComponent();
     sourceItem->setText(0, s);
-    subSection->addChild(sourceItem);
+    InItem->addChild(sourceItem);
     buildLine = InLineSet->GetLineByTargetName(s);
     if ( buildLine == NULL ) {
       continue;

@@ -44,6 +44,8 @@ class CommonFileTree : public QTreeWidget
 
  //! Public Methods
  public :
+  bool                          GetExpanded             (void);
+  bool                          GetDisplayAllItems      (void);
 
  //! Public Data
  public :
@@ -58,6 +60,8 @@ class CommonFileTree : public QTreeWidget
   QString                       filePath2;
   QString                       headerName1;
   QString                       headerName2;
+  bool                          expanded;
+  bool                          displayAllItems;
   
  //! Private Methods
  private :

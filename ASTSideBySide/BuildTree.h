@@ -67,6 +67,8 @@ class BuildTree : public CommonFileTree
 
  //! Public Slots
  public slots :
+  void                          SlotToggleTreeView      (void);
+  void                          SlotToggleChangedItems  (void);
 
  //! Public Signals
  signals :
