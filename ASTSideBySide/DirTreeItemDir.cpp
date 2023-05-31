@@ -12,10 +12,12 @@
 #include <QtGui>
 #include <QWidget>
 
+#define TRACE_USE
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
 #include "DirTreeItemDir.h"
+#include "trace.h"
 
 /*****************************************************************************!
  * Function : DirTreeItem
@@ -24,6 +26,7 @@ DirTreeItemDir::DirTreeItemDir
 () : DirTreeItem()
 {
   type = Dir;
+  changed = false;
   initialize();
 }
 
@@ -105,5 +108,22 @@ DirTreeItemDir::FindItem
   return NULL;
 }
 
-
+/*****************************************************************************!
+ * Function : GetChanged
+ *****************************************************************************/
+bool
+DirTreeItemDir::GetChanged(void)
+{
   
+  return changed;
+}
+
+/*****************************************************************************!
+ * Function : SetChanged
+ *****************************************************************************/
+void
+DirTreeItemDir::SetChanged
+(bool InChanged)
+{
+  changed = InChanged;
+}

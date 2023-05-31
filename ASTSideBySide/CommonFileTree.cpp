@@ -133,3 +133,20 @@ CommonFileTree::GetDisplayAllItems(void)
   return displayAllItems;
 }
 
+/*****************************************************************************!
+ * Function : InitializeHeaders
+ *****************************************************************************/
+void
+CommonFileTree::InitializeHeaders(void)
+{
+  QFileInfo                             fileInfo1(filePath1);
+  QFileInfo                             fileInfo2(filePath2);
+  QString                               fname1 = fileInfo1.fileName();
+  QString                               fname2 = fileInfo2.fileName();
+  QTreeWidgetItem*                      headerItem;
+
+  headerItem = new QTreeWidgetItem();
+  headerItem->setText(0, fname1);
+  headerItem->setText(1, fname2);
+  setHeaderItem(headerItem);  
+}

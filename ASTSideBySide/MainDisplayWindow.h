@@ -109,10 +109,6 @@ class MainDisplayWindow : public QWidget
   DirBuildContainer*            dirBuildContainer;
   BuildTree*                    buildTree;
   BuildTreeContainer*           buildTreeContainer;
-  BuildTreeItemSection*         buildTreeBinary;
-  BuildTreeItemSection*         buildTreeCGI;
-  BuildTreeItemSection*         buildTreeSharedObject;
-  BuildTreeItemSection*         buildTreeOther;
   
  //! Public Slots
  public slots :

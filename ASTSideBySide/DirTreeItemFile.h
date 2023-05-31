@@ -42,7 +42,6 @@ class DirTreeItemFile : public DirTreeItem
   QString                       GetFilename             ();
   bool                          GetChanged              (void);
   void                          SetChanged              (bool InChanged);
-  void                          operator<<              (bool InChanged);
   
  //! Public Data
  public :

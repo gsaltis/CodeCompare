@@ -56,7 +56,8 @@ class BuildCompileLine : public BuildLine
   void                          ProcessInnerTranslationUnitArray(QJsonArray InTUArray, QString InFilename, FILE* InFile);
   QString                       GetFullFilePath         (void);
   void                          SetFullFilePath         (QString InFullFilePath);
-
+  QString                       GetFullFileName         ();
+  
  //! Public Data
  public :
 

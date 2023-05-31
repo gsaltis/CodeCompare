@@ -42,6 +42,8 @@ class DirTreeItemDir : public DirTreeItem
   void                          CollapseChildren        (void);
   void                          ExpandChildren          (void);
   DirTreeItem*                  FindItem                (QString InText);
+  bool                          GetChanged              (void);
+  void                          SetChanged              (bool InChanged);
   
  //! Public Data
  public :
@@ -58,6 +60,8 @@ class DirTreeItemDir : public DirTreeItem
 
  //! Private Data
  private :
+    
+  bool                          changed;
 
  //! Public Slots
  public slots :

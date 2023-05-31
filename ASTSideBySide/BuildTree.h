@@ -19,6 +19,9 @@
  * Local Headers
  *****************************************************************************/
 #include "CommonFileTree.h"
+#include "BuildTreeItemSection.h"
+#include "BuildTreeItem.h"
+#include "BuildLineSet.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -45,6 +48,7 @@ class BuildTree : public CommonFileTree
 
  //! Public Methods
  public :
+  void                          ProcessBuildLines                       (QString InTrackName , BuildLineSet* InBuildLines);
 
  //! Public Data
  public :
@@ -57,18 +61,29 @@ class BuildTree : public CommonFileTree
 
  //! Private Methods
  private :
-  void                          initialize              ();
-  void                          CreateSubWindows        ();
-  void                          InitializeSubWindows    ();
-  void                          resizeEvent             (QResizeEvent* InEvent);
-
+  void                          initialize                              ();
+  void                          CreateSubWindows                        ();
+  void                          InitializeSubWindows                    ();
+  void                          resizeEvent                             (QResizeEvent* InEvent);
+  void                          ProcessBuildLineLibs                    (QString InTrackName, BuildTreeItem* InItem, QStringList InLibs);
+  void                          ProcessBuildLineSources                 (QString InTrackName, BuildTreeItem* InItem, QStringList InSources, BuildLineSet* InLineSet);
+  void                          ProcessBuildLineSecondarySources        (QString InTrackName, BuildTreeItem* InItem, QStringList InSources);
+  void                          CreateConnections                       ();
+  
  //! Private Data
  private :
-
+  BuildTreeItemSection*         buildTreeBinary;
+  BuildTreeItemSection*         buildTreeCGI;
+  BuildTreeItemSection*         buildTreeSharedObject;
+  BuildTreeItemSection*         buildTreeOther;
+  bool                          processLibsLines;
+  bool                          displayIntermediateFiles;
+  
  //! Public Slots
  public slots :
-  void                          SlotToggleTreeView      (void);
-  void                          SlotToggleChangedItems  (void);
+  void                          SlotToggleTreeView                      (void);
+  void                          SlotToggleChangedItems                  (void);
+  void                          SlotFileSelected                        (QTreeWidgetItem* InItem, int InIndex);
 
  //! Public Signals
  signals :

@@ -132,10 +132,10 @@ DirTreeContainer::SlotCollapseButtonPushed(void)
 {
   emit SignalCollapseTree();
   if ( dirTree->GetExpanded() ) {
-    CollapseButton->setText("Co");
+    CollapseButton->setText("CO");
     return;
   }
-  CollapseButton->setText("Ex");
+  CollapseButton->setText("EX");
 }
 
 /*****************************************************************************!
@@ -146,10 +146,10 @@ DirTreeContainer::SlotChangedItemsButtonPushed(void)
 {
   emit SignalChangedItemsDisplay();
   if ( dirTree->GetDisplayAllItems() ) {
-    ChangedItemsButton->setText("Ch");
+    ChangedItemsButton->setText("CH");
     return;
   }
-  ChangedItemsButton->setText("Al");
+  ChangedItemsButton->setText("ALL");
 }
 
 /*****************************************************************************!

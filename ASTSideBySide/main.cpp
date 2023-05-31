@@ -85,11 +85,12 @@ main
   commandLineParser.process(application);
   mainFilename = commandLineParser.value(codeBaseNameOption);
 
+#if 0
   if ( mainFilename.isEmpty() ) {
     QMessageBox::critical(NULL, "Missing File", "Missing file");
     exit(EXIT_FAILURE);
   }    
-
+#endif
   mainFilename1 = mainSource1ASTPath + QString("/") +  mainFilename;
   mainFilename2 = mainSource2ASTPath + QString("/") +  mainFilename;
                                                

@@ -53,6 +53,7 @@ class CommonFileTree : public QTreeWidget
  //! Protected Methods
  protected :
   QString                       GetCommonPrefix         (QString InFilename1, QString InFilename2);
+  void                          InitializeHeaders       (void);
 
  //! Protected Data
  protected :

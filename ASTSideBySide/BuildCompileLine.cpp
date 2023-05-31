@@ -59,7 +59,6 @@ BuildCompileLine::ParseLine
   QString                               libpath;
   QString                               lib;
 
-  TRACE_FUNCTION_START();
   lineText = QString(InBuildCompileLine);
   
   elements = InBuildCompileLine.split(QRegularExpression("\\s+|\n"));
@@ -105,10 +104,8 @@ BuildCompileLine::ParseLine
       flags << s;
       continue;
     }
-    TRACE_FUNCTION_QSTRING(s);
     sources << s;
   }
-  TRACE_FUNCTION_END();
 }
 
 /*****************************************************************************!
@@ -230,3 +227,21 @@ BuildCompileLine::SetFullFilePath
 {
   fullFilePath = InFullFilePath;  
 }
+
+/*****************************************************************************!
+ * Function : GetFullFileName
+ *****************************************************************************/
+QString
+BuildCompileLine::GetFullFileName
+()
+{
+  QString                               fullFileName;
+  QDir                                  d;
+  fullFileName = fullFilePath + QString("/") + sources[0];
+  fullFileName = d.toNativeSeparators(fullFileName);
+  QFileInfo                             info(fullFileName);
+  fullFileName = info.canonicalFilePath();
+  return fullFileName;
+}
+
+  

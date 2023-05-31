@@ -34,6 +34,7 @@ DirTree::DirTree
   connect(this, QTreeWidget::itemClicked, this, DirTree::SlotFileSelected);
   PopulateTree();
   PopulateTree2();
+  InitializeHeaders();
 }
 
 /*****************************************************************************!
@@ -62,6 +63,7 @@ DirTree::PopulateTree(void)
     DirTreeItemDir*                     dirItem;
 
     dirItem = new DirTreeItemDir();
+    dirItems << dirItem;
     dirItem->setText(0, filename);
     addTopLevelItem(dirItem);
     PopulateTreeDir(dirItem, filePath1, info);
@@ -77,7 +79,7 @@ DirTree::PopulateTreeDir
 {
   QDir                                  dir(InFileInfo.absoluteFilePath());
   int                                   filePathLen;
-  
+  bool                                  anyChanged;
   dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
   dir.setSorting(QDir::Name);
 
@@ -90,6 +92,7 @@ DirTree::PopulateTreeDir
     DirTreeItemDir*                     dirItem;
 
     dirItem = new DirTreeItemDir();
+    dirItems << dirItem;
     dirItem->setText(0, filename);
     InItem->addChild(dirItem);
     PopulateTreeDir(dirItem, InFilePath, info);
@@ -97,6 +100,7 @@ DirTree::PopulateTreeDir
 
   dir.setFilter(QDir::Files);
   list = dir.entryInfoList();
+  anyChanged = false;
   for (auto i = list.begin() ; i != list.end(); i++ ) {
     QFileInfo                           info = *i;
     QString                             filename = info.completeBaseName();
@@ -121,13 +125,16 @@ DirTree::PopulateTreeDir
     st = info.path() + QString("/") + info.completeBaseName() + QString(".diff");
     st = dir.toNativeSeparators(st);
     b = dir.exists(st);
-    
+    if ( b ) {
+      anyChanged = true;
+    }
     fileItem = new DirTreeItemFile(filename, fn);
     fileItem->SetChanged(b);
     
     fileItems << fileItem;
     InItem->addChild(fileItem);
   }
+  InItem->SetChanged(anyChanged);
 }
 
 /*****************************************************************************!
@@ -182,9 +189,6 @@ DirTree::PopulateTreeDir2
     fullPath = info.canonicalFilePath();
 
     suffix = info.suffix();
-
-    
-    
     if ( item ) {
       if ( item->GetType() == DirTreeItem::Dir ) {
         item->setText(1, name);
@@ -442,6 +446,11 @@ DirTree::ShowAllItems(void)
   for (i = 0; i < n; i++) {
     fileItems[i]->setHidden(false);
   }
+
+  n = dirItems.size();
+  for (i = 0; i < n; i++) {
+    dirItems[i]->setHidden(false);
+  }
 }
 
 /*****************************************************************************!
@@ -451,9 +460,60 @@ void
 DirTree::ShowChangedItems(void)
 {
   int                                   i, n;
+  DirTreeItemDir*                       dirItem;
+  QTreeWidgetItem*                      item;
+  
+  n = topLevelItemCount();
 
-  n = fileItems.size();
   for (i = 0; i < n; i++) {
-    fileItems[i]->setHidden(fileItems[i]->GetChanged());
-  }  
+    item = topLevelItem(i);
+    dirItem = (DirTreeItemDir*)item;
+
+    if ( DirChanged(dirItem) ) {
+      dirItem->setHidden(false);
+    } else {
+      dirItem->setHidden(true);
+    }
+  }
 }
+
+/*****************************************************************************!
+ * Function: DirChanged
+ *****************************************************************************/
+bool
+DirTree::DirChanged
+(DirTreeItemDir* InDirItem)
+{
+  int                                   i, n;
+  bool                                  c;
+  bool                                  rvalue;
+
+  rvalue = false;
+  n = InDirItem->childCount();
+  
+  for ( i = 0 ; i < n ; i++ ) {
+    DirTreeItem*                        item;
+    item = (DirTreeItem*)InDirItem->child(i);
+    if ( item->GetType() == DirTreeItem::Type::Dir ) {
+      DirTreeItemDir*                   dirItem;
+      dirItem = (DirTreeItemDir*)item;
+      c = DirChanged(dirItem);
+      if ( c ) {
+        rvalue = true;
+      }
+      dirItem->setHidden(!c);
+      continue;
+    }
+    if ( item->GetType() == DirTreeItem::Type::File ) {
+      DirTreeItemFile*                  fileItem;
+      fileItem = (DirTreeItemFile*)item;
+      c = fileItem->GetChanged();
+      if ( c ) {
+        rvalue = true;
+      }
+      fileItem->setHidden(!c);
+    }
+  }
+  return rvalue;
+}
+  

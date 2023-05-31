@@ -73,11 +73,13 @@ class DirTree : public CommonFileTree
   void                          HideDirItems            (DirTreeItem* InItem, QStringList InDifferingItems);
   void                          ShowAllItems            (void);
   void                          ShowChangedItems        (void);
+  bool                          DirChanged              (DirTreeItemDir* InDirItem);
   
  //! Private Data
  private :
   QList<DirTreeItemFile*>       fileItems;
-
+  QList<DirTreeItemDir*>        dirItems;
+  
  //! Public Slots
  public slots :
   void                          SlotFileSelected        (QTreeWidgetItem* InItem, int InIndex);

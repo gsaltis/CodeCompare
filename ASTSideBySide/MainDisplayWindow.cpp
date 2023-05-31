@@ -138,14 +138,6 @@ MainDisplayWindow::CreateSubWindows()
   buildTree = new BuildTree(mainSystemConfig->GetSourceASTTrack1Path(),
                             mainSystemConfig->GetSourceASTTrack2Path());
   buildTreeContainer = new BuildTreeContainer(buildTree);
-  buildTreeBinary = new BuildTreeItemSection("Binary");
-  buildTreeCGI = new BuildTreeItemSection("CGI");
-  buildTreeSharedObject = new BuildTreeItemSection("Shared Object");
-  buildTreeOther = new BuildTreeItemSection("Other");
-  buildTree->addTopLevelItem(buildTreeBinary);
-  buildTree->addTopLevelItem(buildTreeSharedObject);
-  buildTree->addTopLevelItem(buildTreeCGI);
-  buildTree->addTopLevelItem(buildTreeOther);
   
   dirBuildContainer = new DirBuildContainer(dirTreeContainer, buildTreeContainer);;
   dirBuildContainer->resize(400, 0);
@@ -310,15 +302,18 @@ MainDisplayWindow::PopulateASTTree
   TUTreeElement*                        item;
   QStringList                           keys;
   QString                               filename;
-  QFileInfo                             fileinfo(InFilename);
+  QFileInfo                             fileInfo(InFilename);
 
+  if ( ! fileInfo.exists() ) {
+    return;
+  }
   item = new TUTreeElement(TUTreeElement::TopLevel, "Source", "", QJsonValue());
   tuTree = (TUTree*)InTree;
   tuTree->clear();
   tuTree->AddElement(item);
   tuTree->expandItem(item);
   
-  filename = fileinfo.completeBaseName();
+  filename = fileInfo.completeBaseName();
   file.open(QIODeviceBase::ReadOnly);
   doc = QJsonDocument::fromJson(file.readAll());
   file.close();
@@ -804,13 +799,21 @@ MainDisplayWindow::SlotDirFileSelected
   jsonFilename2 = filename2 + ".json";
   errorFilename1 = filename1 + ".errors";
   errorFilename2 = filename2 + ".errors";
+
+  fileWindow1->SetHeaderText(filename1);
+  fileWindow2->SetHeaderText(filename2);
   
   PopulateASTTree(jsonTree1, jsonFilename1);
   PopulateASTTree(jsonTree2, jsonFilename2);
   jsonTree1->SetFilename(filename1);
   jsonTree2->SetFilename(filename2);
   jsonTreeContainer1->SetErrorFilename(errorFilename1);
-  jsonTreeContainer2->SetErrorFilename(errorFilename2);  
+  jsonTreeContainer2->SetErrorFilename(errorFilename2);
+  jsonTreeContainer1->ClearTextWindow();
+  jsonTreeContainer2->ClearTextWindow();
+  jsonTreeContainer1->DisplayErrorWindow();
+  jsonTreeContainer2->DisplayErrorWindow();
+  
   FlagTranslationUnitDifferences();
 }
 
@@ -838,6 +841,9 @@ MainDisplayWindow::FlagTranslationUnitDifferences
   TUTreeElement*                        item2;
 
   top = (TUTreeElement*)InTree1->topLevelItem(0);
+  if ( NULL == top ) {
+    return;
+  }
   n = top->childCount();
   for (i = 0; i < n; i++) {
     TUTreeElement*                      item = (TUTreeElement*)top->child(i);
@@ -930,10 +936,7 @@ MainDisplayWindow::CreateBuildTree(void)
   track1Name = mainSystemConfig->GetSourceASTTrack1Path();
   buildLines = new BuildLineSet();
   CreateBuildTreeDir(track1Name, buildLines);
-  ProcessBuildLines(track1Name, buildLines);
-  buildTreeBinary->sortChildren(0, Qt::AscendingOrder);
-  buildTreeCGI->sortChildren(0, Qt::AscendingOrder);
-  buildTreeSharedObject->sortChildren(0, Qt::AscendingOrder);
+  buildTree->ProcessBuildLines(track1Name, buildLines);
 }
 
 /*****************************************************************************!
@@ -984,8 +987,6 @@ MainDisplayWindow::GetBuildLines
   QString                               content;
   QFile                                 file(InFilePath);
 
-  TRACE_FUNCTION_START();
-  TRACE_FUNCTION_QSTRING(InFullFilePath);
   if ( ! file.open(QIODeviceBase::ReadOnly) ) {
     return;
   }
@@ -1037,152 +1038,8 @@ MainDisplayWindow::GetBuildLines
       InBuildLines->AppendLine(forLine);
       continue;
     }
-    TRACE_FUNCTION_QSTRING(lineParts[0]);
 
   }
   file.close();
-  TRACE_FUNCTION_END();
 }
 
-/*****************************************************************************!
- * Function : ProcessBuildLines
- *****************************************************************************/
-void
-MainDisplayWindow::ProcessBuildLines
-(QString , BuildLineSet* InBuildLines)
-{
-  QStringList                           sources;
-  QStringList                           libs;
-  BuildCompileLine*                     compileLine;
-  BuildARLine*                          arLine;
-  QString                               target;
-  int                                   i, n;
-  BuildTreeItemTop*                     topItem;
-  
-  n = InBuildLines->GetLineCount();
-
-  for (i = 0; i < n; i++) {
-    BuildLine*                          line;
-
-    line = InBuildLines->GetLineByIndex(i);
-    switch ( line->GetType() ) {
-      case BuildLine::TypeCompile : {
-        compileLine = (BuildCompileLine*)line;
-        target = compileLine->GetTarget();
-        if ( compileLine->GetIsTargetObject() ) {
-          break;
-        }
-        
-        topItem = new BuildTreeItemTop();
-        topItem->setText(0, target);
-        QFileInfo                       info(target);
-        QString                         suffix;
-
-        suffix = info.suffix();
-        if ( suffix == "so" ) {
-          if ( !buildTreeSharedObject->ElementExists(target) ) {
-            buildTreeSharedObject->addChild(topItem);
-          }
-          buildTreeSharedObject->addChild(topItem);
-        } else if ( suffix == "cgi" ) {
-          if ( !buildTreeCGI->ElementExists(target) ) {
-            buildTreeCGI->addChild(topItem);
-          }
-        } else if ( suffix == "" ) {
-          if ( !buildTreeBinary->ElementExists(target) ) {
-            buildTreeBinary->addChild(topItem);
-          }
-        } else {
-          buildTree->addTopLevelItem(topItem);
-        }
-        sources = compileLine->GetSources();
-        libs = compileLine->GetLibraries();
-        ProcessBuildLineSources(topItem, sources, InBuildLines);
-#ifdef PROCESS_LINE_LIBS
-        ProcessBuildLineLibs(topItem, libs);
-#endif        
-        break;
-      }
-      case BuildLine::TypeAR : {
-        arLine = (BuildARLine*)line;
-        target = arLine->GetTarget();
-        sources = arLine->GetSources();
-        topItem = new BuildTreeItemTop();
-        topItem->setText(0, target);
-        buildTreeOther->addChild(topItem);
-        ProcessBuildLineSources(topItem, sources, InBuildLines);
-        break;
-      }
-      default :
-        break;
-    }
-  }
-}
-
-/*****************************************************************************!
- * Function : ProcessBuildLineSources
- *****************************************************************************/
-void
-MainDisplayWindow::ProcessBuildLineSources
-(BuildTreeItem* InItem, QStringList InSources, BuildLineSet* InLineSet)
-{
-  QStringList                           sources;
-  BuildLine*                            buildLine;
-  BuildTreeItemComponent*               sourceItem;
-#if 0
-  BuildTreeItemSubSection*              subSection;
-#endif
-  
-  if ( InSources.size() == 0 ) {
-    return;
-  }
-#if 0
-  subSection = new BuildTreeItemSubSection("Sources");
-  InItem->addChild(subSection);
-#endif  
-  foreach ( auto s, InSources ) {
-    sourceItem = new BuildTreeItemComponent();
-    sourceItem->setText(0, s);
-    InItem->addChild(sourceItem);
-    buildLine = InLineSet->GetLineByTargetName(s);
-    if ( buildLine == NULL ) {
-      continue;
-    }
-    if ( buildLine->GetType() == BuildLine::TypeCompile ) {
-      BuildCompileLine*                 compileLine;
-      compileLine = (BuildCompileLine*)buildLine;
-      sources = compileLine->GetSources();
-      ProcessBuildLineSources(sourceItem, sources, InLineSet);
-    }
-  }
-}
-  
-/*****************************************************************************!
- * Function : ProcessBuildLineLibs
- *****************************************************************************/
-void
-MainDisplayWindow::ProcessBuildLineLibs
-(BuildTreeItem* InItem, QStringList InLibs)
-{
-  BuildTreeItemComponent*               sourceItem;
-  BuildTreeItemSubSection*              subSection;
-  
-  if ( InLibs.size() == 0 ) {
-    return;
-  }
-
-  subSection = new BuildTreeItemSubSection("Libs");
-  InItem->addChild(subSection);
-  
-  foreach ( auto s, InLibs ) {
-    sourceItem = new BuildTreeItemComponent();
-
-    if ( InItem->Contains(s) ) {
-      continue;
-    }
-    sourceItem->setText(0, s);
-    subSection->addChild(sourceItem);
-  }
-  subSection->sortChildren(0, Qt::AscendingOrder);
-}
-  

@@ -34,7 +34,7 @@ class BuildTreeItemComponent : public BuildTreeItem
 {
  //! Constructors
  public :
-  BuildTreeItemComponent        ();
+  BuildTreeItemComponent        (QString InTrackName);
 
  //! Destructor
  public :
@@ -42,7 +42,9 @@ class BuildTreeItemComponent : public BuildTreeItem
 
  //! Public Methods
  public :
+  QString                       GetTrackName            ();
 
+  
  //! Public Data
  public :
 
@@ -58,7 +60,8 @@ class BuildTreeItemComponent : public BuildTreeItem
 
  //! Private Data
  private :
-
+  QString                       trackName;
+  
  //! Public Slots
  public slots :
 

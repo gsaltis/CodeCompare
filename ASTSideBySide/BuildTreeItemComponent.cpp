@@ -21,9 +21,10 @@
  * Function : BuildTreeItemComponent
  *****************************************************************************/
 BuildTreeItemComponent::BuildTreeItemComponent
-() : BuildTreeItem()
+(QString InTrackName) : BuildTreeItem()
 {
   initialize();
+  trackName = InTrackName;
 }
 
 /*****************************************************************************!
@@ -43,3 +44,12 @@ BuildTreeItemComponent::initialize()
   type = Component;
 }
 
+/*****************************************************************************!
+ * Function : GetTrackName
+ *****************************************************************************/
+QString
+BuildTreeItemComponent::GetTrackName
+()
+{
+  return trackName;
+}

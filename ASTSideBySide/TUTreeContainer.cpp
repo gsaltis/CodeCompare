@@ -141,8 +141,12 @@ TUTreeContainer::SetErrorText
 {
   QFile                                 file(errorFilename);
   QString                               st;
+  QFileInfo                             info(errorFilename);
 
   errorWindow->setText("");
+  if ( !info.exists() ) {
+    return;
+  }
   file.open(QIODeviceBase::ReadOnly);
   
   st = QString(file.readAll());

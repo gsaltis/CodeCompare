@@ -12,10 +12,12 @@
 #include <QtGui>
 #include <QWidget>
 
+#define TRACE_USE
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
 #include "DirTreeItemFile.h"
+#include "trace.h"
 
 /*****************************************************************************!
  * Function : DirTreeItem
@@ -78,14 +80,8 @@ DirTreeItemFile::SetChanged
 (bool InChanged)
 {
   changed = InChanged;
-}
-
-/*****************************************************************************!
- * Function : operater<<
- *****************************************************************************/
-void
-DirTreeItemFile::operator<<
-(bool InChanged)
-{
-  changed = InChanged;
+  if ( changed )  {
+    setForeground(0, QBrush(QColor(0, 192, 0)));
+    setForeground(1, QBrush(QColor(0, 192, 0)));
+  }
 }
