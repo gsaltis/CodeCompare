@@ -1,8 +1,8 @@
 /*****************************************************************************
- * FILE NAME    : TranslationUnit.cpp
- * DATE         : May 05 2023
+ * FILE NAME    : SourceLine.cpp
+ * DATE         : May 31 2023
  * PROJECT      : 
- * COPYRIGHT    : Copyright (C) 2023 by Vertiv Company
+ * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
 
 /*****************************************************************************!
@@ -15,48 +15,48 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "TranslationUnit.h"
-#include "trace.h"
+#include "SourceLine.h"
 
 /*****************************************************************************!
- * Function : TranslationUnit
+ * Function : SourceLine
  *****************************************************************************/
-TranslationUnit::TranslationUnit
-() 
+SourceLine::SourceLine 
+(QString InFileName, QString InFullFileName) : QWidget()
 {
+  SourceFileName = InFileName;
+  SourceFullFileName = InFullFileName;
 }
 
 /*****************************************************************************!
- * Function : ~TranslationUnit
+ * Function : ~SourceLine
  *****************************************************************************/
-TranslationUnit::~TranslationUnit
+SourceLine::~SourceLine
 ()
 {
 }
 
 /*****************************************************************************!
- * Function : Write
+ * Function : Initialize
  *****************************************************************************/
 void
-TranslationUnit::Write
-(QString InFilename)
+SourceLine::Initialize()
 {
-  int                                   n;
-  bool                                  lastItem;
-  QFile                                 file(InFilename);
-
-  if ( ! file.open(QIODeviceBase::ReadWrite | QIODeviceBase::Truncate) ) {
-    return;
-  }
-
-  file.write("[\n");
-  n = count();
-  for ( int i = 0 ; i < n; i++ ) {
-    TranslationUnitType*                t = at(i);
-    lastItem = ((i + 1) == n);
-    t->Write(&file, lastItem);
-  }
-  file.write("]\n");
-  file.close();
 }
 
+/*****************************************************************************!
+ * Function : GetSourceFileName
+ *****************************************************************************/
+QString
+SourceLine::GetSourceFileName(void)
+{
+  return SourceFileName;
+}
+
+/*****************************************************************************!
+ * Function : GetFullSourceFileName
+ *****************************************************************************/
+QString
+SourceLine::GetFullSourceFileName(void)
+{
+  return SourceFullFileName;
+}

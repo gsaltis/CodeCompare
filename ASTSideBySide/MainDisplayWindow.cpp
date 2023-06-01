@@ -138,6 +138,7 @@ MainDisplayWindow::CreateSubWindows()
   buildTree = new BuildTree(mainSystemConfig->GetSourceASTTrack1Path(),
                             mainSystemConfig->GetSourceASTTrack2Path());
   buildTreeContainer = new BuildTreeContainer(buildTree);
+  connect(buildTree, BuildTree::SignalFileSelected, this, MainDisplayWindow::SlotDirFileSelected);
   
   dirBuildContainer = new DirBuildContainer(dirTreeContainer, buildTreeContainer);;
   dirBuildContainer->resize(400, 0);

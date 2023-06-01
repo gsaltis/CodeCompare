@@ -19,6 +19,7 @@
  *****************************************************************************/
 #include "BuildLine.h"
 #include "CodeTrack.h"
+#include "CompileSourceLine.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -44,7 +45,8 @@ class BuildCompileLine : public BuildLine
   void                          ParseLine               (QString InBuildLine);
   QString                       GetTarget               (void);
   QString                       GetAction               (void);
-  QStringList                   GetSources              (void);
+  QList<CompileSourceLine*>     GetSources              (void);
+  QStringList                   GetSourceFullFilenames  (void);
   QStringList                   GetIncludePaths         (void);
   QStringList                   GetLibraries            (void);
   QStringList                   GetLibraryPaths         (void);
@@ -74,7 +76,8 @@ class BuildCompileLine : public BuildLine
  private :
   QString                               action;
   QString                               target;
-  QStringList                           sources;
+  QList<CompileSourceLine*>             sources;
+  QStringList                           sourceFullFilenames;
   QStringList                           includePaths;
   QStringList                           flags;
   QStringList                           libs;

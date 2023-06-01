@@ -12,19 +12,22 @@
 #include <QtGui>
 #include <QWidget>
 
+#define TRACE_USE
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
 #include "BuildTreeItemComponent.h"
+#include "trace.h"
 
 /*****************************************************************************!
  * Function : BuildTreeItemComponent
  *****************************************************************************/
 BuildTreeItemComponent::BuildTreeItemComponent
-(QString InTrackName) : BuildTreeItem()
+(QString InFullFileName) : BuildTreeItem()
 {
   initialize();
-  trackName = InTrackName;
+  fullFileName = InFullFileName;
+  SetChanged();
 }
 
 /*****************************************************************************!
@@ -41,15 +44,50 @@ BuildTreeItemComponent::~BuildTreeItemComponent
 void
 BuildTreeItemComponent::initialize()
 {
+  QFont                                 f = font(0);
+  f.setBold(true);
+  setFont(0, f);
+  setFont(1, f);
+  setForeground(0, QBrush(QColor(87, 114, 174)));
+  changed = false;
   type = Component;
 }
 
 /*****************************************************************************!
- * Function : GetTrackName
+ * Function : GetFullFileName
  *****************************************************************************/
 QString
-BuildTreeItemComponent::GetTrackName
+BuildTreeItemComponent::GetFullFileName
 ()
 {
-  return trackName;
+  return fullFileName;
+}
+
+/*****************************************************************************!
+ * Function : SetChanged
+ *****************************************************************************/
+void
+BuildTreeItemComponent::SetChanged
+()
+{
+  QString                               diffFileName;
+
+  diffFileName = fullFileName + QString(".diff");
+  QFileInfo                             file(diffFileName);
+
+  if ( file.exists() ) {
+    changed = true;
+    setForeground(0, QBrush(QColor(0, 192, 0)));
+    setForeground(1, QBrush(QColor(0, 192, 0)));
+  }
+}
+
+/*****************************************************************************!
+ * Function : GetChanged
+ *****************************************************************************/
+bool
+BuildTreeItemComponent::GetChanged
+()
+{
+  return changed;
 }

@@ -18,6 +18,7 @@
  * Local Headers
  *****************************************************************************/
 #include "BuildLine.h"
+#include "CompileSourceLine.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -43,7 +44,7 @@ class BuildARLine : public BuildLine
   void                          ParseLine               (QString InBuildLine);
   QString                       GetTarget               (void);
   QString                       GetAction               (void);
-  QStringList                   GetSources              (void);
+  QList<CompileSourceLine*>     GetSources              (void);
   QString                       GetFlags                (void);
   
  //! Public Data
@@ -62,7 +63,7 @@ class BuildARLine : public BuildLine
  private :
   QString                               action;
   QString                               target;
-  QStringList                           sources;
+  QList<CompileSourceLine*>             sources;
   QString                               flags;
   
  //! Public Slots

@@ -130,10 +130,10 @@ BuildTreeContainer::SlotCollapseButtonPushed(void)
 {
   emit SignalCollapseTree();
   if ( buildTree->GetExpanded() ) {
-    CollapseButton->setText("Co");
+    CollapseButton->setText("CO");
     return;
   }
-  CollapseButton->setText("Ex");
+  CollapseButton->setText("EX");
 }
 
 /*****************************************************************************!
@@ -144,10 +144,10 @@ BuildTreeContainer::SlotChangedItemsButtonPushed(void)
 {
   emit SignalChangedItemsDisplay();
   if ( buildTree->GetDisplayAllItems() ) {
-    ChangedItemsButton->setText("Ch");
+    ChangedItemsButton->setText("CH");
     return;
   }
-  ChangedItemsButton->setText("Al");
+  ChangedItemsButton->setText("ALL");
 }
 
 /*****************************************************************************!

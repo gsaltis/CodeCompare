@@ -1,6 +1,6 @@
 /*****************************************************************************
- * FILE NAME    : BuildARLine.cpp
- * DATE         : April 03 2023
+ * FILE NAME    : CompileSourceLine.cpp
+ * DATE         : May 31 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
@@ -15,92 +15,57 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildARLine.h"
+#include "CompileSourceLine.h"
 
 /*****************************************************************************!
- * Function : BuildARLine
+ * Function : CompileSourceLine
  *****************************************************************************/
-BuildARLine::BuildARLine
-() : BuildLine()
+CompileSourceLine::CompileSourceLine 
+() : QWidget()
 {
-  buildType = TypeAR;
 }
 
 /*****************************************************************************!
- * Function : ~BuildARLine
+ * Function : ~CompileSourceLine
  *****************************************************************************/
-BuildARLine::~BuildARLine
+CompileSourceLine::~CompileSourceLine
 ()
 {
 }
 
 /*****************************************************************************!
- * Function : ParseLine
+ * Function : Initialize
  *****************************************************************************/
 void
-BuildARLine::ParseLine
-(QString InBuildARLine)
+CompileSourceLine::Initialize()
 {
-  CompileSourceLine*                    sourceLine;
-  QStringList                           elements;
-  int                                   n;
-  QString                               s;
-  
-  lineText = QString(InBuildARLine);
-  elements = InBuildARLine.split(QRegularExpression("\\s+|\n"));
-  n = elements.count();
-  if ( n < 4 ) {
-    return;
-  }
-  action = QString(elements[0]);
-  flags = QString(elements[1]);
-  target = QString(elements[2]);
-    
-  for ( int i = 3; i < n ; i++ ) {
-    s = elements[i];
-    if ( s.isEmpty() ) {
-      continue;
-    }
-    sourceLine = new CompileSourceLine();
-    sourceLine->Set(s, s);
-    sources << sourceLine;
-  }
 }
 
 /*****************************************************************************!
- * Function : GetTarget
+ * Function : GetSourceFileName
  *****************************************************************************/
 QString
-BuildARLine::GetTarget(void)
+CompileSourceLine::GetSourceFileName(void)
 {
-  return target;
+  return SourceFileName;
 }
 
 /*****************************************************************************!
- * Function : GetAction
+ * Function : GetFullSourceFileName
  *****************************************************************************/
 QString
-BuildARLine::GetAction(void)
+CompileSourceLine::GetFullSourceFileName(void)
 {
-  return action;
+  return SourceFullFileName;
 }
 
 /*****************************************************************************!
- * Function : GetSources
+ * Function : Set
  *****************************************************************************/
-QList<CompileSourceLine*>
-BuildARLine::GetSources(void)
+void
+CompileSourceLine::Set
+(QString InFileName, QString InFullFileName)
 {
-  return sources;
-}
-
-/*****************************************************************************!
- * Function : GetFlags
- *****************************************************************************/
-QString
-BuildARLine::GetFlags
-(void)
-{
-  return flags;
-}
-
+  SourceFileName = InFileName;
+  SourceFullFileName = InFullFileName;
+} 

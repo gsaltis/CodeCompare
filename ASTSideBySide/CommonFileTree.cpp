@@ -25,8 +25,11 @@ CommonFileTree::CommonFileTree
 (QString InFilePath1, QString InFilePath2) : QTreeWidget()
 {
   QDir                                  d;
+
   filePath1 = d.toNativeSeparators(InFilePath1);
   filePath2 = d.toNativeSeparators(InFilePath2);
+  track1.SetBasePath(filePath1);
+  track2.SetBasePath(filePath2);
 
   initialize();
 }

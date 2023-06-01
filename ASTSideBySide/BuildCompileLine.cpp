@@ -58,7 +58,13 @@ BuildCompileLine::ParseLine
   QString                               inc;
   QString                               libpath;
   QString                               lib;
-
+  QString                               st;
+  QString                               st2;
+  QString                               st3;
+  QString                               st4;
+  QDir                                  d;
+  CompileSourceLine*                    sourceLine;
+  
   lineText = QString(InBuildCompileLine);
   
   elements = InBuildCompileLine.split(QRegularExpression("\\s+|\n"));
@@ -104,7 +110,16 @@ BuildCompileLine::ParseLine
       flags << s;
       continue;
     }
-    sources << s;
+    st = fullFilePath + "/" + s;
+    st2 = d.toNativeSeparators(st);
+    QFileInfo                   fileInfo(st2);
+    st3 = fileInfo.canonicalFilePath();
+    st4 = d.toNativeSeparators(st3);
+    sourceFullFilenames << st4;
+
+    sourceLine = new CompileSourceLine();
+    sourceLine->Set(s, st4);
+    sources << sourceLine;
   }
 }
 
@@ -129,11 +144,21 @@ BuildCompileLine::GetAction(void)
 /*****************************************************************************!
  * Function : GetSources
  *****************************************************************************/
-QStringList
+QList<CompileSourceLine*>
 BuildCompileLine::GetSources
 (void)
 {
   return sources;
+}
+
+/*****************************************************************************!
+ * Function : GetSourceFullFilenames
+ *****************************************************************************/
+QStringList
+BuildCompileLine::GetSourceFullFilenames
+(void)
+{
+  return sourceFullFilenames;
 }
 
 /*****************************************************************************!
@@ -189,7 +214,7 @@ BuildCompileLine::Dump(void)
          target.toStdString().c_str());
   for ( int i = 0 ; i < sources.count(); i++ ) {
     QDir                d;
-    QString             st = d.toNativeSeparators(filePath + QString("/") + sources[i]);
+    QString             st = d.toNativeSeparators(filePath + QString("/") + sources[i]->GetSourceFileName());
     QFileInfo           f(st);
     printf(" %s", f.canonicalFilePath().toStdString().c_str());
   }
@@ -237,11 +262,7 @@ BuildCompileLine::GetFullFileName
 {
   QString                               fullFileName;
   QDir                                  d;
-  fullFileName = fullFilePath + QString("/") + sources[0];
-  fullFileName = d.toNativeSeparators(fullFileName);
-  QFileInfo                             info(fullFileName);
-  fullFileName = info.canonicalFilePath();
-  return fullFileName;
-}
-
   
+  fullFileName =  sources[0]->GetFullSourceFileName();
+  return d.toNativeSeparators(fullFileName);
+}

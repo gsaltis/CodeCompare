@@ -18,6 +18,7 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
+#include "CodeTrack.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -63,6 +64,8 @@ class CommonFileTree : public QTreeWidget
   QString                       headerName2;
   bool                          expanded;
   bool                          displayAllItems;
+  CodeTrack                     track1;
+  CodeTrack                     track2;
   
  //! Private Methods
  private :

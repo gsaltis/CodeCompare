@@ -1,11 +1,11 @@
 /*****************************************************************************
- * FILE NAME    : BuildTreeItemComponent.h
- * DATE         : May 24 2023
+ * FILE NAME    : SourceLine.h
+ * DATE         : May 31 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _buildtreeitemcomponent_h_
-#define _buildtreeitemcomponent_h_
+#ifndef _sourceline_h_
+#define _sourceline_h_
 
 /*****************************************************************************!
  * Global Headers
@@ -17,35 +17,35 @@
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildTreeItem.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define BUILD_TREE_ITEM_COMPONENT_X     200
-#define BUILD_TREE_ITEM_COMPONENT_Y     200
-#define BUILD_TREE_ITEM_COMPONENT_WIDTH 200
-#define BUILD_TREE_ITEM_COMPONENT_HEIGHT 200
+#define SOURCE_LINE_X                   200
+#define SOURCE_LINE_Y                   200
+#define SOURCE_LINE_WIDTH               200
+#define SOURCE_LINE_HEIGHT              200
 
 /*****************************************************************************!
- * Exported Class : BuildTreeItemComponent
+ * Exported Class : SourceLine
  *****************************************************************************/
-class BuildTreeItemComponent : public BuildTreeItem
+class SourceLine : public QWidget
 {
+  Q_OBJECT;
+
  //! Constructors
  public :
-  BuildTreeItemComponent        (QString InFullFileName);
+  SourceLine                    (QString InFileName, QString InFullFileName);
 
  //! Destructor
  public :
-  ~BuildTreeItemComponent       ();
+  ~SourceLine                   ();
 
  //! Public Methods
  public :
-  QString                       GetFullFileName         ();
-  void                          SetChanged              ();
-  bool                          GetChanged              ();
-  
+  QString                       GetSourceFileName       (void);
+  QString                       GetFullSourceFileName   (void);
+
  //! Public Data
  public :
 
@@ -57,13 +57,13 @@ class BuildTreeItemComponent : public BuildTreeItem
 
  //! Private Methods
  private :
-  void                          initialize              ();
+  void                                  Initialize              ();
 
  //! Private Data
  private :
-  QString                       fullFileName;
-  bool                          changed;
-  
+  QString                               SourceFileName;
+  QString                               SourceFullFileName;
+
  //! Public Slots
  public slots :
 
@@ -75,4 +75,4 @@ class BuildTreeItemComponent : public BuildTreeItem
 
 };
 
-#endif /* _buildtreeitemcomponent_h_*/
+#endif /* _sourceline_h_*/

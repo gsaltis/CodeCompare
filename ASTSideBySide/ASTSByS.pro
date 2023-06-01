@@ -67,6 +67,7 @@ SOURCES                         += \
 				   LineNumberArea.cpp				\
 				   MainDisplayWindow.cpp			\
 				   MainWindow.cpp				\
+                                   CompileSourceLine.cpp                        \
 				   SystemConfig.cpp				\
 				   TUTree.cpp					\
 				   TUTreeContainer.cpp				\
@@ -117,7 +118,8 @@ HEADERS                         += \
 				   LineNumberArea.h				\
 				   MainDisplayWindow.h				\
 				   MainWindow.h					\
-				   SystemConfig.h				\
+                                   CompileSourceLine.h                          \
+                                   SystemConfig.h				\
 				   TUTree.h					\
 				   TUTreeContainer.h				\
 				   TUTreeContainerSplitter.h			\

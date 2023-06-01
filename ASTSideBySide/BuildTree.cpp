@@ -37,7 +37,7 @@ BuildTree::BuildTree
   pal = palette();
   pal.setBrush(QPalette::Window, QBrush(QColor(255, 255, 255)));
   setColumnCount(2);
-  
+
   setPalette(pal);
   setAutoFillBackground(true);
   initialize();
@@ -144,10 +144,12 @@ BuildTree::SlotToggleChangedItems
 ()
 {
   if ( displayAllItems ) {
+    ShowChangedItems();
     displayAllItems = false;
     return;
   }
 
+  ShowAllItems();
   displayAllItems = true;
 }
 
@@ -156,9 +158,9 @@ BuildTree::SlotToggleChangedItems
  *****************************************************************************/
 void
 BuildTree::ProcessBuildLines
-(QString InTrackName, BuildLineSet* InBuildLines)
+(QString , BuildLineSet* InBuildLines)
 {
-  QStringList                           sources;
+  QList<CompileSourceLine*>             sources;
   QStringList                           libs;
   BuildCompileLine*                     compileLine;
   BuildARLine*                          arLine;
@@ -166,7 +168,8 @@ BuildTree::ProcessBuildLines
   int                                   i, n;
   BuildTreeItemTop*                     topItem;
   BuildTreeItem*                        mainItem;
-
+  QString                               fullFileName;
+  
   n = InBuildLines->GetLineCount();
 
   for (i = 0; i < n; i++) {
@@ -181,6 +184,7 @@ BuildTree::ProcessBuildLines
         if ( compileLine->GetIsTargetObject() ) {
           break;
         }
+        fullFileName = compileLine->GetFullFileName();
         do {
           QFileInfo                       info(target);
           QString                         suffix;
@@ -205,33 +209,33 @@ BuildTree::ProcessBuildLines
             } else {
               addTopLevelItem(topItem);
             }
-            ProcessBuildLineSources(InTrackName, topItem, sources, InBuildLines);
+            ProcessBuildLineSources(fullFileName, topItem, sources, InBuildLines);
             mainItem = (BuildTreeItem*)topItem;
             break;
           }
           if ( suffix == "so" ) {
-            ProcessBuildLineSources(InTrackName, buildTreeSharedObject, sources, InBuildLines);
+            ProcessBuildLineSources(fullFileName, buildTreeSharedObject, sources, InBuildLines);
             mainItem = (BuildTreeItem*)buildTreeSharedObject;
             break;
           }
           if ( suffix == "cgi" ) {
-            ProcessBuildLineSources(InTrackName, buildTreeCGI, sources, InBuildLines);
+            ProcessBuildLineSources(fullFileName, buildTreeCGI, sources, InBuildLines);
             mainItem = (BuildTreeItem*)buildTreeCGI;
             break;
           }
           if ( suffix == "" ) {
-            ProcessBuildLineSources(InTrackName, buildTreeBinary, sources, InBuildLines);
+            ProcessBuildLineSources(fullFileName, buildTreeBinary, sources, InBuildLines);
             mainItem = (BuildTreeItem*)buildTreeBinary;
             break;
           }
-          ProcessBuildLineSources(InTrackName, buildTreeOther, sources, InBuildLines);
+          ProcessBuildLineSources(fullFileName, buildTreeOther, sources, InBuildLines);
           mainItem = (BuildTreeItem*)buildTreeOther;
           break;
         } while(false);
           
         if ( processLibsLines ) {
           libs = compileLine->GetLibraries();
-          ProcessBuildLineLibs(InTrackName,mainItem, libs);
+          ProcessBuildLineLibs(fullFileName,mainItem, libs);
         }
         break;
       }
@@ -242,7 +246,7 @@ BuildTree::ProcessBuildLines
         topItem = new BuildTreeItemTop();
         topItem->setText(0, target);
         buildTreeOther->addChild(topItem);
-        ProcessBuildLineSources(InTrackName, topItem, sources, InBuildLines);
+        ProcessBuildLineSources(fullFileName, topItem, sources, InBuildLines);
         break;
       }
       default :
@@ -259,16 +263,17 @@ BuildTree::ProcessBuildLines
  *****************************************************************************/
 void
 BuildTree::ProcessBuildLineSources
-(QString InTrackName, BuildTreeItem* InItem, QStringList InSources, BuildLineSet* InLineSet)
+(QString InFullFileName, BuildTreeItem* InItem, QList<CompileSourceLine*> InSources, BuildLineSet* InLineSet)
 {
-  QStringList                           sources;
+  QString                               st;
+  QList<CompileSourceLine*>             sources;
   BuildLine*                            buildLine;
   BuildTreeItemComponent*               sourceItem;
   BuildTreeItem*                        mainItem;
 #if 0
   BuildTreeItemSubSection*              subSection;
 #endif
-  
+
   if ( InSources.size() == 0 ) {
     return;
   }
@@ -279,12 +284,13 @@ BuildTree::ProcessBuildLineSources
   foreach ( auto s, InSources ) {
     mainItem = InItem;
     if ( displayIntermediateFiles ) {
-      sourceItem = new BuildTreeItemComponent(InTrackName);
-      sourceItem->setText(0, s);
+      st = s->GetFullSourceFileName();
+      sourceItem = new BuildTreeItemComponent(st);
+      sourceItem->setText(0, s->GetSourceFileName());
       mainItem = (BuildTreeItem*)sourceItem;
       InItem->addChild(sourceItem);
     }
-    buildLine = InLineSet->GetLineByTargetName(s);
+    buildLine = InLineSet->GetLineByTargetName(s->GetSourceFileName());
     if ( buildLine == NULL ) {
       continue;
     }
@@ -292,7 +298,7 @@ BuildTree::ProcessBuildLineSources
       BuildCompileLine*                 compileLine;
       compileLine = (BuildCompileLine*)buildLine;
       sources = compileLine->GetSources();
-      ProcessBuildLineSecondarySources(InTrackName, mainItem, sources);
+      ProcessBuildLineSecondarySources(InFullFileName, mainItem, sources);
     }
   }
 }
@@ -302,17 +308,16 @@ BuildTree::ProcessBuildLineSources
  *****************************************************************************/
 void
 BuildTree::ProcessBuildLineSecondarySources
-(QString InTrackName, BuildTreeItem* InItem, QStringList InSources)
+(QString, BuildTreeItem* InItem, QList<CompileSourceLine*> InSources)
 {
   BuildTreeItemComponent*               sourceItem;
-  
+
   if ( InSources.size() == 0 ) {
     return;
   }
   foreach ( auto s, InSources ) {
-    sourceItem = new BuildTreeItemComponent(InTrackName);
-    
-    sourceItem->setText(0, s);
+    sourceItem = new BuildTreeItemComponent(s->GetFullSourceFileName());
+    sourceItem->setText(0, s->GetSourceFileName());
     InItem->addChild(sourceItem);
   }
 }
@@ -322,7 +327,7 @@ BuildTree::ProcessBuildLineSecondarySources
  *****************************************************************************/
 void
 BuildTree::ProcessBuildLineLibs
-(QString InTrackName, BuildTreeItem* InItem, QStringList InLibs)
+(QString, BuildTreeItem* InItem, QStringList InLibs)
 {
   BuildTreeItemComponent*               sourceItem;
   BuildTreeItemSubSection*              subSection;
@@ -335,7 +340,7 @@ BuildTree::ProcessBuildLineLibs
   InItem->addChild(subSection);
   
   foreach ( auto s, InLibs ) {
-    sourceItem = new BuildTreeItemComponent(InTrackName);
+    sourceItem = new BuildTreeItemComponent(s);
 
     if ( InItem->Contains(s) ) {
       continue;
@@ -364,16 +369,127 @@ BuildTree::SlotFileSelected
 (QTreeWidgetItem* InItem, int )
 {
   BuildTreeItem*                        item;
-  QString                               trackName;
+  QString                               fullFileName;
   BuildTreeItemComponent*               component;
+  QString                               st;
+  
   item = (BuildTreeItem*)InItem;
 
   if ( item->GetType() != BuildTreeItem::Type::Component ) {
     return;
   }
   component = (BuildTreeItemComponent*)item;
-  trackName = component->GetTrackName();
+  fullFileName = component->GetFullFileName();
+
+  st = track1.RemoveLeadingBasePath(fullFileName);
+  
+  emit SignalFileSelected(st);
 }
 
-
+/*****************************************************************************!
+ * Function : ShowChangedItems
+ *****************************************************************************/
+void
+BuildTree::ShowChangedItems(void)
+{
+  int                                   i, n;
+  BuildTreeItemTop*                     dirItem;
+  QTreeWidgetItem*                      item;
   
+  n = topLevelItemCount();
+
+  for (i = 0; i < n; i++) {
+    item = topLevelItem(i);
+    dirItem = (BuildTreeItemTop*)item;
+
+    if ( DirChanged(dirItem) ) {
+      dirItem->setHidden(false);
+    } else {
+      dirItem->setHidden(true);
+    }
+  }
+}
+
+/*****************************************************************************!
+ * Function: DirChanged
+ *****************************************************************************/
+bool
+BuildTree::DirChanged
+(BuildTreeItem* InBuildItem)
+{
+  int                                   i, n;
+  bool                                  c;
+  bool                                  rvalue;
+
+  rvalue = false;
+  n = InBuildItem->childCount();
+  
+  for ( i = 0 ; i < n ; i++ ) {
+    BuildTreeItem*                      item;
+    item = (BuildTreeItem*)InBuildItem->child(i);
+    BuildTreeItem::Type                 t = item->GetType();
+    if ( t == BuildTreeItem::Type::Top || t == BuildTreeItem::Type::Section ) {
+      c = DirChanged(item);
+      if ( c ) {
+        rvalue = true;
+      }
+      item->setHidden(!c);
+      continue;
+    }
+    if ( item->GetType() == BuildTreeItem::Type::Component ) {
+      BuildTreeItemComponent*           componentItem;
+      componentItem = (BuildTreeItemComponent*)item;
+      c = componentItem->GetChanged();
+      if ( c ) {
+        rvalue = true;
+      }
+      componentItem->setHidden(!c);
+    }
+  }
+  return rvalue;
+}
+
+/*****************************************************************************!
+ * Function : ShowAllItems
+ *****************************************************************************/
+void
+BuildTree::ShowAllItems
+()
+{
+  QTreeWidgetItem*                      item;
+  int                                   i, n;
+  BuildTreeItem*                        buildItem;
+  
+  n = topLevelItemCount();
+
+  for (i = 0; i < n; i++) {
+    item = topLevelItem(i);
+    buildItem = (BuildTreeItem*)item;
+    ShowAllDirItems(buildItem);
+  }
+}
+
+/*****************************************************************************!
+ * Function : ShowAllDirItems
+ *****************************************************************************/
+void
+BuildTree::ShowAllDirItems
+(BuildTreeItem* InItem)
+{
+  int                                   i, n;
+  QTreeWidgetItem*                      item;
+  BuildTreeItem*                        buildItem;
+  BuildTreeItem::Type                   t;
+
+  n = InItem->childCount();
+
+  for (i = 0; i < n; i++) {
+    item = InItem->child(i);
+    buildItem = (BuildTreeItem*)item;
+    t = buildItem->GetType();
+    if ( t == BuildTreeItem::Type::Top || t == BuildTreeItem::Type::Section ) {
+      ShowAllDirItems(buildItem);
+    }
+    item->setHidden(false);
+  }
+}

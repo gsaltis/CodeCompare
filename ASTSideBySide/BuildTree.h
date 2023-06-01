@@ -22,6 +22,7 @@
 #include "BuildTreeItemSection.h"
 #include "BuildTreeItem.h"
 #include "BuildLineSet.h"
+#include "CompileSourceLine.h"
 
 /*****************************************************************************!
  * Exported Macros
@@ -66,10 +67,14 @@ class BuildTree : public CommonFileTree
   void                          InitializeSubWindows                    ();
   void                          resizeEvent                             (QResizeEvent* InEvent);
   void                          ProcessBuildLineLibs                    (QString InTrackName, BuildTreeItem* InItem, QStringList InLibs);
-  void                          ProcessBuildLineSources                 (QString InTrackName, BuildTreeItem* InItem, QStringList InSources, BuildLineSet* InLineSet);
-  void                          ProcessBuildLineSecondarySources        (QString InTrackName, BuildTreeItem* InItem, QStringList InSources);
+  void                          ProcessBuildLineSources                 (QString InTrackName, BuildTreeItem* InItem, QList<CompileSourceLine*> InSources, BuildLineSet* InLineSet);
+  void                          ProcessBuildLineSecondarySources        (QString InTrackName, BuildTreeItem* InItem, QList<CompileSourceLine*> InSources);
   void                          CreateConnections                       ();
-  
+  void                          ShowChangedItems                        ();
+  bool                          DirChanged                              (BuildTreeItem* InBuildItem);
+  void                          ShowAllItems                            ();
+  void                          ShowAllDirItems                         (BuildTreeItem* InItem);
+
  //! Private Data
  private :
   BuildTreeItemSection*         buildTreeBinary;
@@ -87,6 +92,7 @@ class BuildTree : public CommonFileTree
 
  //! Public Signals
  signals :
+  void                          SignalFileSelected                      (QString InFilename);
 
  //! Public Actions
  public :
