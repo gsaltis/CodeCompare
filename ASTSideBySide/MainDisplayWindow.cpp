@@ -142,7 +142,8 @@ MainDisplayWindow::CreateSubWindows()
   
   dirBuildContainer = new DirBuildContainer(dirTreeContainer, buildTreeContainer);;
   dirBuildContainer->resize(400, 0);
-  
+  connect(buildTree, BuildTree::SignalFileCountsChanged,
+          buildTreeContainer, BuildTreeContainer::SlotSetFileCounts);
   //!
   jsonTree2 = new TUTree(filename2);
   connect(jsonTree2,

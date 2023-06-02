@@ -14,6 +14,7 @@
 #include <QtGui>
 #include <QWidget>
 #include <QFrame>
+#include <QLabel>
 #include <QPushButton>
 
 /*****************************************************************************!
@@ -68,14 +69,18 @@ class BuildTreeContainer : public QWidget
  private :
   BuildTree*                    buildTree;
   QFrame*                       toolBar;
-  
+  QFrame*                       statusBar;
+  QLabel*                       FilesCountLabel;
   QPushButton*                  CollapseButton;
   QPushButton*                  ChangedItemsButton;
+  QPushButton*                  ShowChangedLinesButton;
   
  //! Public Slots
  public slots :
   void                          SlotCollapseButtonPushed        (void);
   void                          SlotChangedItemsButtonPushed    (void);
+  void                          SlotShowChangedLinesButtonPushed(void);
+  void                          SlotSetFileCounts               (int InTotalFiles, int InChangedFiles);
 
  //! Public Signals
  signals :

@@ -37,7 +37,8 @@ BuildTree::BuildTree
   pal = palette();
   pal.setBrush(QPalette::Window, QBrush(QColor(255, 255, 255)));
   setColumnCount(2);
-
+  totalFiles = 0;
+  changedFiles = 0;
   setPalette(pal);
   setAutoFillBackground(true);
   initialize();
@@ -256,6 +257,7 @@ BuildTree::ProcessBuildLines
   buildTreeBinary->sortChildren(0, Qt::AscendingOrder);
   buildTreeCGI->sortChildren(0, Qt::AscendingOrder);
   buildTreeSharedObject->sortChildren(0, Qt::AscendingOrder);
+  emit SignalFileCountsChanged(totalFiles, changedFiles);
 }
 
 /*****************************************************************************!
@@ -286,6 +288,9 @@ BuildTree::ProcessBuildLineSources
     if ( displayIntermediateFiles ) {
       st = s->GetFullSourceFileName();
       sourceItem = new BuildTreeItemComponent(st);
+      totalFiles++;
+      changedFiles += sourceItem->GetChanged() ? 1 : 0;
+      
       sourceItem->setText(0, s->GetSourceFileName());
       mainItem = (BuildTreeItem*)sourceItem;
       InItem->addChild(sourceItem);
@@ -317,6 +322,8 @@ BuildTree::ProcessBuildLineSecondarySources
   }
   foreach ( auto s, InSources ) {
     sourceItem = new BuildTreeItemComponent(s->GetFullSourceFileName());
+    totalFiles++;
+    changedFiles += sourceItem->GetChanged() ? 1 : 0;
     sourceItem->setText(0, s->GetSourceFileName());
     InItem->addChild(sourceItem);
   }
@@ -341,6 +348,8 @@ BuildTree::ProcessBuildLineLibs
   
   foreach ( auto s, InLibs ) {
     sourceItem = new BuildTreeItemComponent(s);
+    totalFiles++;
+    changedFiles += sourceItem->GetChanged() ? 1 : 0;
 
     if ( InItem->Contains(s) ) {
       continue;

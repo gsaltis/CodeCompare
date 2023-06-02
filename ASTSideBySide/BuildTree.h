@@ -83,6 +83,8 @@ class BuildTree : public CommonFileTree
   BuildTreeItemSection*         buildTreeOther;
   bool                          processLibsLines;
   bool                          displayIntermediateFiles;
+  int                           changedFiles;
+  int                           totalFiles;
   
  //! Public Slots
  public slots :
@@ -93,6 +95,7 @@ class BuildTree : public CommonFileTree
  //! Public Signals
  signals :
   void                          SignalFileSelected                      (QString InFilename);
+  void                          SignalFileCountsChanged                 (int InTotalFilesCount, int InChangedFilesCount);
 
  //! Public Actions
  public :

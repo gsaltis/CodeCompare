@@ -63,6 +63,17 @@ BuildTreeContainer::CreateSubWindows()
   toolBar->setFrameStyle(QFrame::Panel);
   toolBar->setStyleSheet("QFrame { border : 1px solid #CCC}");
 
+  statusBar = new QFrame(this);
+  statusBar->setFrameShadow(QFrame::Sunken);
+  statusBar->setFrameStyle(QFrame::Panel);
+  statusBar->setStyleSheet("QFrame { border : 1px solid #CCC}");
+
+  FilesCountLabel = new QLabel(statusBar);
+  FilesCountLabel->move(5, 1);
+  FilesCountLabel->resize(60, 18);
+  FilesCountLabel->setText(QString("%1 / %2").arg(0).arg(0));
+  FilesCountLabel->setStyleSheet("QLabel { border : 0px solid #00000000}");
+    
   //! Create the CollapseButton button  
   CollapseButton = new QPushButton();
   CollapseButton->setParent(toolBar);
@@ -77,6 +88,13 @@ BuildTreeContainer::CreateSubWindows()
   ChangedItemsButton->move(33, 1);
   ChangedItemsButton->resize(30,30);
   connect(ChangedItemsButton, SIGNAL(pressed()), this, SLOT(SlotChangedItemsButtonPushed()));
+
+  ShowChangedLinesButton = new QPushButton();
+  ShowChangedLinesButton->setParent(toolBar);
+  ShowChangedLinesButton->setText("LI");
+  ShowChangedLinesButton->move(65, 1);
+  ShowChangedLinesButton->resize(30,30);
+  connect(ShowChangedLinesButton, SIGNAL(pressed()), this, SLOT(SlotShowChangedLinesButtonPushed()));
 }
 
 /*****************************************************************************!
@@ -100,26 +118,42 @@ BuildTreeContainer::resizeEvent
   int                                   height;
   int                                   buildTreeX, buildTreeY, buildTreeW, buildTreeH;
   int                                   toolBarW, toolBarH, toolBarX, toolBarY;
+  int                                   statusBarW, statusBarH, statusBarX, statusBarY;
+  int                                   FilesCountLabelW, FilesCountLabelH;
   
   size = InEvent->size();
   width = size.width();
   height = size.height();
 
+  toolBarH = 32;
+  statusBarH = 20;
+  buildTreeH = height - (toolBarH + statusBarH);
+  
   buildTreeX = 0;
   buildTreeY = 0;
   buildTreeW = width;
-  buildTreeH = height - 32;
 
   toolBarX = 0;
-  toolBarH = 32;
   toolBarW = width;
-  toolBarY = height - 32;
+  toolBarY = height - toolBarH;
+  
+  statusBarX = 0;
+  statusBarW = width;
+  statusBarY = height - (toolBarH + statusBarH);
+
+  FilesCountLabelW = width - 10;
+  FilesCountLabelH = 18;
+
+  FilesCountLabel->resize(FilesCountLabelW, FilesCountLabelH);
   
   buildTree->move(buildTreeX, buildTreeY);
   buildTree->resize(buildTreeW, buildTreeH);
 
   toolBar->move(toolBarX, toolBarY);
   toolBar->resize(toolBarW, toolBarH);
+
+  statusBar->move(statusBarX, statusBarY);
+  statusBar->resize(statusBarW, statusBarH);
 }
 
 /*****************************************************************************!
@@ -151,6 +185,16 @@ BuildTreeContainer::SlotChangedItemsButtonPushed(void)
 }
 
 /*****************************************************************************!
+ * Function : SlotShowChangedLinesButtonPushed
+ *****************************************************************************/
+void
+BuildTreeContainer::SlotShowChangedLinesButtonPushed
+(void)
+{
+
+}
+
+/*****************************************************************************!
  * Function : CreateConnections
  *****************************************************************************/
 void
@@ -158,4 +202,14 @@ BuildTreeContainer::CreateConnections(void)
 {
   connect(this, BuildTreeContainer::SignalCollapseTree, buildTree, BuildTree::SlotToggleTreeView);
   connect(this, BuildTreeContainer::SignalChangedItemsDisplay, buildTree, BuildTree::SlotToggleChangedItems);
+}
+
+/*****************************************************************************!
+ * Function : SlotSetFileCounts
+ *****************************************************************************/
+void
+BuildTreeContainer::SlotSetFileCounts
+(int InTotalFiles, int InChangedFiles)
+{
+  FilesCountLabel->setText(QString("Files : Total:%1 | Changed:%2").arg(InTotalFiles).arg(InChangedFiles));
 }
