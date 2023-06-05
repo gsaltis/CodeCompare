@@ -140,3 +140,14 @@ MainWindow::SlotExit(void)
 {
   exit(EXIT_SUCCESS);  
 }
+
+/*****************************************************************************!
+ * Function : SlotSetBuildWindow
+ *****************************************************************************/
+void
+MainWindow::SlotSetBuildWindow
+()
+{
+  displayWindow->SlotSetBuildWindow();
+}
+    

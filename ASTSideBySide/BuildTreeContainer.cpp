@@ -14,11 +14,13 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
+#define TRACE_USE
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
 #include "BuildTreeContainer.h"
 #include "BuildTreeItemComponent.h"
+#include "trace.h"
 
 /*****************************************************************************!
  * Function : BuildTreeContainer
@@ -195,6 +197,7 @@ void
 BuildTreeContainer::SlotGenerateCSVFileButtonPushed
 (void)
 {
+  QString                               fn;
   QString                               fileName;
   int                                   i, n, j, k, m, p;
   QTreeWidgetItem*                      item;
@@ -202,7 +205,10 @@ BuildTreeContainer::SlotGenerateCSVFileButtonPushed
   BuildTreeItemComponent*               item3;
   BuildTreeItemSection*                 sectionItem;
   QString                               s;
-
+  int                                   changedCount = 1;
+  QString                               changedFlag = "";
+  QStringList                           processedFiles;
+  
   fileName = QFileDialog::getSaveFileName(NULL, "Save CSV File", csvFileName, "CSV Files (*.csv)");
   if ( fileName == "" ) {
     return;
@@ -223,7 +229,7 @@ BuildTreeContainer::SlotGenerateCSVFileButtonPushed
     k = item->childCount();
     for (j = 0; j < k; j++) {
       item2 = item->child(j);
-      s = item2->text(0) + QString("\n");
+      s = QString(",%1,,\n").arg(item2->text(0));
       sectionItem = (BuildTreeItemSection*)item2;
       if ( ! sectionItem->AnyChanged() ) {
         continue;
@@ -233,7 +239,17 @@ BuildTreeContainer::SlotGenerateCSVFileButtonPushed
       for (m = 0; m < p; m++) {
         item3 = (BuildTreeItemComponent*)item2->child(m);
         if ( item3->GetChanged() ) {
-          s = QString(",") + buildTree->RemoveLeadingBasePath1(item3->GetFullFileName()) + QString("\n");
+          fn = buildTree->RemoveLeadingBasePath1(item3->GetFullFileName());
+          changedFlag = "*";
+          if ( !processedFiles.contains(fn) ) {
+            changedFlag = "";
+            processedFiles << fn;
+          }
+          s = QString("%1,,%2,%3\n")
+            .arg(changedCount)
+            .arg(changedFlag)
+            .arg(fn);
+          changedCount++;
           file.write(s.toLatin1());
         }
       }

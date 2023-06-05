@@ -35,6 +35,9 @@ DirBuildContainer::DirBuildContainer
   setPalette(pal);
   setAutoFillBackground(true);
   initialize();
+  WindowNames << QString("SC") << QString("BT");
+  WindowIndexDir = 0;
+  WindowIndexBuild = 1;
 }
 
 /*****************************************************************************!
@@ -134,10 +137,48 @@ void
 DirBuildContainer::SlotToggleViewButtonPushed(void)
 {
   int                                   windowIndex;
-  QString                               names[] = { "SC", "BT" };
+
   windowIndex = stacker->currentIndex();
   windowIndex++;
   windowIndex = windowIndex % stacker->count();
   stacker->setCurrentIndex(windowIndex);
-  toggleViewButton->setText(names[windowIndex]);
+  toggleViewButton->setText(WindowNames[windowIndex]);
 }
+
+/*****************************************************************************!
+ * Function : SlotSetBuildWindow
+ *****************************************************************************/
+void
+DirBuildContainer::SlotSetBuildWindow
+()
+{
+  int                                   windowIndex;
+  windowIndex = WindowIndexBuild;
+  stacker->setCurrentIndex(windowIndex);
+  toggleViewButton->setText(WindowNames[windowIndex]);
+}
+
+/*****************************************************************************!
+ * Function : SlotSetDirWindow
+ *****************************************************************************/
+void
+DirBuildContainer::SlotSetDirWindow
+()
+{
+  int                                   windowIndex;
+  windowIndex = WindowIndexDir;
+  stacker->setCurrentIndex(windowIndex);
+  toggleViewButton->setText(WindowNames[windowIndex]);
+}
+
+/*****************************************************************************!
+ * Function : SetWindow
+ *****************************************************************************/
+void
+DirBuildContainer::SetWindow
+(int InWindowIndex)
+{
+  stacker->setCurrentIndex(InWindowIndex);
+  toggleViewButton->setText(WindowNames[InWindowIndex]);
+}
+

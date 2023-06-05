@@ -65,7 +65,8 @@ class DirBuildContainer : public QWidget
   void                          CreateSubWindows        ();
   void                          InitializeSubWindows    ();
   void                          resizeEvent             (QResizeEvent* InEvent);
-
+  void                          SetWindow               (int InWindowIndex);
+  
  //! Private Data
  private :
   QFrame*                       toolBar;
@@ -73,11 +74,16 @@ class DirBuildContainer : public QWidget
   BuildTreeContainer*           buildContainer;
   QStackedWidget*               stacker;
   QPushButton*                  toggleViewButton;
+  QStringList                   WindowNames;
+  int                           WindowIndexBuild;
+  int                           WindowIndexDir;
   
  //! Public Slots
  public slots :
-  void                          SlotToggleViewButtonPushed (void);
-
+  void                          SlotToggleViewButtonPushed      (void);
+  void                          SlotSetBuildWindow              (void);
+  void                          SlotSetDirWindow                (void);
+  
  //! Public Signals
  signals :
 

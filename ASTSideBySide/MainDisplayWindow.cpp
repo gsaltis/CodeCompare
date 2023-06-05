@@ -1045,3 +1045,12 @@ MainDisplayWindow::GetBuildLines
   file.close();
 }
 
+/*****************************************************************************!
+ * Function : SlotSetBuildWindow
+ *****************************************************************************/
+void
+MainDisplayWindow::SlotSetBuildWindow
+()
+{
+  dirBuildContainer->SlotSetBuildWindow();
+}

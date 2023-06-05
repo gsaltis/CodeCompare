@@ -63,6 +63,7 @@ main
   MainWindow*                           w;
   QCommandLineParser                    commandLineParser;
   QString                               mainFilename;
+  bool                                  buildWindow;
   
   application.setApplicationName("ASTSByS");
   application.setApplicationVersion("0.0.0");
@@ -74,17 +75,23 @@ main
 
   mainSource1ASTPath = mainSystemConfig->GetSourceASTTrack1Path();
   mainSource2ASTPath = mainSystemConfig->GetSourceASTTrack2Path();
-  
+
   commandLineParser.setApplicationDescription("CodeCompare");
   commandLineParser.addHelpOption();
   commandLineParser.addVersionOption();
   QCommandLineOption codeBaseNameOption(QStringList() << "f" << "file",
-                                         QCoreApplication::translate("main", "Specifiy a file name."),
+                                         QCoreApplication::translate("main", "Specify a file name."),
                                          QCoreApplication::translate("main", "filename"));
+  QCommandLineOption buildWindowOption(QStringList() << "b" << "build",
+                                       QCoreApplication::translate("main", "Specify that the build tree is displayed"));
+  
   commandLineParser.addOption(codeBaseNameOption);
+  commandLineParser.addOption(buildWindowOption);
+  
   commandLineParser.process(application);
   mainFilename = commandLineParser.value(codeBaseNameOption);
-
+  buildWindow = commandLineParser.isSet(buildWindowOption);
+  
 #if 0
   if ( mainFilename.isEmpty() ) {
     QMessageBox::critical(NULL, "Missing File", "Missing file");
@@ -98,6 +105,8 @@ main
   w->resize(mainSystemConfig->GetMainWindowSize());
   w->move(mainSystemConfig->GetMainWindowLocation());
   w->show();
-  
+  if ( buildWindow ) {
+    w->SlotSetBuildWindow();
+  }
   return application.exec();
 }
