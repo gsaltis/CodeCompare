@@ -11,11 +11,14 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWidget>
+#include <QMessageBox>
+#include <QFileDialog>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
 #include "BuildTreeContainer.h"
+#include "BuildTreeItemComponent.h"
 
 /*****************************************************************************!
  * Function : BuildTreeContainer
@@ -47,6 +50,7 @@ BuildTreeContainer::~BuildTreeContainer
 void
 BuildTreeContainer::initialize()
 {
+  csvFileName = QString("Build.csv");
   InitializeSubWindows();  
   CreateSubWindows();
   CreateConnections();
@@ -89,12 +93,12 @@ BuildTreeContainer::CreateSubWindows()
   ChangedItemsButton->resize(30,30);
   connect(ChangedItemsButton, SIGNAL(pressed()), this, SLOT(SlotChangedItemsButtonPushed()));
 
-  ShowChangedLinesButton = new QPushButton();
-  ShowChangedLinesButton->setParent(toolBar);
-  ShowChangedLinesButton->setText("LI");
-  ShowChangedLinesButton->move(65, 1);
-  ShowChangedLinesButton->resize(30,30);
-  connect(ShowChangedLinesButton, SIGNAL(pressed()), this, SLOT(SlotShowChangedLinesButtonPushed()));
+  GenerateCSVFileButton = new QPushButton();
+  GenerateCSVFileButton->setParent(toolBar);
+  GenerateCSVFileButton->setText("LI");
+  GenerateCSVFileButton->move(65, 1);
+  GenerateCSVFileButton->resize(30,30);
+  connect(GenerateCSVFileButton, SIGNAL(pressed()), this, SLOT(SlotGenerateCSVFileButtonPushed()));
 }
 
 /*****************************************************************************!
@@ -185,13 +189,58 @@ BuildTreeContainer::SlotChangedItemsButtonPushed(void)
 }
 
 /*****************************************************************************!
- * Function : SlotShowChangedLinesButtonPushed
+ * Function : SlotGenerateCSVFileButtonPushed
  *****************************************************************************/
 void
-BuildTreeContainer::SlotShowChangedLinesButtonPushed
+BuildTreeContainer::SlotGenerateCSVFileButtonPushed
 (void)
 {
+  QString                               fileName;
+  int                                   i, n, j, k, m, p;
+  QTreeWidgetItem*                      item;
+  QTreeWidgetItem*                      item2;
+  BuildTreeItemComponent*               item3;
+  BuildTreeItemSection*                 sectionItem;
+  QString                               s;
 
+  fileName = QFileDialog::getSaveFileName(NULL, "Save CSV File", csvFileName, "CSV Files (*.csv)");
+  if ( fileName == "" ) {
+    return;
+  }
+
+  csvFileName = fileName;
+  
+  QFile                                 file(csvFileName);
+  if ( !file.open(QIODeviceBase::ReadWrite) ) {
+    QMessageBox::critical(NULL, "Could not open file", QString("Could not open the CSV file - ") + file.errorString());
+    return;
+  }
+
+  n = buildTree->topLevelItemCount();
+
+  for (i = 0; i < n; i++) {
+    item = buildTree->topLevelItem(i);
+    k = item->childCount();
+    for (j = 0; j < k; j++) {
+      item2 = item->child(j);
+      s = item2->text(0) + QString("\n");
+      sectionItem = (BuildTreeItemSection*)item2;
+      if ( ! sectionItem->AnyChanged() ) {
+        continue;
+      }
+      file.write(s.toLatin1());
+      p = item2->childCount();
+      for (m = 0; m < p; m++) {
+        item3 = (BuildTreeItemComponent*)item2->child(m);
+        if ( item3->GetChanged() ) {
+          s = QString(",") + buildTree->RemoveLeadingBasePath1(item3->GetFullFileName()) + QString("\n");
+          file.write(s.toLatin1());
+        }
+      }
+    }
+  }
+
+  file.close();
 }
 
 /*****************************************************************************!

@@ -17,6 +17,7 @@
  *****************************************************************************/
 #include "BuildTreeItemSection.h"
 #include "BuildTreeItemSubSection.h"
+#include "BuildTreeItemComponent.h"
 
 /*****************************************************************************!
  * Function : BuildTreeItemSection
@@ -72,3 +73,31 @@ BuildTreeItemSection::ElementExists
   }
   return false;
 }
+
+/*****************************************************************************!
+ * Function : AnyChanged
+ *****************************************************************************/
+bool
+BuildTreeItemSection::AnyChanged
+()
+{
+  int                                   i, n;
+  BuildTreeItem*                        item;
+  BuildTreeItem::Type                   type;
+  BuildTreeItemComponent*               componentItem;
+
+  n = childCount();
+  for (i = 0; i < n; i++) {
+    item = (BuildTreeItem*)child(i);
+    type = item->GetType();
+    if ( type != BuildTreeItem::Type::Component ) {
+      continue;
+    }
+    componentItem = (BuildTreeItemComponent*)item;
+    if ( componentItem->GetChanged() ) {
+      return true;
+    }
+  }
+  return false;
+}
+

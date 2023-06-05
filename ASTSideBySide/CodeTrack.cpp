@@ -75,12 +75,15 @@ CodeTrack::PathBeginsWithBasePath
 {
   int                                   n;
   QString                               s;
+  QString                               b;
+  
   n = InPath.length();
   if ( n < basePathLen ) {
     return false;
   }
   s = QDir::toNativeSeparators(InPath.sliced(0, basePathLen));
-  return s == basePath;
+  b = QDir::toNativeSeparators(basePath);
+  return s == b;
 }
 
 /*****************************************************************************!

@@ -73,13 +73,14 @@ class BuildTreeContainer : public QWidget
   QLabel*                       FilesCountLabel;
   QPushButton*                  CollapseButton;
   QPushButton*                  ChangedItemsButton;
-  QPushButton*                  ShowChangedLinesButton;
+  QPushButton*                  GenerateCSVFileButton;
+  QString                       csvFileName;
   
  //! Public Slots
  public slots :
   void                          SlotCollapseButtonPushed        (void);
   void                          SlotChangedItemsButtonPushed    (void);
-  void                          SlotShowChangedLinesButtonPushed(void);
+  void                          SlotGenerateCSVFileButtonPushed (void);
   void                          SlotSetFileCounts               (int InTotalFiles, int InChangedFiles);
 
  //! Public Signals

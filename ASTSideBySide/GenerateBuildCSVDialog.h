@@ -1,50 +1,48 @@
 /*****************************************************************************
- * FILE NAME    : BuildTreeItemSection.h
- * DATE         : May 24 2023
+ * FILE NAME    : GenerateBuildCSVDialog.h
+ * DATE         : June 02 2023
  * PROJECT      : 
  * COPYRIGHT    : Copyright (C) 2023 by Gregory R Saltis
  *****************************************************************************/
-#ifndef _buildtreeitemsection_h_
-#define _buildtreeitemsection_h_
+#ifndef _generatebuildcsvdialog_h_
+#define _generatebuildcsvdialog_h_
 
 /*****************************************************************************!
  * Global Headers
  *****************************************************************************/
 #include <QtCore>
 #include <QtGui>
-#include <QWidget>
+#include <QDialog>
+#include <QPushButton>
 
 /*****************************************************************************!
  * Local Headers
  *****************************************************************************/
-#include "BuildTreeItem.h"
 
 /*****************************************************************************!
  * Exported Macros
  *****************************************************************************/
-#define BUILD_TREE_ITEM_SECTION_X       200
-#define BUILD_TREE_ITEM_SECTION_Y       200
-#define BUILD_TREE_ITEM_SECTION_WIDTH   200
-#define BUILD_TREE_ITEM_SECTION_HEIGHT  200
+#define GENERATE_BUILD_CSV_DIALOG_WIDTH         300
+#define GENERATE_BUILD_CSV_DIALOG_HEIGHT        400
 
 /*****************************************************************************!
- * Exported Class : BuildTreeItemSection
+ * Exported Class : GenerateBuildCSVDialog
  *****************************************************************************/
-class BuildTreeItemSection : public BuildTreeItem
+class GenerateBuildCSVDialog : public QDialog
 {
+  Q_OBJECT;
+
  //! Constructors
  public :
-  BuildTreeItemSection          (QString InName);
+  GenerateBuildCSVDialog        ();
 
  //! Destructor
  public :
-  ~BuildTreeItemSection         ();
+  ~GenerateBuildCSVDialog       ();
 
  //! Public Methods
  public :
-  bool                          ElementExists           (QString InName);
-  bool                          AnyChanged              ();
-  
+
  //! Public Data
  public :
 
@@ -56,13 +54,19 @@ class BuildTreeItemSection : public BuildTreeItem
 
  //! Private Methods
  private :
-  void                          initialize              ();
+  void                          Initialize              (void);
+  void                          CreateConnections       (void);
+  void                          CreateSubWindows        (void);
 
  //! Private Data
  private :
+  QPushButton*                  OKButton;
+  QPushButton*                  CancelButton;
 
  //! Public Slots
  public slots :
+  void                          SlotOKButtonPressed     ();
+  void                          SlotCancelButtonPressed ();
 
  //! Public Signals
  signals :
@@ -72,4 +76,4 @@ class BuildTreeItemSection : public BuildTreeItem
 
 };
 
-#endif /* _buildtreeitemsection_h_*/
+#endif /* _generatebuildcsvdialog_h_*/

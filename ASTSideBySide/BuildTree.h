@@ -50,6 +50,7 @@ class BuildTree : public CommonFileTree
  //! Public Methods
  public :
   void                          ProcessBuildLines                       (QString InTrackName , BuildLineSet* InBuildLines);
+  QString                       RemoveLeadingBasePath1  (QString InFullFilename);
 
  //! Public Data
  public :

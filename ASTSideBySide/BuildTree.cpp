@@ -502,3 +502,14 @@ BuildTree::ShowAllDirItems
     item->setHidden(false);
   }
 }
+
+/*****************************************************************************!
+ * Function : RemoveLeadingBasePath1
+ *****************************************************************************/
+QString
+BuildTree::RemoveLeadingBasePath1
+(QString InFullFileName)
+{
+  return track1.RemoveLeadingBasePath(InFullFileName);
+}
+
