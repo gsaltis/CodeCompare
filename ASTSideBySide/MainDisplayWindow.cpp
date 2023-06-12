@@ -955,7 +955,7 @@ MainDisplayWindow::CreateBuildTreeDir
   int                                   i, n;
   QFileInfo                             info;
   QString                               buildFilename;
-  
+
   dir.setPath(InDirName);
 
   dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
@@ -982,6 +982,7 @@ void
 MainDisplayWindow::GetBuildLines
 (QString InFullFilePath, QString InFilePath, BuildLineSet* InBuildLines)
 {
+  int                                   n;
   QString                               command;
   QStringList                           lineParts;
   QString                               line;
@@ -994,14 +995,15 @@ MainDisplayWindow::GetBuildLines
   }
   content = QString(file.readAll());
   lines = content.split("\n", Qt::SkipEmptyParts);
-  for ( int i = 0; i < lines.size(); i++ ) {
+  n = lines.size();
+  for ( int i = 0; i < n; i++ ) {
     line = lines[i];
     lineParts = BuildLine::GetLineElements(line);
     command = lineParts[0];
     if ( command[0] == QChar('#') ) {
       continue;
     }
-    if ( command == "gcc" ) {
+    if ( command == "cc" || command == "gcc" ) {
       BuildCompileLine*                 compileLine = new BuildCompileLine(InFullFilePath);
       compileLine->ParseLine(line);      
       InBuildLines->AppendLine(compileLine);

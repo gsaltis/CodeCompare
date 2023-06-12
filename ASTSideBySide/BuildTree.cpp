@@ -170,7 +170,7 @@ BuildTree::ProcessBuildLines
   BuildTreeItemTop*                     topItem;
   BuildTreeItem*                        mainItem;
   QString                               fullFileName;
-  
+
   n = InBuildLines->GetLineCount();
 
   for (i = 0; i < n; i++) {

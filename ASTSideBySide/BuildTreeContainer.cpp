@@ -197,6 +197,7 @@ void
 BuildTreeContainer::SlotGenerateCSVFileButtonPushed
 (void)
 {
+  QString                               fullPath;
   QString                               fn;
   QString                               fileName;
   int                                   i, n, j, k, m, p;
@@ -239,16 +240,19 @@ BuildTreeContainer::SlotGenerateCSVFileButtonPushed
       for (m = 0; m < p; m++) {
         item3 = (BuildTreeItemComponent*)item2->child(m);
         if ( item3->GetChanged() ) {
-          fn = buildTree->RemoveLeadingBasePath1(item3->GetFullFileName());
+          fullPath = item3->GetFullFileName();
+          QFileInfo fullPathInfo(fullPath);
+          fn = buildTree->RemoveLeadingBasePath1(fullPath);
           changedFlag = "*";
           if ( !processedFiles.contains(fn) ) {
             changedFlag = "";
             processedFiles << fn;
           }
-          s = QString("%1,,%2,%3\n")
+          s = QString("%1,,%2,%3,%4\n")
             .arg(changedCount)
             .arg(changedFlag)
-            .arg(fn);
+            .arg(fn)
+            .arg(fullPathInfo.size());
           changedCount++;
           file.write(s.toLatin1());
         }
